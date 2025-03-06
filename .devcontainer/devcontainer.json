@@ -4,7 +4,7 @@
     "workspaceFolder": "/workspace",
     "mounts": [
        {
-         "source": "${localWorkspaceFolder}",
+         "source": "${localWorkspaceFolder}/src",
          "target": "/workspace",
          "type": "bind"
        }
