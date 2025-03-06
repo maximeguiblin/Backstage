@@ -1,0 +1,7 @@
+{
+    "usecase_name": "backstage",
+    "project_name": "backstage",
+    "project_slug": "backstage",
+    "project_infra": "app",
+    "tag": "1.0.9"
+}
