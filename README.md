@@ -1,13 +1,33 @@
-# backstage
+# Developer portal with Backstage
 
 This repository contains the source code for a backstage based developer portal
 
 This project package was initiated based on Sodexo AI Platform Cookiecutter project template.
 
 
-## Setup working environment
+## Run in local using docker
 
-Before installing & running, you must setup your working environment by running the following steps:
+First, you need to build a docker image locally by running the command at the root of the repo:
+
+  ```
+  $ docker build -t backstage .
+  ```
+
+Then, you can run the docker image locally by using the command at the root of the repo:
+
+  ```
+  $ docker run -p 3000:3000 -p 7007:7007 backstage
+  ```
+
+Finally you can open the backstage portal by going into the URL: http://localhost:3000
+
+
+## Deploy in Azure
+
+
+### Setup working environment
+
+Before deploying in Azure, you must setup your working environment by running the following steps:
 
 * Open the URL and log in with your AZ account https://azeuvs1gct987.visualstudio.com/_usersSettings/tokens
 * Generate an Azure Devops Personal Access Token by selecting "All accessible organizations" and at least the permission "Read" under section "Packaging"
@@ -20,7 +40,7 @@ Before installing & running, you must setup your working environment by running 
 * Copy the resuling command at the end of your file ~/.bashrc
 
 
-## Installing
+### Installing
 
 * Clone the project repository
 * Install the dependencies of the project into a new virtual environment with Python >= 3.8 (recommending 3.10)
@@ -30,18 +50,18 @@ Before installing & running, you must setup your working environment by running 
   ```
 
 
-## How to run
+### How to deploy
 
-To run, deploy or manage your project in AMLS or Databricks, you will find several commands in the AIP CLI by using the help option:
+To deploy in Azure Container Apps, you can use the command:
 
   ```
-  $ aip --help
+  $ aip app container deploy
   ```
 
 
 ## Documentation
 
-The documentation of the project is available in the following links:
+The documentation of the project is available in the following links: To be filled
 
 Please fill here the links to code and product documentations
 

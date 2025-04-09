@@ -1,25 +1,29 @@
-FROM --platform=linux/amd64 python:3.10-slim
+FROM node:20
 
-# Install gcc and python3-dev
-RUN apt-get update && apt-get install -y \
-    gcc \
-    python3-dev
+RUN apt-get update
+RUN apt-get install -y python3 g++ build-essential python-is-python3
 
-WORKDIR /app
-
-ARG PIP_EXTRA_INDEX_URL="https://sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/aipsdk-core/"
-ENV PIP_EXTRA_INDEX_URL=$PIP_EXTRA_INDEX_URL
-
-COPY scripts scripts
-COPY pyproject.toml poetry.lock ./
-RUN bash scripts/install_requirements.sh --no_venv --python_version 3.10
-
-ARG RUN_MODE="job"
-ENV RUN_MODE=$RUN_MODE
-
-ARG AIP_LOGGER_SOURCE="docker"
-ENV AIP_LOGGER_SOURCE=$AIP_LOGGER_SOURCE
-
+WORKDIR workspace
 COPY conf conf
-COPY src src
-CMD ["python", "src/backstage/user_code_app.py"]
+COPY src/backstage backstage
+
+# Uncomment this to run the Python code
+# ARG PIP_EXTRA_INDEX_URL="https://sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/aipsdk-core/"
+# ENV PIP_EXTRA_INDEX_URL=$PIP_EXTRA_INDEX_URL
+# COPY scripts scripts
+# COPY pyproject.toml poetry.lock ./
+# RUN bash scripts/install_requirements.sh --no_venv --python_version 3.10
+# ENV RUN_MODE="live"
+# ARG AIP_LOGGER_SOURCE="docker"
+# ENV AIP_LOGGER_SOURCE=$AIP_LOGGER_SOURCE
+# CMD ["python", "backstage/user_code_app.py"]
+
+# Uncomment this to run the Node code
+WORKDIR backstage
+ENV NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot"
+ENV LOG_LEVEL=debug
+RUN corepack enable
+RUN corepack yarn install
+EXPOSE 3000
+EXPOSE 7007
+CMD ["corepack", "yarn", "dev"]

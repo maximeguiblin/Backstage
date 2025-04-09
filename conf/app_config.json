@@ -5,7 +5,6 @@
             "build": {
                 "dir": ".",
                 "file": "Dockerfile",
-                "args": ["--build-arg", "RUN_MODE=live"],
                 "tag_default": "latest"
             }
         }
@@ -18,7 +17,7 @@
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
             "container_name": "backstage_app",
-            "args_create": ["--ingress", "external", "--target-port", "8000"]
+            "args_create": ["--ingress", "external", "--target-port", "3000", "--exposed-port", "7007"]
         }
     ],
 
