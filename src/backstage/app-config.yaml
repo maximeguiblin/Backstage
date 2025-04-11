@@ -32,11 +32,11 @@ backend:
     connection:
       host: azieps1aip001.postgres.database.azure.com
       port: 5432
-      user: sdxpostgreadminuser@azieps1aip001
+      user: sdxpostgreadminuser
       password: rS842@xWgJ9Lf;M?5j6t
       database: postgres
       ssl:
-        rejectUnauthorized: false
+        rejectUnauthorized: true
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
