@@ -27,17 +27,21 @@ backend:
     credentials: true
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
+  
+  #database:
+      #client: better-sqlite3
+      #connection: ':memory:'
+   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
   database:
     client: pg
     connection:
-      host: azieps1aip001.postgres.database.azure.com
-      port: 5432
-      user: sdxpostgreadminuser
-      password: rS842@xWgJ9Lf;M?5j6t
-      database: postgres
+      host: ${PG_HOST}
+      port: ${PG_PORT}
+      user: ${PG_USER}
+      password: ${PG_PASSWORD}
+      database: ${PG_DATABASE}
       ssl:
-        rejectUnauthorized: true
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+        rejectUnauthorized: false
 
 integrations:
   github:
