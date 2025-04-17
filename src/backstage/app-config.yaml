@@ -1,6 +1,7 @@
 app:
   title: Scaffolded Backstage App
-  baseUrl: https://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io:30000
+  #baseUrl: http://0.0.0.0:3000
+  baseUrl: http://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io
 
 organization:
   name: My Company
@@ -12,7 +13,8 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  baseUrl: https://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io
+  # baseUrl: http://0.0.0.0:7007
+  baseUrl: http://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
@@ -22,26 +24,25 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: https://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io
+    #origin: http://localhost:3000
+    origin: http://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
-  
-  #database:
-      #client: better-sqlite3
-      #connection: ':memory:'
-   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
   database:
+    # client: better-sqlite3
+    # connection: ':memory:'
     client: pg
     connection:
-      host: ${PG_HOST}
-      port: ${PG_PORT}
-      user: ${PG_USER}
-      password: ${PG_PASSWORD}
-      database: ${PG_DATABASE}
+      host: azieps1aip001.postgres.database.azure.com
+      port: 5432
+      user: sdxpostgreadminuser
+      password: rS842@xWgJ9Lf;M?5j6t
+      database: postgres
       ssl:
         rejectUnauthorized: false
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
   github:
@@ -82,6 +83,10 @@ auth:
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
 
+# events:
+#   backend:
+#     type: none
+
 catalog:
   import:
     entityFilename: catalog-info.yaml
@@ -115,7 +120,7 @@ catalog:
     #   rules:
     #     - allow: [User, Group]
 
-kubernetes:
+# kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework

@@ -21,7 +21,7 @@ COPY src/backstage backstage
 # Uncomment this to run the Node code
 WORKDIR backstage
 ENV NODE_OPTIONS="${NODE_OPTIONS:-} --no-node-snapshot"
-ENV LOG_LEVEL=debug
+# ENV LOG_LEVEL=debug
 RUN corepack enable
 RUN corepack yarn install
 EXPOSE 3000
