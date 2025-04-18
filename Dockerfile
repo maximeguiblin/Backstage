@@ -26,4 +26,7 @@ RUN corepack enable
 RUN corepack yarn install
 EXPOSE 3000
 EXPOSE 7007
-CMD ["corepack", "yarn", "dev"]
+ARG START_COMMAND=dev
+ENV START_COMMAND=$START_COMMAND
+RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
+CMD sh -c "corepack yarn $START_COMMAND"
