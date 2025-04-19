@@ -28,5 +28,9 @@ EXPOSE 3000
 EXPOSE 7007
 ARG START_COMMAND=dev
 ENV START_COMMAND=$START_COMMAND
+ARG FRONT_ENDPOINT="http://0.0.0.0:3000"
+ENV FRONT_ENDPOINT=$FRONT_ENDPOINT
+ARG BACK_ENDPOINT="http://0.0.0.0:7007"
+ENV BACK_ENDPOINT=$BACK_ENDPOINT
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
 CMD sh -c "corepack yarn $START_COMMAND"
