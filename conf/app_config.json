@@ -7,7 +7,9 @@
                 "file": "Dockerfile",
                 "args": [
                     "--build-arg",
-                    "START_COMMAND=start"
+                    "START_COMMAND=start",
+                    "--build-arg",
+                    "FRONT_ENDPOINT={@infra.front_endpoint}"
                 ],
                 "tag_default": "latest"
             }
@@ -19,7 +21,9 @@
                 "file": "Dockerfile",
                 "args": [
                     "--build-arg",
-                    "START_COMMAND=start-backend"
+                    "START_COMMAND=start-backend",
+                    "--build-arg",
+                    "BACK_ENDPOINT={@infra.back_endpoint}"
                 ],
                 "tag_default": "latest"
             }

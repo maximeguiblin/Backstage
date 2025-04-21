@@ -42,6 +42,8 @@
     "DATALAKE_NAME": "aziedl1aip001",
     "NETWORK_SECURITYGROUP_NAME": "",
     "CONTAINER_APP_ENVIRONMENT": "aziece1aip001",
+    "FRONT_ENDPOINT" : "azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "BACK_ENDPOINT" : "azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
     "CONTAINER_APP1_NAME": "azieca1aip001",
     "CONTAINER_APP2_NAME": "azieca2aip001",
     "SERVICE_PLAN_NAME": "aziesp1aip001",
