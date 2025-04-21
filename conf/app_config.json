@@ -32,7 +32,7 @@
     "container_apps": [
         {
             "name": "app1",
-            "container_app_name": "@infra.container_app1_name",
+            "container_app_name": "@infra.container_app_front_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
             "container_name": "backstage_app_front",
