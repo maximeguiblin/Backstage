@@ -1,7 +1,7 @@
 {
     "containers": [
         {
-            "name": "backstage_app1",
+            "name": "backstage_app_front",
             "build": {
                 "dir": ".",
                 "file": "Dockerfile",
@@ -15,7 +15,7 @@
             }
         },
         {
-            "name": "backstage_app2",
+            "name": "backstage_app_back",
             "build": {
                 "dir": ".",
                 "file": "Dockerfile",
@@ -35,7 +35,7 @@
             "container_app_name": "@infra.container_app1_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
-            "container_name": "backstage_app1",
+            "container_name": "backstage_app_front",
             "args_create": [
                 "--ingress",
                 "external",
@@ -45,10 +45,10 @@
         },
         {
             "name": "app2",
-            "container_app_name": "@infra.container_app2_name",
+            "container_app_name": "@infra.container_app_back_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
-            "container_name": "backstage_app2",
+            "container_name": "backstage_app_back",
             "args_create": [
                 "--ingress",
                 "external",
@@ -67,7 +67,7 @@
     "service_apps": [
         {
             "name": "app1",
-            "service_app_name": "@infra.service_app1_name",
+            "service_app_name": "@infra.service_app_front_name",
             "service_plan_name": "@infra.service_plan_name",
             "app_type": "container",
             "container_name": "backstage_app",
