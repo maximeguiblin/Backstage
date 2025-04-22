@@ -9,6 +9,12 @@ variables.json
 .streamlit-deployment/
 data.json
 
+# tmp directory
+tmp
+
+# history
+.history
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
