@@ -13,10 +13,18 @@ First, you need to build a docker image locally by running the command at the ro
   $ docker build -t backstage .
   ```
 
-Then, you can run the docker image locally by using the command at the root of the repo:
+Then, you can run the docker image locally.
+To do so yu must specify several environment variable.
+  * PG_HOST : hostname of the server running Postgresql, ex azieps1aip001.postgres.database.azure.com
+  * PG_PORT : port used to connect to PG, ex 5432
+  * PG_USER : user to connect to PG, ex sdxpostgreadminuser
+  * PG_PASSWORD : password used to connect to PG
+  * PG_DATABASE : name of teh PG database that should be used by backstage
+
+Than you can run at the root of the repo ex:
 
   ```
-  $ docker run -p 3000:3000 -p 7007:7007 backstage
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> backstage
   ```
 
 Finally you can open the backstage portal by going into the URL: http://localhost:3000
