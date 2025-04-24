@@ -74,10 +74,22 @@ techdocs:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
 auth:
-  # see https://backstage.io/docs/auth/ to learn about auth providers
   providers:
     # See https://backstage.io/docs/auth/guest/provider
     guest: {}
+### TODO: Uncomment the following lines once the authentication process is clear and the issue with the App Registration for URL redirection is resolved. What needs to be done is to create a new App Registration in Azure AD and manage the URL redirection to point http://localhost:7007/api/auth/microsoft/handler/frame to  https://azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io/api/auth/microsoft/handler/frame and uncomment the TODO tagged lines in the index.ts and App.tsx files and see if it works.
+  # environment: development
+  # providers:
+  #   microsoft:
+  #     development:
+  #       clientId: ${BACKSTAGE_CLIENT_ID}
+  #       clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+  #       tenantId: ${BACKSTAGE_TENANT_ID}
+  #       domainHint: ${BACKSTAGE_TENANT_ID}
+  #       signIn:
+  #         resolvers:
+  #           # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
+  #           - resolver: userIdMatchingUserEntityAnnotation
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options

@@ -26,7 +26,10 @@
         "PG_PORT": "PG-PORT",
         "PG_USER": "PG-USER",
         "PG_PASSWORD": "PG-PASSWORD",
-        "PG_DATABASE": "PG-DATABASE"
+        "PG_DATABASE": "PG-DATABASE",
+        "BACKSTAGE_CLIENT_ID": "BACKSTAGE-CLIENT-ID",
+        "BACKSTAGE_CLIENT_SECRET": "BACKSTAGE-CLIENT-SECRET",
+        "BACKSTAGE_TENANT_ID": "BACKSTAGE-TENANT-ID"
     },
     "PROJECT_ID": "aip001",
     "PROJECT_NAME": "{{cookiecutter.project_name}}",
@@ -42,8 +45,8 @@
     "DATALAKE_NAME": "aziedl1aip001",
     "NETWORK_SECURITYGROUP_NAME": "",
     "CONTAINER_APP_ENVIRONMENT": "aziece1aip001",
-    "FRONT_ENDPOINT" : "azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "BACK_ENDPOINT" : "azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "FRONT_ENDPOINT": "azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "BACK_ENDPOINT": "azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
     "CONTAINER_APP_FRONT_NAME": "azieca1aip001",
     "CONTAINER_APP_BACK_NAME": "azieca2aip001",
     "SERVICE_PLAN_NAME": "aziesp1aip001",
