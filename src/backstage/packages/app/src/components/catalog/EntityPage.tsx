@@ -1,12 +1,19 @@
-import React from 'react';
-import { Button, Grid } from '@material-ui/core';
+import {
+  RELATION_API_CONSUMED_BY,
+  RELATION_API_PROVIDED_BY,
+  RELATION_CONSUMES_API,
+  RELATION_DEPENDENCY_OF,
+  RELATION_DEPENDS_ON,
+  RELATION_HAS_PART,
+  RELATION_PART_OF,
+  RELATION_PROVIDES_API,
+} from '@backstage/catalog-model';
+import { EmptyState } from '@backstage/core-components';
 import {
   EntityApiDefinitionCard,
-  EntityConsumedApisCard,
   EntityConsumingComponentsCard,
   EntityHasApisCard,
-  EntityProvidedApisCard,
-  EntityProvidingComponentsCard,
+  EntityProvidingComponentsCard
 } from '@backstage/plugin-api-docs';
 import {
   EntityAboutCard,
@@ -18,46 +25,42 @@ import {
   EntityHasSystemsCard,
   EntityLayout,
   EntityLinksCard,
-  EntitySwitch,
   EntityOrphanWarning,
   EntityProcessingErrorsPanel,
+  EntityRelationWarning,
+  EntitySwitch,
+  hasCatalogProcessingErrors,
+  hasRelationWarnings,
   isComponentType,
   isKind,
-  hasCatalogProcessingErrors,
   isOrphan,
-  hasRelationWarnings,
-  EntityRelationWarning,
 } from '@backstage/plugin-catalog';
-import {
-  EntityUserProfileCard,
-  EntityGroupProfileCard,
-  EntityMembersListCard,
-  EntityOwnershipCard,
-} from '@backstage/plugin-org';
-import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
-import { EmptyState } from '@backstage/core-components';
 import {
   Direction,
   EntityCatalogGraphCard,
 } from '@backstage/plugin-catalog-graph';
 import {
-  RELATION_API_CONSUMED_BY,
-  RELATION_API_PROVIDED_BY,
-  RELATION_CONSUMES_API,
-  RELATION_DEPENDENCY_OF,
-  RELATION_DEPENDS_ON,
-  RELATION_HAS_PART,
-  RELATION_PART_OF,
-  RELATION_PROVIDES_API,
-} from '@backstage/catalog-model';
+  EntityGroupProfileCard,
+  EntityMembersListCard,
+  EntityOwnershipCard,
+  EntityUserProfileCard,
+} from '@backstage/plugin-org';
+import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
+import { Button, Grid } from '@material-ui/core';
 
-import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
+import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 
 import {
   EntityKubernetesContent,
   isKubernetesAvailable,
 } from '@backstage/plugin-kubernetes';
+
+import {
+  EntityAzurePullRequestsContent,
+  EntityAzureReadmeCard,
+  isAzureDevOpsAvailable
+} from '@backstage-community/plugin-azure-devops';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -142,52 +145,31 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+    
+    <Grid container spacing={3} alignItems="stretch">
+      <EntitySwitch>
+        <EntitySwitch.Case if={isAzureDevOpsAvailable}>
+          <Grid item md={6}>
+            ...
+          </Grid>
+          <Grid item md={6}>
+            <EntityAzureReadmeCard maxHeight={350} />
+          </Grid>
+        </EntitySwitch.Case>
+      </EntitySwitch>
+    </Grid>
+
   </Grid>
 );
 
+// For example in the Service section
 const serviceEntityPage = (
   <EntityLayout>
-    <EntityLayout.Route path="/" title="Overview">
-      {overviewContent}
+    // ...
+    <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
+      <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      {cicdContent}
-    </EntityLayout.Route>
-
-    <EntityLayout.Route
-      path="/kubernetes"
-      title="Kubernetes"
-      if={isKubernetesAvailable}
-    >
-      <EntityKubernetesContent />
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/api" title="API">
-      <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
-          <EntityProvidedApisCard />
-        </Grid>
-        <Grid item md={6}>
-          <EntityConsumedApisCard />
-        </Grid>
-      </Grid>
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/dependencies" title="Dependencies">
-      <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
-          <EntityDependsOnComponentsCard variant="gridItem" />
-        </Grid>
-        <Grid item md={6}>
-          <EntityDependsOnResourcesCard variant="gridItem" />
-        </Grid>
-      </Grid>
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
-    </EntityLayout.Route>
+    // ...
   </EntityLayout>
 );
 
