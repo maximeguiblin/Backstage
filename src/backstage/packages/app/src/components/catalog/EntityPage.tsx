@@ -59,6 +59,12 @@ import {
   isKubernetesAvailable,
 } from '@backstage/plugin-kubernetes';
 
+import {
+  EntityAzurePipelinesContent,
+  EntityAzurePullRequestsContent,
+  isAzureDevOpsAvailable,
+} from '@backstage-community/plugin-azure-devops';
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -94,6 +100,10 @@ const cicdContent = (
           </Button>
         }
       />
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isAzureDevOpsAvailable}>
+        <EntityAzurePipelinesContent defaultLimit={25} />
     </EntitySwitch.Case>
   </EntitySwitch>
 );
@@ -187,6 +197,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
+      <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
   </EntityLayout>
 );

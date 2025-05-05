@@ -29,10 +29,10 @@ backend:
     origin: ${CORS_ENDPOINT}
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
     client: pg
     connection:
       host: ${PG_HOST}
@@ -42,6 +42,8 @@ backend:
       password: ${PG_PASSWORD}
       ssl:
         rejectUnauthorized: false
+    #client: better-sqlite3
+    #connection: ':memory:'
 
 integrations:
   azure:
@@ -128,9 +130,9 @@ catalog:
         organization: sdxcloud
         project: '*'
         repository: '*'
-        path: /src/backstage/catalog-info.yaml
+        path: /**/catalog-info.yaml
         schedule:
-          frequency: { minutes: 15 }
+          frequency: { minutes: 2 }
           timeout: { minutes: 3 }
 
 kubernetes:
