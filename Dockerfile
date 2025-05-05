@@ -33,5 +33,6 @@ ENV CORS_ENDPOINT="https://$FRONT_ENDPOINT"
 ENV FRONT_ENDPOINT="http://$FRONT_ENDPOINT"
 ARG BACK_ENDPOINT="0.0.0.0:7007"
 ENV BACK_ENDPOINT="http://$BACK_ENDPOINT"
+RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-azure
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
 CMD sh -c "corepack yarn $START_COMMAND"

@@ -44,15 +44,22 @@ backend:
         rejectUnauthorized: false
 
 integrations:
-  github:
-    - host: github.com
-      # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
-      # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/locations#configuration
-      token: ${GITHUB_TOKEN}
-    ### Example for how to add your GitHub Enterprise instance using the API:
-    # - host: ghe.example.net
-    #   apiBaseUrl: https://ghe.example.net/api/v3
-    #   token: ${GHE_TOKEN}
+  azure:
+    - host: dev.azure.com #sdxcloud.visualstudio.com
+      credentials:
+        - personalAccessToken: ${BACKSTAGE_ACCESS_TOKEN}
+        # - clientId: ${BACKSTAGE_CLIENT_ID}
+        #   clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+        #   tenantId: ${BACKSTAGE_TENANT_ID}
+  #github:
+  #  - host: github.com
+  #    # This is a Personal Access Token or PAT from GitHub. You can find out how to generate this token, and more information
+  #    # about setting up the GitHub integration here: https://backstage.io/docs/integrations/github/locations#configuration
+  #    token: ${GITHUB_TOKEN}
+  #  ### Example for how to add your GitHub Enterprise instance using the API:
+  #  # - host: ghe.example.net
+  #  #   apiBaseUrl: https://ghe.example.net/api/v3
+  #  #   token: ${GHE_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
@@ -114,6 +121,17 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
     #   rules:
     #     - allow: [User, Group]
+
+  providers:
+    azureDevOps:
+      sdxcloudBackstageCatalogProvider: # identifies your dataset / provider independent of config changes
+        organization: sdxcloud
+        project: '*'
+        repository: '*'
+        path: /src/backstage/catalog-info.yaml
+        schedule:
+          frequency: { minutes: 15 }
+          timeout: { minutes: 3 }
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
