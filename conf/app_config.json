@@ -9,7 +9,11 @@
                     "--build-arg",
                     "START_COMMAND=start",
                     "--build-arg",
-                    "FRONT_ENDPOINT={@infra.front_endpoint}"
+                    "FRONT_ENDPOINT={@infra.front_endpoint}",
+                    "--build-arg",
+                    "CORS_ENDPOINT={@infra.cors_endpoint}",
+                    "--build-arg",
+                    "BACK_ENDPOINT={@infra.back_endpoint}"
                 ],
                 "tag_default": "latest"
             }
@@ -22,6 +26,10 @@
                 "args": [
                     "--build-arg",
                     "START_COMMAND=start-backend",
+                    "--build-arg",
+                    "FRONT_ENDPOINT={@infra.front_endpoint}",
+                    "--build-arg",
+                    "CORS_ENDPOINT={@infra.cors_endpoint}",
                     "--build-arg",
                     "BACK_ENDPOINT={@infra.back_endpoint}"
                 ],

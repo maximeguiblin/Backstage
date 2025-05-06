@@ -1,12 +1,12 @@
-To install
-Updates needed in backstage/app-config.yaml to listen on all interfaces (or the local/production one)
+To recreate a new upgraded version of backstage
+cd .devcontainer
+docker build -t create_backstage_workspace .
+docker run -it --mount type=bind,src=./workspace,dst=/workspace create_backstage_workspace bash
+> npx @backstage/create-app@latest
+> > y
+> > backstage
+> chmod -R 777 backstage
+> exit
 
-To run
-After starting the devcontainer, run : "cd backstage" and "yarn dev" to start backstage
-Need to update the ports in the VSCode tab to make sure it is redirected on ports 3000 & 7007 locally
+diff -qr workspace/backstage ../src/backstage
 
-Learn backstage
-https://www.youtube.com/watch?v=A-3Ai--Z-Gs
-
-In general IDP
-https://www.youtube.com/watch?v=j5i00z3QXyU&list=PLyicRj904Z9_50dH2eD5prLZ8b9A-fdgt
