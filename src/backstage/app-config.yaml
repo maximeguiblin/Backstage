@@ -110,7 +110,7 @@ catalog:
     azureDevOps:
       sdxcloudBackstageCatalogProvider: # identifies your dataset / provider independent of config changes
         organization: sdxcloud
-        project: '*'
+        project: 'IST.GLB.GLB.DataFactory_DeveloperPlatform'
         repository: '*'
         path: /**/catalog-info.yaml
         schedule:

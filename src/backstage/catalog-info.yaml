@@ -9,7 +9,7 @@ metadata:
   #   backstage.io/techdocs-ref: dir:.
   annotations:
     dev.azure.com/host-org: dev.azure.com/sdxcloud
-    dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.POC.Backstage
+    dev.azure.com/project-repo: IST.GLB.GLB.DataFactory_DeveloperPlatform/IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage
 spec:
   type: website
   owner: john@example.com

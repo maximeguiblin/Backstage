@@ -47,7 +47,7 @@ RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packag
 # Start backstage frontend or backend or both depending on arguments
 CMD sh -c '\
   if [ "$START_COMMAND" = "dev" ]; then \
-    if test -f ../../app-config.local.yaml; then \
+    if test -f app-config.local.yaml; then \
         exec corepack yarn dev --config ../../app-config.yaml --config ../../app-config.local.yaml; \
     else \
         exec corepack yarn dev --config ../../app-config.yaml; \
