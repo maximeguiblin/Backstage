@@ -1,0 +1,178 @@
+# Sodexo Org Structure
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: sodexo
+  description: Sodexo - Food Services & Facilities Management
+  links:
+    - url: http://www.sodexo.com/
+      title: sodexo.com
+spec:
+  type: organization
+  profile:
+    displayName: Sodexo
+    email: info@sodexo.com
+    picture: https://edge.sitecorecloud.io/sodexofrance1-sodexocorpsites-prod-e74c/media/Project/Sodexo-Corp/Global/Media-prod/Images/Logos/Sodexo_Logotype_Blue.png?h=42&iar=0&w=131
+  children: [infrastructure]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: infrastructure
+  description: Infrastructure department
+spec:
+  type: department
+  parent: sodexo
+  children: [gccc, tcs]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: gccc
+  description: Global Cloud Competency Centre
+spec:
+  type: team
+  profile:
+    email: gccc@sodexo.com
+    picture: https://sodexo.sharepoint.com/sites/GLB_IST_Global_CCC/_api/siteiconmanager/getsitelogo?type='1'&hash=637786146262324486
+  parent: infrastructure
+  children: [devsecops]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: tcs
+  description: Cloud Operations
+spec:
+  type: team
+  profile:
+    email: tcs@sodexo.com
+  parent: infrastructure
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: devsecops
+  description: Cloud Architecture, Security, and Automation
+  links:
+    - url: https://sdxcloud.visualstudio.com/TDDIDevSecOpsProgram
+      title: Azure DevOps
+      icon: dashboard
+    - url: https://sdxcloud.visualstudio.com/TDDIDevSecOpsProgram/_wiki/wikis/TDDIDevSecOpsProgram.wiki/63089/TDDIDevSecOpsProgram-Wiki
+      title: Sharepoint website
+      icon: feed
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/50861/Videos
+      title: Videos
+      icon: star
+spec:
+  type: team
+  profile:
+    email: devsecops@sodexo.com
+  parent: gccc
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: mihail.nedkov
+spec:
+  profile:
+    displayName: Mihail Nedkov
+    email: Mihail.Nedkov.ext@sodexo.com
+    picture: https://api.dicebear.com/7.x/avataaars/svg?seed=Bailey&backgroundColor=transparent
+  memberOf: [devsecops]
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: patterns
+  title: Cloud Architecture Patterns
+  description: Re-usable architecture patterns for cloud deployments
+  tags:
+    - azure
+    - bicep
+  links:
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/34714/06-HOW-USE-PATTERNS-FOR-PROJECT-DEPLOY-THEM
+      title: Wiki
+      description: Wiki page for Patterns
+      icon: docs
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_build?view=folders
+      title: Pipelines
+      description: Production Pipelines for deploying patterns
+      icon: star
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_git/PATTERN.DataPatterns_Global.AZ
+    dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/POC.TestPipeline
+    dev.azure.com/build-definition: POC.TestPipeline      
+spec:
+  owner: devsecops
+  lifecycle: production
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: patterns-architecture
+  title: Patterns Arch
+spec:
+  type: resource 
+  lifecycle: production
+  owner: devsecops
+  system: patterns
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: patterns-iac
+  title: Patterns IaC
+  tags:
+    - azure
+    - bicep
+  links:
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/34714/06-HOW-USE-PATTERNS-FOR-PROJECT-DEPLOY-THEM
+      title: Wiki
+      description: Wiki page for patterns
+      icon: docs
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_build?view=folders
+      title: Pipelines
+      description: Pipelines for deploying patterns
+      icon: star
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_git/PATTERN.DataPatterns_Global.AZ
+    dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/POC.TestPipeline
+    dev.azure.com/build-definition: POC.TestPipeline
+spec:
+  type: service 
+  lifecycle: production
+  owner: devsecops
+  system: patterns
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: patterns-qa
+  title: Patterns QA
+  tags:
+    - quality
+  links:
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/51008/10-AZURE-TEST-FRAMEWORK
+      title: Wiki
+      description: Azure Test Framework Wiki page
+      icon: docs
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/51008/10-AZURE-TEST-FRAMEWORK
+      title: Pipelines
+      description: Azure Test Framework Pipelines
+      icon: star
+  annotations:
+    #backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_git/PATTERN.DataDigital_ADFB.AZ
+    #backstage.io/techdocs-ref: dir:.
+    dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/PATTERN.DataDigital_ADFB.AZ
+    dev.azure.com/build-definition: Azure Test Framework - SupplierCentral
+spec:
+  type: service 
+  lifecycle: production
+  owner: devsecops
+  system: patterns
+  subcomponentOf: patterns-iac
+---
