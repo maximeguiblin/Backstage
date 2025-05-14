@@ -20,12 +20,21 @@ To do so yu must specify several environment variable.
   * PG_USER : user to connect to PG, ex sdxpostgreadminuser
   * PG_PASSWORD : password used to connect to PG
   * PG_DATABASE : name of teh PG database that should be used by backstage
+  * BACKSTAGE_ACCESS_TOKEN : the access token used by backstage to access Azure DevOps(see below how to generate it)
 
 Than you can run at the root of the repo ex:
 
   ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> backstage
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_ACCESS_TOKEN=<PAT_TOKEN> backstage
   ```
+
+If you are making changes to yaml files and want to test them locally without rebuilding the docker image and restarting the container, you can mount the folder with yaml files so that they are reloaded dynamically e.g.
+
+  ```
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_ACCESS_TOKEN=<PAT_TOKEN> -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\sodexo:/workspace/backstage/sodexo" -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\app-config.yaml:/workspace/backstage/app-config.yaml" backstage
+  ```
+
+Create a file app-config.local.yaml to store local configuration for backstage. This file is gitignored but even if not used should be creted and left empty to avoid errors in the log.
 
 Finally you can open the backstage portal by going into the URL: http://localhost:3000
 
