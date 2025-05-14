@@ -118,6 +118,18 @@ catalog:
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
+    # VM template
+    - type: file
+      target: ../../sodexo/templates/azure-vm-template.yaml
+      rules:
+        - allow: [Template]
+
+    # Patterns template
+    - type: file
+      target: ../../sodexo/templates/azure-patterns-template.yaml
+      rules:
+        - allow: [Template]        
+
     ## Uncomment these lines to add more example data
     # - type: url
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml

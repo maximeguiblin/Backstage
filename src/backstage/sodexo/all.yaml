@@ -147,6 +147,9 @@ spec:
   lifecycle: production
   owner: devsecops
   system: patterns
+  providesApis:
+    - run-adfb-pattern
+    - run-poc-pattern  
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -168,11 +171,371 @@ metadata:
     #backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_git/PATTERN.DataDigital_ADFB.AZ
     #backstage.io/techdocs-ref: dir:.
     dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/PATTERN.DataDigital_ADFB.AZ
-    dev.azure.com/build-definition: Azure Test Framework - SupplierCentral
+    dev.azure.com/build-definition: Azure Test Framework - Supply PriCat
 spec:
   type: service 
   lifecycle: production
   owner: devsecops
   system: patterns
   subcomponentOf: patterns-iac
+  providesApis:
+    - run-data-tests
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: run-data-tests
+  description: Run Data Tests
+  tags:
+    - quality
+  owner: devsecops
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: devsecops
+  definition: |
+    openapi: 3.0.3
+    info:
+      title: Trigger Azure DevOps Pipeline
+      description: Trigger a specific Azure DevOps pipeline run using its ID.
+      version: 1.0.0
+    servers:
+      - url: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation
+    paths:
+      /_apis/pipelines/8258/runs:
+        post:
+          summary: Trigger pipeline run
+          operationId: triggerPipeline
+          parameters:
+            - name: api-version
+              in: query
+              required: true
+              schema:
+                type: string
+                default: 7.1-preview.1
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    resources:
+                      type: object
+                      properties:
+                        repositories:
+                          type: object
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                refName:
+                                  type: string
+                                  example: refs/heads/dev
+                example:
+                  resources:
+                    repositories:
+                      self:
+                        refName: refs/heads/dev
+          responses:
+            '200':
+              description: Successfully triggered pipeline run
+            '401':
+              description: Unauthorized - invalid or missing PAT
+            '400':
+              description: Bad request - invalid payload or parameters
+            '500':
+              description: Internal server error
+          security:
+            - basicAuth: []
+    components:
+      securitySchemes:
+        basicAuth:
+          type: http
+          scheme: basic
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: run-adfb-pattern
+  description: Run the ADFB Pattern which deploys Azure Databricks & Datafactory along with supporting resources such as Key Vaults, Storage Accounts, Azure DevOps agent, etc. 
+  tags:
+    - patterns
+    - adfb
+  links:
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/34714/06-HOW-USE-PATTERNS-FOR-PROJECT-DEPLOY-THEM
+      title: Wiki
+      description: Wiki page for Patterns
+      icon: docs
+  owner: devsecops
+spec:
+  type: openapi
+  lifecycle: production
+  owner: devsecops
+  definition: |
+    openapi: 3.0.3
+    info:
+      title: Trigger ADFB Azure DevOps Pipeline
+      description: Triggers a pipeline that deploys ADFB environment in sdxcloud dev.
+      version: 1.0.0
+    servers:
+      - url: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation
+    paths:
+      /_apis/pipelines/8631/runs:
+        post:
+          summary: Trigger ADFB Pattern pipeline
+          operationId: triggerADFBPatternPipeline
+          parameters:
+            - name: api-version
+              in: query
+              required: true
+              schema:
+                type: string
+                default: 7.1-preview.1
+            - name: deployDEV
+              in: query
+              required: true
+              description: Deploy to DEV environment
+              schema:
+                type: boolean
+                default: true
+            - name: deployUAT
+              in: query
+              required: true
+              description: Deploy to UAT environment
+              schema:
+                type: boolean
+                default: false               
+            - name: deployPROD
+              in: query
+              required: true
+              description: Deploy to PROD environment
+              schema:
+                type: boolean
+                default: false
+            - name: DataPatternVersion
+              in: query
+              required: true
+              description: Version of the Data pattern
+              schema:
+                type: string
+                default: latest                                   
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    resources:
+                      type: object
+                      properties:
+                        repositories:
+                          type: object
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                refName:
+                                  type: string
+                                  example: refs/heads/dev
+                example:
+                  resources:
+                    repositories:
+                      self:
+                        refName: refs/heads/dev                
+          responses:
+            '200':
+              description: Successfully triggered pipeline run
+            '401':
+              description: Unauthorized - invalid or missing PAT
+            '400':
+              description: Bad request - invalid payload or parameters
+            '500':
+              description: Internal server error
+          security:
+            - basicAuth: []
+    components:
+      securitySchemes:
+        basicAuth:
+          type: http
+          scheme: basic
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: run-poc-pattern
+  description: Run the POC Pattern pipeline for project onboarding. 
+  tags:
+    - patterns
+    - adfb
+  links:
+    - url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_wiki/wikis/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation.wiki/34714/06-HOW-USE-PATTERNS-FOR-PROJECT-DEPLOY-THEM
+      title: Wiki
+      description: Wiki page for Patterns
+      icon: docs
+  owner: devsecops
+spec:
+  type: openapi
+  lifecycle: production
+  owner: devsecops
+  definition: |
+    openapi: 3.0.3
+    info:
+      title: Trigger Project Onboarding Pipeline
+      description: Triggers a pipeline that onboards a new project using the selected pattern.
+      version: 1.0.0
+    servers:
+      - url: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation
+    paths:
+      /_apis/pipelines/8651/runs:
+        post:
+          summary: Trigger Project Onboarding Pipeline
+          operationId: triggerProjectOnboardingPipeline
+          parameters:
+            - name: api-version
+              in: query
+              required: true
+              schema:
+                type: string
+                default: 7.1-preview.1
+            - name: pattern
+              in: query
+              required: true
+              description: Select the pattern to use
+              schema:
+                type: string
+                enum: [ADFB, ADFBML, ADFBMLGTW, ADFBPBID, ADFML, AMLAKSGTW, SHPOINTFTPADFADB, ADFMLD, ADFBMLPBID, ADFBMLGTWD, ADFMLOPENAI, ADFDBMLOPENAI, ADFBMLOPENAIGTW, SHPOINTADFAML, SHPOINTADFADB]
+                default: ADFB
+            - name: projectName
+              in: query
+              required: true
+              description: Project Name
+              schema:
+                type: string
+            - name: applicationName
+              in: query
+              required: true
+              description: Application Name (Repository Name)
+              schema:
+                type: string
+            - name: sraqID
+              in: query
+              required: true
+              description: SRAQ ID
+              schema:
+                type: string
+            - name: cristalID
+              in: query
+              required: true
+              description: Cristal ID
+              schema:
+                type: string
+            - name: locations
+              in: query
+              required: false
+              description: Locations (comma-separated, e.g. northeurope,eastus2)
+              schema:
+                type: string
+                default: northeurope
+            - name: organizationName
+              in: query
+              required: false
+              description: ADO Organization Name
+              schema:
+                type: string
+                default: sdxcloud
+            - name: projectNameADO
+              in: query
+              required: false
+              description: ADO Project Name
+              schema:
+                type: string
+                default: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation
+            - name: threeLetterCode
+              in: query
+              required: true
+              description: Three-letter Code (3 characters)
+              schema:
+                type: string
+            - name: eightLetterCode
+              in: query
+              required: true
+              description: Project Code (max 8 characters, must start with the 3-letter code)
+              schema:
+                type: string
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    resources:
+                      type: object
+                      properties:
+                        repositories:
+                          type: object
+                          properties:
+                            self:
+                              type: object
+                              properties:
+                                refName:
+                                  type: string
+                                  example: refs/heads/dev
+                    templateParameters:
+                      type: object
+                      properties:
+                        pattern:
+                          type: string
+                        projectName:
+                          type: string
+                        applicationName:
+                          type: string
+                        sraqID:
+                          type: string
+                        cristalID:
+                          type: string
+                        locations:
+                          type: string
+                        organizationName:
+                          type: string
+                        projectNameADO:
+                          type: string
+                        threeLetterCode:
+                          type: string
+                        eightLetterCode:
+                          type: string
+                example:
+                  resources:
+                    repositories:
+                      self:
+                        refName: refs/heads/main
+                  templateParameters:
+                    pattern: "ADFB"
+                    projectName: "MyProject"
+                    applicationName: "MyApplication"
+                    sraqID: "SRAQ-12345"
+                    cristalID: "CR-67890"
+                    locations: "northeurope"
+                    organizationName: "sdxcloud"
+                    projectNameADO: "IST.GLB.GLB.DataDigitalFactory_24HCloudFormation"
+                    threeLetterCode: "ABC"
+                    eightLetterCode: "ABC12345"
+          responses:
+            '200':
+              description: Successfully triggered pipeline run
+            '401':
+              description: Unauthorized - invalid or missing PAT
+            '400':
+              description: Bad request - invalid payload or parameters
+            '500':
+              description: Internal server error
+          security:
+            - basicAuth: []
+    components:
+      securitySchemes:
+        basicAuth:
+          type: http
+          scheme: basic
 ---
