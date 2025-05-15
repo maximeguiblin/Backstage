@@ -42,6 +42,9 @@ ENV BACK_ENDPOINT=$BACK_ENDPOINT
 RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-azure
 RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops
 RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops-backend
+RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs
+RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request
+
 # Patch config files for dev run
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
 # Start backstage frontend or backend or both depending on arguments

@@ -83,7 +83,7 @@ spec:
 
   # These steps are executed in the scaffolder backend
   steps:
-    - id: log-input
+    - id: log-input-parameters
       name: Log Input Parameters
       action: debug:log
       input:
@@ -96,13 +96,13 @@ spec:
           Location: ${{ parameters.location }}
           Size: ${{ parameters.size }}
           OS Version: ${{ parameters.osVersion }}
-    - id: log-input
+    - id: validate-inputs
       name: Validate Inputs
       action: debug:log
       input:
         message: |
           Validating inputs for VM provisioning
-    - id: log-input
+    - id: check-credentials
       name: Checking credentials
       action: debug:log
       input:
