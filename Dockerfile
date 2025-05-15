@@ -38,13 +38,17 @@ ENV START_COMMAND=$START_COMMAND
 ENV FRONT_ENDPOINT=$FRONT_ENDPOINT
 ENV CORS_ENDPOINT=$CORS_ENDPOINT
 ENV BACK_ENDPOINT=$BACK_ENDPOINT
-# Install plugins
+# Install backend plugins
 RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-azure
 RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops
 RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops-backend
 RUN corepack yarn --cwd packages/backend add @parfuemerie-douglas/scaffolder-backend-module-azure-pipelines
 RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs
 RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request
+RUN corepack yarn --cwd packages/backend add @drodil/backstage-plugin-qeta-backend@3.21.0
+# Install app plugins
+RUN corepack yarn --cwd packages/app add @drodil/backstage-plugin-qeta
+
 # Patch config files for dev run
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
 # Start backstage frontend or backend or both depending on arguments

@@ -133,7 +133,7 @@ catalog:
     - type: file
       target: ../../sodexo/templates/azure-patterns-template.yaml
       rules:
-        - allow: [Template]        
+        - allow: [Template]
 
     ## Uncomment these lines to add more example data
     # - type: url
@@ -167,3 +167,9 @@ permission:
 azureDevOps:
   host: dev.azure.com
   organization: sdxcloud
+
+qeta:
+  permission:
+    enabled: false
+  authentication:
+    required: false
