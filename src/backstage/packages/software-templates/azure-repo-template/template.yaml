@@ -23,7 +23,6 @@ spec:
         - add_notebooks
         - organization
         - project
-        - pipelineId
         - branch
       properties:
         author_name:
@@ -75,38 +74,15 @@ spec:
           type: string
         project:
           type: string
-        pipelineId:
-          type: string
         branch:
           type: string
           default: main
 
   steps:
-    - id: write-config
-      name: Write config JSON for pipeline
-      action: fs:write
-      input:
-        path: cookiecutter-config.json
-        content: |
-          {
-            "author_name": "${{ parameters.author_name }}",
-            "author_email": "${{ parameters.author_email }}",
-            "project_name": "${{ parameters.project_name }}",
-            "project_slug": "${{ parameters.project_slug }}",
-            "project_short_description": "${{ parameters.project_short_description }}",
-            "project_infra": "${{ parameters.project_infra }}",
-            "usecase_name": "${{ parameters.usecase_name }}",
-            "version": "${{ parameters.version }}",
-            "code_license": "${{ parameters.code_license }}",
-            "add_notebooks": "${{ parameters.add_notebooks }}"
-          }
-
-    - id: trigger-pipeline
+    - id: run-azure-pipeline
       name: Trigger Azure DevOps Pipeline
-      action: azure:devops:runPipelineWithParameters
+      action: azure:pipeline:run
       input:
         organization: ${{ parameters.organization }}
         project: ${{ parameters.project }}
-        pipelineId: ${{ parameters.pipelineId }}
-        branch: ${{ parameters.branch }}
-        filePath: cookiecutter-config.json
+        pipelineId: "8853"
