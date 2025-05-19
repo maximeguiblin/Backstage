@@ -14,75 +14,74 @@ spec:
         - author_name
         - author_email
         - project_name
-        - project_slug
-        - project_short_description
+        - repo_name
+        - repo_slug
+        - short_description
         - project_infra
         - usecase_name
         - version
         - code_license
         - add_notebooks
-        - organization
-        - project
-        - branch
       properties:
         author_name:
+          type: string
           default: "Data Factory"
-          type: string
         author_email:
+          type: string
           default: "nicolas.marchand@sodexo.com"
-          type: string
         project_name:
-          default: "Test-Dummy-Project"
           type: string
-        project_slug:
+          default: "GLB.GLB.DataLab.AIPlatform"
+        repo_name:
+          type: string
+          description: "A repo that already exists in the Azure DevOps project"
+        repo_slug:
+          type: string
           default: "test_dummy_project"
+        short_description:
           type: string
-        project_short_description:
-          type: string
+          default: "This repository contains all the structure code you need to create a AIP Project compatible with Sodexo Data Factory AI Platform."
         project_infra:
           type: string
           description: "Choose the type of infrastructure this project will target"
-          enum: ["1", "2", "3", "4", "5"]
-          enumNames:
-            - "ADB"
-            - "AML"
-            - "AML2"
-            - "APP"
-            - "ALL"
+          enum: ["adb", "aml", "aml2", "app", "all"]
         usecase_name:
-          default: "test_dummy_project"
           type: string
+          default: "test_dummy_project"
         version:
           type: string
           default: "0.1.0"
         code_license:
           type: string
-          description: "Choose the licence for this project"
-          enum: ["1", "2", "3", "4", "5", "6"]
-          enumNames:
-            - "SODEXO license"
-            - "MIT license"
-            - "BSD license"
-            - "ISC license"
-            - "Apache Software License 2.0"
-            - "GNU General Public License v3"
+          enum: ["SODEXO license", "MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3"]
+          default: "SODEXO license"
         add_notebooks:
-          default: "n"
           type: string
           enum: ["y", "n"]
-        organization:
-          type: string
-        project:
-          type: string
+          default: "n"
         branch:
           type: string
-          default: main
+          description: "Branch to trigger the pipeline on"
+          default: "develop"
 
   steps:
     - id: run-azure-pipeline
       name: Trigger Azure DevOps Pipeline
       action: azure:pipeline:run
       input:
-        organization: ${{ parameters.organization }}
-        project: ${{ parameters.project }}
+        organization: "sdxcloud"
+        project: "GLB.GLB.DataLab.AIPlatform"
         pipelineId: "8853"
+        branch: ${{ parameters.branch }}
+        pipelineParameters:
+          author_name: ${{ parameters.author_name }}
+          author_email: ${{ parameters.author_email }}
+          project_name: ${{ parameters.project_name }}
+          repo_name: ${{ parameters.repo_name }}
+          repo_slug: ${{ parameters.repo_slug }}
+          short_description: ${{ parameters.short_description }}
+          project_infra: ${{ parameters.project_infra }}
+          usecase_name: ${{ parameters.usecase_name }}
+          version: ${{ parameters.version }}
+          code_license: ${{ parameters.code_license }}
+          add_notebooks: ${{ parameters.add_notebooks }}
