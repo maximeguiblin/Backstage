@@ -34,6 +34,13 @@ name = "PPP"
 url = "https://sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/"
 priority = "supplemental"
 
+[tool.poetry.group.aip]
+optional = true
+
+[tool.poetry.group.aip.dependencies]
+aipcli-core = "1.3.2"
+aipcli-app = "1.3.2"
+
 [build-system]
 requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"

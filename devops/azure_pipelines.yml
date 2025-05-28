@@ -27,8 +27,108 @@ jobs:
           fi
         displayName: "Validate source branch"
 
-  - job: Tests
+  - job: Linter
+    pool:
+      vmImage: 'ubuntu-24.04'
 
+#      - bash: |
+#          if [[ -d backstage ]]; then cd backstage ; fi
+#          aip core code check --exclude venv --tool black --tool isort
+#          git diff && git diff-index --quiet HEAD
+#          if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
+#              echo "Exiting with failure because local diff was found after checking code format";
+#              exit 1;
+#          fi
+#          git checkout .
+#        displayName: Run code formatting checks (black, isort)
+
+
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'
+        displayName: 'Install Node.js'
+
+      - bash: |
+          cd src/backstage
+          yarn install
+          if [ "$(Build.Reason)" == "PullRequest" ]; then
+            echo "Inspecting changed files with linter"
+            # Get list of changed files in the PR
+            cd ../..
+            CHANGED_FILES=$(git diff --name-only origin/$(System.PullRequest.TargetBranch) HEAD)
+            # Filter for JavaScript/TypeScript files
+            JS_FILES=$(echo "$CHANGED_FILES" | grep -E '\.(js|jsx|ts|tsx)$' || true)
+            if [ -n "$JS_FILES" ]; then
+              echo "Running ESLint on changed files:"
+              echo "$JS_FILES"
+              yarn lint
+            else
+              echo "No JavaScript/TypeScript files changed in this PR"
+            fi
+          else
+            echo "Inspecing repo with linter"
+            # Run on all files if not a PR
+            yarn lint:all
+          fi
+          if [ "$?" != 0 ]; then
+              echo "Exiting with failure because ESLint found issues";
+              exit 1;
+          fi
+        displayName: Run ESLint
+
+#      - script: |
+#          sudo apt-get install -qq -y graphviz
+#        displayName: Install docs pre-dependencies
+#
+#     - script: |
+#         echo "Current branch is $(Build.SourceBranch)"
+#         if [[ $(Build.SourceBranch) == "refs/heads/master" ]]; then
+#           VERSION='latest'
+#         elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
+#           VERSION='merge'
+#         elif [[ $(Build.SourceBranch) == "refs/heads/dev" ]]; then
+#           VERSION='merge'
+#         else
+#           VERSION='tmp'
+#         fi
+#         PATHDOC=docs/build/html/
+#         echo "##vso[task.setvariable variable=VERSION]$VERSION"
+#         echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
+#         echo "Found VERSION=$VERSION"
+#         echo "Found PATHDOC=$PATHDOC"
+#       displayName: Get docs version
+#
+#     - script: |
+#         if [[ -d backstage ]]; then cd backstage ; fi
+#         aip core docs build --add_markdowns --add_diagrams --install_packages
+#         if [[ ! -d $(PATHDOC) ]];
+#         then
+#           echo "Not found generated doc at path $(PATHDOC)"
+#           exit 1
+#         fi
+#       displayName: Build docs
+#
+#     - task: AzureCLI@2
+#       inputs:
+#         azureSubscription: '$(docsServiceConnection)'
+#         scriptType: 'bash'
+#         scriptLocation: 'inlineScript'
+#         inlineScript: |
+#           if [[ -d backstage ]]; then cd backstage ; fi
+#           aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore cookiecutter_project_slug/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
+#       displayName: Upload new docs
+
+
+  - job: Deploy
+    dependsOn: Linter
+    condition: and(
+        succeeded(),
+        or(
+            eq(variables['Build.SourceBranch'], 'refs/heads/master'),
+            eq(variables['deploy'], 'true')
+        )
+      )
     pool:
       vmImage: 'ubuntu-24.04'
     strategy:
@@ -46,103 +146,17 @@ jobs:
         inputs:
           artifactFeeds: $(artifactFeeds)
           onlyAddExtraIndex: true
-        condition: or(
-          eq(variables['System.CollectionId'], '944af632-eef0-4851-accd-f68e6a620d3b'),
-          eq(variables['System.CollectionUri'], 'https://sdxcloud.visualstudio.com/')
-          )
         displayName: Pip authentication (sdxcloud only)
 
-      - task: PipAuthenticate@1
-        inputs:
-          onlyAddExtraIndex: true
-          pythonDownloadServiceConnections: $(PythonDownloadServiceConnections)
-        condition: and(
-          ne(variables['System.CollectionId'], '944af632-eef0-4851-accd-f68e6a620d3b'),
-          ne(variables['System.CollectionUri'], 'https://sdxcloud.visualstudio.com/')
-          )
-        displayName: Pip authentication (not sdxcloud)
-
-      - task: Cache@2
-        inputs:
-          key: poetry.lock
-          path: $(System.DefaultWorkingDirectory)
-          cacheHitVar: POETRY_CACHE_RESTORED
-        displayName: Cache dependencies
-
       - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev --install_group core
+          pip install --upgrade pip
+          pip install aipcli-core aipcli-app
         displayName: Install dependencies
 
       - bash: |
-          set -e
-          if [[ -d backstage ]]; then cd backstage ; fi
-          aip core code check --exclude venv --tool black --tool isort
-          git diff && git diff-index --quiet HEAD
-          if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
-              echo "Exiting with failure because local diff was found after checking code format";
-              exit 1;
-          fi
-          git checkout .
-        displayName: Run code formatting checks (black, isort)
-
-      - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          export PYTHONPATH=src:$PYTHONPATH
-          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
-        displayName: Run tests with coverage
-
-      - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          export PYTHONPATH=src:$PYTHONPATH
-          coverage report -m --include="src/*"
-          coverage html -d cov_reports --include="src/*"
-          coverage xml --skip-empty -o cov_reports/coverage.xml --include="src/*"
-        displayName: Generate coverage reports
-
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: '**/test-*.xml'
-        displayName: Publish tests results
-
-      - task: PublishCodeCoverageResults@1
-        inputs:
-            codeCoverageTool: Cobertura
-            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        displayName: Publish tests coverage results
-
-      - script: |
-          sudo apt-get install -qq -y graphviz
-        displayName: Install docs pre-dependencies
-
-      - script: |
-          echo "Current branch is $(Build.SourceBranch)"
-          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
-            VERSION='latest'
-          elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
-            VERSION='merge'
-          elif [[ $(Build.SourceBranch) == "refs/heads/dev" ]]; then
-            VERSION='merge'
-          else
-            VERSION='tmp'
-          fi
-          PATHDOC=docs/build/html/
-          echo "##vso[task.setvariable variable=VERSION]$VERSION"
-          echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
-          echo "Found VERSION=$VERSION"
-          echo "Found PATHDOC=$PATHDOC"
-        displayName: Get docs version
-
-      - script: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          aip core docs build --add_markdowns --add_diagrams --install_packages
-          if [[ ! -d $(PATHDOC) ]];
-          then
-            echo "Not found generated doc at path $(PATHDOC)"
-            exit 1
-          fi
-        displayName: Build docs
+          aip app container build --container_name backstage_app_front
+          aip app container build --container_name backstage_app_back
+        displayName: Build containers
 
       - task: AzureCLI@2
         inputs:
@@ -150,41 +164,6 @@ jobs:
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            if [[ -d backstage ]]; then cd backstage ; fi
-            aip core docs push --path_local $(PATHDOC) --account_name aziest1doc999 --datastore documentation --path_in_datastore cookiecutter_project_slug/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
-        displayName: Upload new docs
-
-
-  - job: TagVersion
-    dependsOn: Tests
-    condition: and(
-        succeeded(),
-        eq(variables['Build.SourceBranch'], 'refs/heads/main')
-      )
-    pool:
-      vmImage: 'ubuntu-24.04'
-    strategy:
-      matrix:
-        Python310:
-          python.version: '3.10'
-
-    steps:
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: "$(python.version)"
-        displayName: "Use Python $(python.version)"
-
-      - bash: |
-          if [[ -d backstage ]]; then exit 0; fi
-          current_tag=$(git tag --points-at HEAD)
-          echo "Current tag HEAD: $current_tag"
-          if [ -z $current_tag ];
-          then
-              echo "No tag found on current HEAD. Will create new one";
-              pip install toml
-              python setup_packaging.py --setup_tagging
-              git -c http.extraheader="AUTHORIZATION:bearer $(System.AccessToken)" push origin --tags
-          else
-              echo "Already found tag on current HEAD. Skipping creation."
-          fi
-        displayName: Create and push next tag version
+            aip core login --force_login
+            aip app container deploy --all
+        displayName: 'Deploy backstage app'
