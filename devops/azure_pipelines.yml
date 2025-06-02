@@ -9,7 +9,7 @@ variables:
   docsServiceConnection: "IFM_CORE_DEV"
 
 trigger:
-- master
+- main
 - develop
 
 
@@ -18,9 +18,9 @@ jobs:
     displayName: Validate Source Branch
     steps:
       - script: |
-          if [[ "$(System.PullRequest.TargetBranch)" == "refs/heads/master" ]] && [[ "$(System.PullRequest.SourceBranch)" != "refs/heads/develop" ]];
+          if [[ "$(System.PullRequest.TargetBranch)" == "refs/heads/main" ]] && [[ "$(System.PullRequest.SourceBranch)" != "refs/heads/develop" ]];
           then
-            echo "Pull requests to 'master' are only allowed from 'develop'."
+            echo "Pull requests to 'main' are only allowed from 'develop'."
             exit 1
           else
             echo "Validation of source branch success"
@@ -118,7 +118,7 @@ jobs:
 
       - script: |
           echo "Current branch is $(Build.SourceBranch)"
-          if [[ $(Build.SourceBranch) == "refs/heads/master" ]]; then
+          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
             VERSION='latest'
           elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
             VERSION='merge'
@@ -159,7 +159,7 @@ jobs:
     dependsOn: Tests
     condition: and(
         succeeded(),
-        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        eq(variables['Build.SourceBranch'], 'refs/heads/main')
       )
     pool:
       vmImage: 'ubuntu-24.04'
