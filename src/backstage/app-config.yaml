@@ -106,11 +106,6 @@ catalog:
       rules:
         - allow: [Template]
 
-    - type: file
-      target: ../software-templates/azure-repo-template/template.yaml
-      rules:
-        - allow: [Template]
-
     # Local example organizational data
     - type: file
       target: ../../examples/org.yaml
