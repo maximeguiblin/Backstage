@@ -1,0 +1,66 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: trigger-bicep-pipeline
+  title: Provisioning resources in SDX Sandbox
+  description: Collects parameters and triggers an Azure DevOps pipeline with them.
+spec:
+  owner: platform-team
+  type: service
+
+  parameters:
+  - title: Azure resources selection
+    required:
+      - resource_group
+      - resource_suffix
+      - pattern
+    description: "Select the Azure resources you want to deploy using Bicep templates."
+    properties:
+      resource_group:
+          type: string
+          description: "Name of the existing Resource Group"
+      resource_suffix:
+          type: string
+          description: "Specify a suffix for naming the instances in your group (must be 6 characters long)"
+          minLength: 6
+          maxLength: 6
+      pattern:
+        title: Select a pattern
+        type: string
+        oneOf:
+          - title: Pattern 1 (Azure Databricks + Azure Storage Account + Azure Key Vault + Azure App Insights)
+            const: pattern_sandbox_adb
+          - title: Pattern 2 (Azure Machine Learning + Azure Storage Account + Azure Key Vault + Azure Container Registry + Azure App Insight)
+            const: pattern_sandbox_amls
+      user_login:
+        title: Use your login identity
+        type: string
+        oneOf:
+          - title: No, use identity of Backstage to log in for provisioning
+            const: "false"
+          - title: Yes, use my own identity to log in for provisioning
+            const: "true"
+      project_repository:
+          type: string
+          description: "Reference your repository url where the infra config files will be pushed (e.g 'https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/test_dummy_project')"
+          default: ""
+      branch:
+          type: string
+          description: "Branch to trigger the pipeline on"
+          default: ""
+
+  steps:
+    - id: run-azure-pipeline
+      name: Trigger Azure DevOps Pipeline
+      action: azure:pipeline:run
+      input:
+        organization: "sdxcloud"
+        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
+        pipelineId: "8986"
+        branch: ${{ parameters.branch }}
+        pipelineParameters:
+          resource_group: ${{ parameters.resource_group }}
+          resource_suffix: ${{ parameters.resource_suffix }}
+          pattern: ${{ parameters.pattern }}
+          user_login: ${{ parameters.user_login }}
+          project_repository: ${{ parameters.project_repository }}
