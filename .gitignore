@@ -8,6 +8,7 @@ variables.json
 /src/cookiecutter_project_slug
 .streamlit-deployment/
 data.json
+src/backstage/__version__.py
 
 # tmp directory
 tmp
