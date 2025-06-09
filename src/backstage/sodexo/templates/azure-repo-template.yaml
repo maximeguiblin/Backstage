@@ -14,9 +14,8 @@ spec:
         - author_name
         - author_email
         - project_name
-        - repo_name
-        - repo_slug
-        - short_description
+        - project_slug
+        - project_short_description
         - project_infra
         - usecase_name
         - version
@@ -32,13 +31,10 @@ spec:
         project_name:
           type: string
           default: "GLB.GLB.DataLab.AIPlatform"
-        repo_name:
-          type: string
-          description: "A repo that already exists in the Azure DevOps project"
-        repo_slug:
+        project_slug:
           type: string
           default: "test_dummy_project"
-        short_description:
+        project_short_description:
           type: string
           default: "This repository contains all the structure code you need to create a AIP Project compatible with Sodexo Data Factory AI Platform."
         project_infra:
@@ -59,10 +55,36 @@ spec:
           type: string
           enum: ["y", "n"]
           default: "n"
+
+    - title: Infra Parameters
+      required:
+        - project_repository_url
+        - subscription
+        - resource_group
+        - user_login
+      properties:
+        project_repository_url:
+          type: string
+          description: "A URL of the repository to push CookieCutter output"
+        subscription:
+          type: string
+          description: "Azure Subscription to retrieve resources"
+        resource_group:
+          type: string
+          description: "Azure Resource Group to retrieve resources"
+        user_login:
+          title: Use your login identity
+          type: string
+          oneOf:
+            - title: No, use identity of Backstage to log in for retrieving resources
+              const: "false"
+            - title: Yes, use my own identity to log in for retrieving resources
+              const: "true"
         branch:
           type: string
           description: "Branch to trigger the pipeline on"
           default: "develop"
+        
 
   steps:
     - id: run-azure-pipeline
@@ -72,16 +94,19 @@ spec:
         organization: "sdxcloud"
         project: "GLB.GLB.DataLab.AIPlatform"
         pipelineId: "8853"
-        branch: ${{ parameters.branch }}
+        branch: master
         pipelineParameters:
           author_name: ${{ parameters.author_name }}
           author_email: ${{ parameters.author_email }}
           project_name: ${{ parameters.project_name }}
-          repo_name: ${{ parameters.repo_name }}
-          repo_slug: ${{ parameters.repo_slug }}
-          short_description: ${{ parameters.short_description }}
+          project_slug: ${{ parameters.project_slug }}
+          project_short_description: ${{ parameters.project_short_description }}
           project_infra: ${{ parameters.project_infra }}
           usecase_name: ${{ parameters.usecase_name }}
           version: ${{ parameters.version }}
           code_license: ${{ parameters.code_license }}
           add_notebooks: ${{ parameters.add_notebooks }}
+          project_repository_url: ${{ parameters.project_repository_url }}
+          subscription: ${{ parameters.subscription }}
+          resource_group: ${{ parameters.resource_group }}
+          user_login: ${{ parameters.user_login }}
