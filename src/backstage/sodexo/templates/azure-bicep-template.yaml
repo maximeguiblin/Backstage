@@ -41,7 +41,8 @@ spec:
             - Databricks
             - DataFactory
         uniqueItems: true
-        ui:widget: checkboxes
+        ui:options:
+          widget: checkboxes
       user_login:
         title: Use your login identity
         type: string
@@ -72,6 +73,6 @@ spec:
           resource_group: ${{ parameters.resource_group }}
           resource_suffix: ${{ parameters.resource_suffix }}
           pattern: ${{ parameters.pattern }}
-          extra_resources: ${{ parameters.extra_resources }}
+          extra_resources: ${{ parameters.extra_resources | join(",") }}
           user_login: ${{ parameters.user_login }}
           project_repository: ${{ parameters.project_repository }}
