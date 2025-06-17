@@ -38,8 +38,11 @@ spec:
         items:
           type: string
           enum:
-            - Databricks
-            - DataFactory
+            - databricks
+            - datafactory
+          enumNames:
+            - Azure Databricks
+            - Azure DataFactory
         uniqueItems: true
         ui:options:
           widget: checkboxes
