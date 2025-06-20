@@ -39,15 +39,15 @@ ENV FRONT_ENDPOINT=$FRONT_ENDPOINT
 ENV CORS_ENDPOINT=$CORS_ENDPOINT
 ENV BACK_ENDPOINT=$BACK_ENDPOINT
 # Install backend plugins
-RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-azure
-RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops
-RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops-backend
-RUN corepack yarn --cwd packages/backend add @parfuemerie-douglas/scaffolder-backend-module-azure-pipelines
-RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs
-RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request
+RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-azure@0.3.5
+RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops@0.16.0
+RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-azure-devops-backend@0.17.0
+RUN corepack yarn --cwd packages/backend add @parfuemerie-douglas/scaffolder-backend-module-azure-pipelines@1.3.0
+RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs@0.1.10
+RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request@5.3.2
 RUN corepack yarn --cwd packages/backend add @drodil/backstage-plugin-qeta-backend@3.21.0
 # Install app plugins
-RUN corepack yarn --cwd packages/app add @drodil/backstage-plugin-qeta
+RUN corepack yarn --cwd packages/app add @drodil/backstage-plugin-qeta@3.31.4
 
 # Patch config files for dev run
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi
