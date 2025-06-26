@@ -1,0 +1,125 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: AI-Platform
+  description: AI Platform project is a made to help deliver complex data projects in a quick, secure and standardised way while being compliant with Sodexo policies in terms of security and infrastructure.
+  links:
+    - url: https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_workitems
+      title: Azure DevOps Board
+spec:
+  type: usecase
+  profile:
+    displayName: AI Platform
+  lifecycle: experimental
+  owner: AIP-SQUAD
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.AIPlatform.Cookiecutter
+  description: This repository contains all the structure code you need to create a AIP Project compatible with Sodexo Data Factory AI Platform.
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.Cookiecutter
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Cookiecutter
+spec:
+  type: repo
+  owner: AIP-SQUAD
+  subcomponentOf: AI-Platform
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.AIPlatform.CLI
+  description: AIPCLI is a utility providing a command line interface to interact with AI Platform environments and assets.
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.CLI
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.CLI
+  links:
+    - url: https://aip.datalab.sodexo.com/aip/docs/cli
+      title: CLI documentation
+spec:
+  type: repo
+  owner: AIP-SQUAD
+  subcomponentOf: AI-Platform
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.AIPlatform.SDK
+  description: AIPSDK is a Python library providing a set of classes and methods to interact with AI Platform environments and assets from any Python project.
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.SDK
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.SDK
+  links:
+    - url: https://aip.datalab.sodexo.com/aip/docs/sdk
+      title: SDK documentation
+spec:
+  type: repo
+  owner: AIP-SQUAD
+  subcomponentOf: AI-Platform
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: AIP-SQUAD
+  description: AIPlatform Team
+spec:
+  type: team
+  profile:
+    email: hamed.ky@sodexo.com
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: hamed.ky
+spec:
+  profile:
+    displayName: Hamed Ky
+    email: hamed.ky@sodexo.com
+  memberOf: [AIP-SQUAD]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: maeliza.semmour
+spec:
+  profile:
+    displayName: Maeliza Semmour
+    email: maeliza.semmour@sodexo.com
+  memberOf: [AIP-SQUAD]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: christophe.gougam
+spec:
+  profile:
+    displayName: Christophe Gougam
+    email: christophe.gougam.ext@sodexo.com
+  memberOf: [AIP-SQUAD]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: samuel.rochette
+spec:
+  profile:
+    displayName: Samuel Rochette
+    email: samuel.rochette@sodexo.com
+  memberOf: [AIP-SQUAD]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: adrien.broussolle
+spec:
+  profile:
+    displayName: Adrien Broussolle
+    email: adrien.broussolle.ext@sodexo.com
+  memberOf: [AIP-SQUAD]

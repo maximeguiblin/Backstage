@@ -6,6 +6,11 @@ app:
     # Uncomment the following host directive to bind to specific interfaces
     host: 0.0.0.0
 
+azureDevOps:
+  host: dev.azure.com
+  organization: sdxcloud
+  token: ${BACKSTAGE_ACCESS_TOKEN}
+
 organization:
   name: My Company
 
@@ -60,6 +65,10 @@ integrations:
         # - clientId: ${BACKSTAGE_CLIENT_ID}
         #   clientSecret: ${BACKSTAGE_CLIENT_SECRET}
         #   tenantId: ${BACKSTAGE_TENANT_ID}
+  azureDevOps:
+    - host: dev.azure.com
+      organization: sdxcloud
+      token: ${BACKSTAGE_ACCESS_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
@@ -130,17 +139,17 @@ catalog:
       rules:
         - allow: [Template]
 
-    # Azure Repo template
+    # AIP templates
     - type: file
-      target: ../../sodexo/templates/azure-repo-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Bicep template
-    - type: file
-      target: ../../sodexo/templates/azure-bicep-template.yaml
+      target: ../../sodexo/aip-template.yaml
       rules:
         - allow: [Template] 
+
+    # AIP catalog
+    - type: file
+      target: ../../sodexo/aip-catalog.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location]
 
     ## Uncomment these lines to add more example data
     # - type: url
@@ -170,10 +179,6 @@ kubernetes:
 permission:
   # setting this to `false` will disable permissions
   enabled: true
-
-azureDevOps:
-  host: dev.azure.com
-  organization: sdxcloud
 
 qeta:
   permission:
