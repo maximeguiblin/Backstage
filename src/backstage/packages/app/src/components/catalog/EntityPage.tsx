@@ -35,7 +35,7 @@ import {
   hasRelationWarnings,
   isComponentType,
   isKind,
-  isOrphan,
+  isOrphan
 } from '@backstage/plugin-catalog';
 import {
   Direction,
@@ -65,6 +65,8 @@ import {
   isAzureDevOpsAvailable,
 } from '@backstage-community/plugin-azure-devops';
 
+import { CustomEntityLinksCard } from './SimpleLinksTable';
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -72,6 +74,7 @@ const techdocsContent = (
     </TechDocsAddons>
   </EntityTechdocsContent>
 );
+
 
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
@@ -300,6 +303,23 @@ const defaultEntityPage = (
   </EntityLayout>
 );
 
+const infraEnvironmentEntityPage = (
+  <EntityLayout>
+    <EntityLayout.Route path="/" title="Overview">
+      {overviewContent}
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/resource-group" title="Resource Group">
+      <CustomEntityLinksCard filterType="resource-group" />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/spn" title="SPN">
+      <CustomEntityLinksCard filterType="service-principal" />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/ad-group" title="AD Group">
+      <CustomEntityLinksCard filterType="ad-group" />
+    </EntityLayout.Route>
+  </EntityLayout>
+);
+
 const componentPage = (
   <EntitySwitch>
     <EntitySwitch.Case if={isComponentType('service')}>
@@ -312,6 +332,10 @@ const componentPage = (
 
     <EntitySwitch.Case if={isComponentType('repo')}>
       {repoEntityPage}
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isComponentType('infra-environment')}>
+      {infraEnvironmentEntityPage}
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
@@ -476,55 +500,6 @@ const usecasePage = (
   </EntityLayout>
 );
 
-const repoPage = (
-  <EntityLayout>
-    <EntityLayout.Route path="/" title="Overview">
-      {overviewContent}
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      {cicdContent}
-    </EntityLayout.Route>
-
-    <EntityLayout.Route
-      path="/kubernetes"
-      title="Kubernetes"
-      if={isKubernetesAvailable}
-    >
-      <EntityKubernetesContent />
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/dependencies" title="Dependencies">
-      <Grid container spacing={3} alignItems="stretch">
-        <Grid item md={6}>
-          <EntityDependsOnComponentsCard variant="gridItem" />
-        </Grid>
-        <Grid item md={6}>
-          <EntityDependsOnResourcesCard variant="gridItem" />
-        </Grid>
-      </Grid>
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/readme" title="README">
-      <EntitySwitch>
-        <EntitySwitch.Case if={isAzureDevOpsAvailable}>
-          <Grid item xs={12}>
-            <EntityAzureReadmeCard />
-          </Grid>
-        </EntitySwitch.Case>
-      </EntitySwitch>
-    </EntityLayout.Route>
-
-    <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
-      <EntityAzurePullRequestsContent defaultLimit={25} />
-    </EntityLayout.Route>
-  </EntityLayout>
-);
-
 export const entityPage = (
   <EntitySwitch>
     <EntitySwitch.Case if={isKind('component')} children={componentPage} />
@@ -534,7 +509,6 @@ export const entityPage = (
     <EntitySwitch.Case if={isKind('system')} children={systemPage} />
     <EntitySwitch.Case if={isKind('domain')} children={domainPage} />
     <EntitySwitch.Case if={isKind('usecase')} children={usecasePage} />
-    <EntitySwitch.Case if={isKind('repo')} children={repoPage} />
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
   </EntitySwitch>
 );

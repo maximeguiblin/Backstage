@@ -9,9 +9,9 @@ metadata:
 spec:
   type: usecase
   profile:
-    displayName: AI Platform
+    displayName: AI-Platform
   lifecycle: experimental
-  owner: AIP-SQUAD
+  owner: aip-team
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -24,7 +24,7 @@ metadata:
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Cookiecutter
 spec:
   type: repo
-  owner: AIP-SQUAD
+  owner: aip-team
   subcomponentOf: AI-Platform
   lifecycle: experimental
 ---
@@ -42,7 +42,7 @@ metadata:
       title: CLI documentation
 spec:
   type: repo
-  owner: AIP-SQUAD
+  owner: aip-team
   subcomponentOf: AI-Platform
   lifecycle: experimental
 ---
@@ -60,18 +60,57 @@ metadata:
       title: SDK documentation
 spec:
   type: repo
-  owner: AIP-SQUAD
+  owner: aip-team
   subcomponentOf: AI-Platform
   lifecycle: experimental
 ---
 apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: SANDBOX
+  description: Component dedicated to the SANDBOX Azure environment.
+  links:
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: IST-GLB-IENO-AIPWE-BOX-RG01
+      type: resource-group
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: My-SPN
+      type: service-principal
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: My-AD-Group
+      type: ad-group
+spec:
+  type: infra-environment
+  profile:
+    displayName: SANDBOX
+  lifecycle: experimental
+  subcomponentOf: AI-Platform
+  owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: DEV
+  description: Component dedicated to the DEV Azure environment.
+spec:
+  type: infra-environment
+  profile:
+    displayName: DEV
+  lifecycle: experimental
+  subcomponentOf: AI-Platform
+  owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
 kind: Group
 metadata:
-  name: AIP-SQUAD
+  name: aip-team
   description: AIPlatform Team
 spec:
   type: team
+  parent: sodexo
+  children: []
   profile:
+    displayName: AI-Platform Team
     email: hamed.ky@sodexo.com
 ---
 apiVersion: backstage.io/v1alpha1
@@ -82,7 +121,7 @@ spec:
   profile:
     displayName: Hamed Ky
     email: hamed.ky@sodexo.com
-  memberOf: [AIP-SQUAD]
+  memberOf: [aip-team]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -92,7 +131,7 @@ spec:
   profile:
     displayName: Maeliza Semmour
     email: maeliza.semmour@sodexo.com
-  memberOf: [AIP-SQUAD]
+  memberOf: [aip-team]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -102,7 +141,7 @@ spec:
   profile:
     displayName: Christophe Gougam
     email: christophe.gougam.ext@sodexo.com
-  memberOf: [AIP-SQUAD]
+  memberOf: [aip-team]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -112,7 +151,7 @@ spec:
   profile:
     displayName: Samuel Rochette
     email: samuel.rochette@sodexo.com
-  memberOf: [AIP-SQUAD]
+  memberOf: [aip-team]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -122,4 +161,5 @@ spec:
   profile:
     displayName: Adrien Broussolle
     email: adrien.broussolle.ext@sodexo.com
-  memberOf: [AIP-SQUAD]
+  memberOf: [aip-team]
+---

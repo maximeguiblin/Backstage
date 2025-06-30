@@ -5,7 +5,7 @@ metadata:
   title: Provisioning resources in SDX Sandbox
   description: Initialize Azure resources to your Resource Group by providing information to this template.
 spec:
-  owner: AIP-SQUAD
+  owner: aip-team
   type: service
 
   parameters:
@@ -87,7 +87,7 @@ metadata:
   title: Initialize repository with CookieCutter template
   description: Initialize a new repository based on AIP CookieCutter template by providing information to this template.
 spec:
-  owner: AIP-SQUAD
+  owner: aip-team
   type: service
 
   parameters:

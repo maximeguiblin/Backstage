@@ -14,7 +14,7 @@ spec:
     displayName: Sodexo
     email: info@sodexo.com
     picture: https://edge.sitecorecloud.io/sodexofrance1-sodexocorpsites-prod-e74c/media/Project/Sodexo-Corp/Global/Media-prod/Images/Logos/Sodexo_Logotype_Blue.png?h=42&iar=0&w=131
-  children: [infrastructure]
+  children: [infrastructure, aip-team]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Group
