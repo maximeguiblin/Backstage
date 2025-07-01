@@ -47,7 +47,7 @@ export function EntityLinksEmptyState() {
   return (
     <>
       <Typography variant="body1">
-        {'entityLinksCard.emptyDescription'}
+        entityLinksCard.emptyDescription
       </Typography>
       <div className={classes.code}>
         <CodeSnippet

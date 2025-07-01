@@ -54,8 +54,8 @@ export const CustomEntityLinksCard = (props: EntityLinksCardProps) => {
       ) : (
         <LinksGridList
           cols={cols}
-          items={attributeData.map(({ url, title, icon }) => ({
-            text: title ?? url,
+          items={attributeData.map(({ url, title: linkTitle, icon }) => ({
+            text: linkTitle ?? url,
             href: url,
             Icon: iconResolver(icon),
           }))}
