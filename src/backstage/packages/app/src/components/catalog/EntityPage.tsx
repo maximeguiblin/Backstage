@@ -309,13 +309,13 @@ const infraEnvironmentEntityPage = (
       {overviewContent}
     </EntityLayout.Route>
     <EntityLayout.Route path="/resource-group" title="Resource Group">
-      <CustomEntityLinksCard filterType="resource-group" />
+      <CustomEntityLinksCard attribute_key="resource_group" title="List of Resource Groups" />
     </EntityLayout.Route>
     <EntityLayout.Route path="/spn" title="SPN">
-      <CustomEntityLinksCard filterType="service-principal" />
+      <CustomEntityLinksCard attribute_key="spn" title="List of Service Principals" />
     </EntityLayout.Route>
     <EntityLayout.Route path="/ad-group" title="AD Group">
-      <CustomEntityLinksCard filterType="ad-group" />
+      <CustomEntityLinksCard attribute_key="ad_group" title="List of AD Groups" />
     </EntityLayout.Route>
   </EntityLayout>
 );

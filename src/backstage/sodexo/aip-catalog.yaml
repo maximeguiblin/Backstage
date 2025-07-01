@@ -69,16 +69,23 @@ kind: Component
 metadata:
   name: SANDBOX
   description: Component dedicated to the SANDBOX Azure environment.
-  links:
+  resource_group:
     - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
       title: IST-GLB-IENO-AIPWE-BOX-RG01
-      type: resource-group
     - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
-      title: My-SPN
-      type: service-principal
+      title: GRP-EU-AIP-DEV-RG10
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: GLB-GLB-IENO-AIPSAWEB-PRD-RG01
+  spn: 
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: GLB-DATALAB.AZU-AIP.SHAREDAIP.eu-DEV
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: GLB-DATALAB.AZU-AIP.SHAREDAIP.eu-UAT
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
+      title: GLB-DATALAB.AZU-AIP.SHAREDAIP.eu-PRD
+  ad_group:
     - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
       title: My-AD-Group
-      type: ad-group
 spec:
   type: infra-environment
   profile:

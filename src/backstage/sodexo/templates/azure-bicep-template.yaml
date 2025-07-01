@@ -54,7 +54,7 @@ spec:
             const: "false"
           - title: Yes, use my own identity to log in for provisioning
             const: "true"
-      project_repository:
+      project_repository_url:
           type: string
           description: "Reference your repository url where the infra config files will be pushed (e.g 'https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/test_dummy_project')"
           default: ""
@@ -78,4 +78,4 @@ spec:
           pattern: ${{ parameters.pattern }}
           extra_resources: ${{ parameters.extra_resources | join(",") }}
           user_login: ${{ parameters.user_login }}
-          project_repository: ${{ parameters.project_repository }}
+          project_repository_url: ${{ parameters.project_repository_url }}

@@ -31,37 +31,30 @@ export type ColumnBreakpoints = Record<Breakpoint, number>;
 export interface EntityLinksCardProps {
   cols?: ColumnBreakpoints | number;
   variant?: InfoCardVariants;
-  filterType?: string;
+  attribute_key?: string;
+  title?: string;
 }
 
 
 export const CustomEntityLinksCard = (props: EntityLinksCardProps) => {
-  const { cols = undefined, variant, filterType } = props;
+  const { cols = undefined, variant, attribute_key, title } = props;
   const { entity } = useEntity();
   const app = useApp();
 
   const iconResolver = (key?: string): IconComponent =>
     key ? app.getSystemIcon(key) ?? LanguageIcon : LanguageIcon;
 
-  let links = entity?.metadata?.links;
-
-  // Filter links by type if filterType is provided, otherwise by title
-  if (filterType && links) {
-    links = links.filter(link => link.type === filterType);
-  }
-
-  // Format the card title - use filterType for display if available
-  const displayTitle = filterType;
-  const cardTitle = displayTitle ? `List of ${displayTitle}s` : 'customEntityLinksCard.title';
-
+  // Get the attribute value from metadata.attribute.url with defensive checks
+  const attributeData = entity?.metadata?.[attribute_key];
+  
   return (
-    <InfoCard title={cardTitle} variant={variant}>
-      {!links || links.length === 0 ? (
+    <InfoCard title={title} variant={variant}>
+      {!attributeData || attributeData.length === 0 ? (
         <EntityLinksEmptyState />
       ) : (
         <LinksGridList
           cols={cols}
-          items={links.map(({ url, title, icon }) => ({
+          items={attributeData.map(({ url, title, icon }) => ({
             text: title ?? url,
             href: url,
             Icon: iconResolver(icon),
@@ -70,4 +63,5 @@ export const CustomEntityLinksCard = (props: EntityLinksCardProps) => {
       )}
     </InfoCard>
   );
+
 };
