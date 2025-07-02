@@ -40,9 +40,11 @@ spec:
           enum:
             - databricks
             - datafactory
+            - datalake
           enumNames:
             - Azure Databricks
             - Azure DataFactory
+            - Azure DataLake
         uniqueItems: true
         ui:options:
           widget: checkboxes
