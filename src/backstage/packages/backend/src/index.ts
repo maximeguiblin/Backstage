@@ -58,5 +58,6 @@ backend.add(import('@backstage-community/plugin-azure-devops-backend'));
 backend.add(import('@parfuemerie-douglas/scaffolder-backend-module-azure-pipelines'))
 backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
 backend.add(import('@drodil/backstage-plugin-qeta-backend'));
+backend.add(import('@backstage-community/plugin-sonarqube-backend'));
 
 backend.start();

@@ -11,6 +11,18 @@ azureDevOps:
   organization: sdxcloud
   token: ${BACKSTAGE_ACCESS_TOKEN}
 
+# sonarqube:
+#   instances:
+#     - name: default
+#       baseUrl: https://scrutineer.sodexonet.com
+#       apiKey: squ_31330f69bceb785afc66f57474bdb71ec3e163ed
+sonarqube:
+  instances:
+    - name: sodexoSonarqube
+      instanceKey: sdxSonarqube
+      baseUrl: https://scrutineer.sodexonet.com
+      apiKey: sqa_e4c64ced1899ec7ffa5493b2d9a82481905657a8
+
 organization:
   name: My Company
 

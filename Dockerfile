@@ -46,8 +46,11 @@ RUN corepack yarn --cwd packages/backend add @parfuemerie-douglas/scaffolder-bac
 RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs@0.1.10
 RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request@5.3.2
 RUN corepack yarn --cwd packages/backend add @drodil/backstage-plugin-qeta-backend@3.21.0
+RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-sonarqube-backend@0.9.0
 # Install app plugins
 RUN corepack yarn --cwd packages/app add @drodil/backstage-plugin-qeta@3.31.4
+RUN corepack yarn --cwd packages/app add @backstage-community/plugin-sonarqube@0.14.0
+RUN corepack yarn --cwd packages/app add @backstage-community/plugin-sonarqube-react@0.7.0
 
 # Patch config files for dev run
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi

@@ -67,6 +67,9 @@ import {
 
 import { CustomEntityLinksCard } from './SimpleLinksTable';
 
+import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstage-community/plugin-sonarqube';
+import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -155,6 +158,14 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSonarQubeAvailable}>
+        <Grid item md={6}>
+          <EntitySonarQubeCard variant="gridItem" />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
   </Grid>
 );
 
@@ -255,6 +266,10 @@ const repoEntityPage = (
 
     <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
       <EntityAzurePullRequestsContent defaultLimit={25} />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/sonarqube" title="Sonarqube">
+      <SonarQubeRelatedEntitiesOverview relationType={RELATION_HAS_PART} entityKind="component" />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
