@@ -37,7 +37,6 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.CLI
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.CLI
-    # sonarqube.org/organization-key: test-organization-key
     sonarqube.org/project-key: sodexoSonarqube/GLB.GLB.DataLab.AIPlatform_GLB.GLB.DataLab.AIPlatform.CLI_AZZeC7NIZNnaRRY8khp8
   links:
     - url: https://aip.datalab.sodexo.com/aip/docs/cli
@@ -57,7 +56,6 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.SDK
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.SDK
-    # sonarqube.org/organization-key: test-organization-key
     sonarqube.org/project-key: sodexoSonarqube/GLB.GLB.DataLab.AIPlatform_GLB.GLB.DataLab.AIPlatform.SDK_AZXxa6KVZNnaRRY8khLc
   links:
     - url: https://aip.datalab.sodexo.com/aip/docs/sdk

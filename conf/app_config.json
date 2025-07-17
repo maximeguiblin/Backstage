@@ -72,7 +72,8 @@
                 "BACKSTAGE_CLIENT_ID": "{#{@infra.keyvault_secrets.backstage_client_id}}",
                 "BACKSTAGE_CLIENT_SECRET": "{#{@infra.keyvault_secrets.backstage_client_secret}}",
                 "BACKSTAGE_TENANT_ID": "{#{@infra.keyvault_secrets.backstage_tenant_id}}",
-                "BACKSTAGE_ACCESS_TOKEN": "{#{@infra.keyvault_secrets.backstage_access_token}}"
+                "BACKSTAGE_ACCESS_TOKEN": "{#{@infra.keyvault_secrets.backstage_access_token}}",
+                "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}"
             }
         }
     ],
