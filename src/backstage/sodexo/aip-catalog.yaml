@@ -172,3 +172,15 @@ spec:
     email: adrien.broussolle.ext@sodexo.com
   memberOf: [aip-team]
 ---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sdk-documentation
+  description: Documentation for the AIP SDK
+  annotations:
+    backstage.io/techdocs-ref: dir:./sdk-docs
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+  system: AI-Platform 

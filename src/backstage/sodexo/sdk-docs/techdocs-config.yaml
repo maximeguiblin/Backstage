@@ -1,0 +1,4 @@
+techdocs:
+  generator:
+    runIn: 'local'
+  builder: 'local' 
