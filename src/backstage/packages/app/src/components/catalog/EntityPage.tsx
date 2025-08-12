@@ -70,6 +70,8 @@ import { CustomEntityLinksCard } from './SimpleLinksTable';
 import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstage-community/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
 
+import { TrivyReportTab } from './TrivyReportTab';
+
 const techdocsContent = (
   <EntityTechdocsContent>
     <TechDocsAddons>
@@ -281,6 +283,10 @@ const repoEntityPage = (
           <EntityDependsOnResourcesCard variant="gridItem" />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+    
+    <EntityLayout.Route path="/trivy-report" title="Trivy Report">
+      <TrivyReportTab />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/docs" title="Docs">
