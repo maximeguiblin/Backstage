@@ -4,13 +4,12 @@
 ####################
 
 variables:
-  artifactFeeds: "AIP-feed"
+  artifactFeeds: AIP-feed
   PythonDownloadServiceConnections: AIPFeed_PythonPackageDownload
-  docsServiceConnection: "Srv_Cnx_AIP_SANDBOX"
+  docsServiceConnection: Srv_Cnx_AIP_SDXDEV
 
 trigger:
 - main
-- develop
 
 
 jobs:
@@ -25,27 +24,22 @@ jobs:
           else
             echo "Validation of source branch success"
           fi
-        displayName: "Validate source branch"
+        displayName: Check PR target branch for main
 
   - job: Tests
-
     pool:
-      vmImage: 'ubuntu-24.04'
-    strategy:
-      matrix:
-        Python310:
-          python.version: '3.10'
+      vmImage: ubuntu-24.04
 
     steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: "$(python.version)"
-        displayName: "Use Python $(python.version)"
+          versionSpec: 3.10
+        displayName: Use Python 3.10
 
       - task: NodeTool@0
         inputs:
-          versionSpec: '18.x'
-        displayName: 'Install Node.js'
+          versionSpec: 18.x
+        displayName: Install Node.js
 
       - task: PipAuthenticate@1
         inputs:
@@ -60,53 +54,17 @@ jobs:
 
       - bash: |
           set -e
-          echo "Starting to build backstage frontend container ..."
-          aip app container build --container_name backstage_app_front
-          echo "Successfully built backstage frontend container"
-
-          echo "Starting to build backstage backend container ..."
-          aip app container build --container_name backstage_app_back
-          echo "Successfully built backstage backend container"
-        displayName: Building containers
-
-#      - bash: |
-#          set -e
-#          if [[ -d backstage ]]; then cd backstage ; fi
-#          aip core code check --exclude venv --tool black --tool isort
-#          git diff && git diff-index --quiet HEAD
-#          if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
-#              echo "Exiting with failure because local diff was found after checking code format";
-#              exit 1;
-#          fi
-#          git checkout .
-#        displayName: Run code formatting checks (black, isort)
-
-#      - bash: |
-#          if [[ -d backstage ]]; then cd backstage ; fi
-#          export PYTHONPATH=src:$PYTHONPATH
-#          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
-#        displayName: Run tests with coverage
-
-#      - bash: |
-#          if [[ -d backstage ]]; then cd backstage ; fi
-#          export PYTHONPATH=src:$PYTHONPATH
-#          coverage report -m --include="src/*"
-#          coverage html -d cov_reports --include="src/*"
-#          coverage xml --skip-empty -o cov_reports/coverage.xml --include="src/*"
-#        displayName: Generate coverage reports
-
-#      - task: PublishTestResults@2
-#        inputs:
-#          testResultsFormat: 'JUnit'
-#          testResultsFiles: '**/test-*.xml'
-#        displayName: Publish tests results
-
-#      - task: PublishCodeCoverageResults@2
-#        inputs:
-#            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-#        displayName: Publish tests coverage results
-
-      - bash: |
+          
+          echo "Run AIP checks"
+          aip core code check --tool black --tool isort
+          git diff && git diff-index --quiet HEAD
+          if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
+              echo "Exiting with failure because local diff was found after checking code format";
+              exit 1;
+          fi
+          git checkout .
+          
+          echo "Run ESLint checks"
           cd src/backstage
           yarn install
           yarn lint:all
@@ -114,7 +72,24 @@ jobs:
               echo "Exiting with failure because ESLint found issues";
               exit 1;
           fi
-        displayName: Run ESLint
+        displayName: Run code formatting checks
+
+      - bash: |
+          if [[ -d backstage ]]; then cd backstage ; fi
+          export PYTHONPATH=src:$PYTHONPATH
+          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
+        displayName: Run tests with coverage
+
+      - bash: |
+          set -e
+          echo "Starting to build backstage frontend container ..."
+          aip app container build --container_name backstage_app_front
+          echo "Successfully built backstage frontend container"
+
+          echo "Starting to build backstage backend container ..."
+          aip app container build --container_name backstage_app_back
+          echo "Successfully built backstage backend container"
+        displayName: Build containers
 
       - script: |
           sudo apt-get install -qq -y graphviz
@@ -126,8 +101,6 @@ jobs:
             VERSION='latest'
           elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
             VERSION='merge'
-          elif [[ $(Build.SourceBranch) == "refs/heads/dev" ]]; then
-            VERSION='merge'
           else
             VERSION='tmp'
           fi
@@ -136,7 +109,7 @@ jobs:
           echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
           echo "Found VERSION=$VERSION"
           echo "Found PATHDOC=$PATHDOC"
-        displayName: Get docs version
+        displayName: Get doc version
 
       - script: |
           if [[ -d backstage ]]; then cd backstage ; fi
@@ -146,7 +119,7 @@ jobs:
             echo "Not found generated doc at path $(PATHDOC)"
             exit 1
           fi
-        displayName: Build docs
+        displayName: Build doc
 
       - task: AzureCLI@2
         inputs:
@@ -156,7 +129,7 @@ jobs:
           inlineScript: |
             if [[ -d backstage ]]; then cd backstage ; fi
             aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
-        displayName: Upload new docs
+        displayName: Push doc
 
 
   - job: Deploy
@@ -169,17 +142,13 @@ jobs:
         )
       )
     pool:
-      vmImage: 'ubuntu-24.04'
-    strategy:
-      matrix:
-        Python310:
-          python.version: '3.10'
+      vmImage: ubuntu-24.04
 
     steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: "$(python.version)"
-        displayName: "Use Python $(python.version)"
+          versionSpec: 3.10
+        displayName: Use Python 3.10
 
       - task: PipAuthenticate@1
         inputs:
@@ -206,12 +175,12 @@ jobs:
 
       - task: AzureCLI@2
         inputs:
-          azureSubscription: '$(docsServiceConnection)'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
+          azureSubscription: $(docsServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
           inlineScript: |
             aip app container deploy --all
-        displayName: 'Deploy backstage app'
+        displayName: Deploy backstage app
 
       - bash: |
           git -c http.extraheader="AUTHORIZATION:bearer $(System.AccessToken)" push origin --tags
