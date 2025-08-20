@@ -69,8 +69,9 @@ import { CustomEntityLinksCard } from './SimpleLinksTable';
 
 import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstage-community/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
-
 import { TrivyReportTab } from './TrivyReportTab';
+import { AipCheckTab } from './AipCheckTab';
+
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -291,6 +292,10 @@ const repoEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/aip-check" title="AIP Check">
+      <AipCheckTab />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/readme" title="README">

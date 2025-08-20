@@ -22,6 +22,7 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.Cookiecutter
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Cookiecutter
+    aip.check: https://aziest1doc001.blob.core.windows.net/report/aip/cookiecutter/aip_check.html?sp=r&st=2025-08-25T15:03:15Z&se=2025-10-10T23:18:15Z&spr=https&sv=2024-11-04&sr=c&sig=4BxaIX4zz8cRI7xGDHqxaG63mQTxh89mQr6bGSLYPVA%3D
 spec:
   type: repo
   owner: aip-team

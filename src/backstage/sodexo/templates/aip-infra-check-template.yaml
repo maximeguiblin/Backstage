@@ -1,0 +1,82 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: aip-infra-check
+  title: Infrastructure configuration check with AIP
+  description: Check infrastructure of a usecase with AIP CLI
+  tags:
+    - azure
+    - usecase
+    - infrastructure
+spec:
+  owner: platform-team
+  type: service
+
+  parameters:
+    - title: Usecase Information
+      required:
+        - repo_url
+        - usecase_name
+        - environment
+        - user_login
+      properties:
+        repo_url:
+          title: Repository URL
+          type: string
+          description: "URL of the repository containing the usecase code (e.g., 'https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/my-usecase')"
+          ui:field: UrlPicker
+          ui:options:
+            allowedHosts:
+              - sdxcloud.visualstudio.com
+              - dev.azure.com
+            patterns:
+              - "https://sdxcloud.visualstudio.com/**"
+              - "https://dev.azure.com/**"
+        usecase_name:
+          title: Usecase Name
+          type: string
+          description: "Select the usecase from the list (only repos with AIP check capability)"
+          ui:field: EntityPicker
+          ui:options:
+            allowedKinds: [Component]
+            defaultKind: Component
+            allowedTypes: [repo]
+            catalogFilter:
+              kind: Component
+              spec.type: repo
+        environment:
+          title: Environment Type
+          type: string
+          description: "Select the Azure environment type for this usecase"
+          enum:
+            - adb
+            - aml2
+            - aml
+          enumNames:
+            - Azure Databricks
+            - Azure Machine Learning v2
+            - Azure Machine Learning
+        user_login:
+          title: Use your login identity
+          type: string
+          description: "Choose whether to use your own identity or Backstage identity for authentication"
+          oneOf:
+            - title: No, use identity of Backstage to checkout the repo and run aip.
+              const: "false"
+            - title: Yes, use my own identity to checkout the repo and run aip.
+              const: "true"
+
+  steps:
+    - id: trigger-infra-check-pipeline
+      name: Trigger AIP Infrastructure Check Pipeline
+      action: azure:pipeline:run
+      input:
+        organization: "sdxcloud"
+        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
+        pipelineId: "9869"
+        branch: feat/651736_check_infra_html
+        pipelineParameters:
+          repo_url: ${{ parameters.repo_url }}
+          usecase_name: ${{ parameters.usecase_name }}
+          environment: ${{ parameters.environment }}
+          user_login: ${{ parameters.user_login }}
