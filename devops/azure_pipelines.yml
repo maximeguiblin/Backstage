@@ -6,7 +6,7 @@
 variables:
   artifactFeeds: AIP-feed
   PythonDownloadServiceConnections: AIPFeed_PythonPackageDownload
-  docsServiceConnection: Srv_Cnx_AIP_SDXDEV
+  serviceConnection: GLB-SDP-DEVOPS-CICD-D
 
 trigger:
 - main
@@ -123,9 +123,9 @@ jobs:
 
       - task: AzureCLI@2
         inputs:
-          azureSubscription: '$(docsServiceConnection)'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
+          azureSubscription: $(serviceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
           inlineScript: |
             if [[ -d backstage ]]; then cd backstage ; fi
             aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
@@ -175,7 +175,7 @@ jobs:
 
       - task: AzureCLI@2
         inputs:
-          azureSubscription: $(docsServiceConnection)
+          azureSubscription: $(serviceConnection)
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
