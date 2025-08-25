@@ -28,8 +28,7 @@ jobs:
 
   - job: TestAndBuild
     pool:
-      vmImage: ubuntu-24.04
-
+      name: DevOps agent pool NON-PROD CICD - SDP
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -47,6 +46,22 @@ jobs:
           onlyAddExtraIndex: true
         displayName: Pip authentication (sdxcloud only)
 
+      - task: Cache@2
+        inputs:
+          key: 'python | "pyproject.toml"'
+          restoreKeys: |
+            python
+          path: ~/.cache/pip
+        displayName: Cache Python dependencies
+
+      - task: Cache@2
+        inputs:
+          key: 'node | "src/backstage/package-lock.json"'
+          restoreKeys: |
+            node
+          path: src/backstage/node_modules
+        displayName: Cache Node.js dependencies
+
       - bash: |
           if [[ -d backstage ]]; then cd backstage ; fi
           bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev
@@ -56,7 +71,7 @@ jobs:
           set -e
           
           echo "Run AIP checks"
-          aip core code check --tool black --tool isort
+          aip -i SDXDEV core code check --tool black --tool isort
           git diff && git diff-index --quiet HEAD
           if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
               echo "Exiting with failure because local diff was found after checking code format";
@@ -83,21 +98,27 @@ jobs:
       - bash: |
           set -e
           echo "Starting to build backstage backend container ..."
-          aip app container build --container_name backstage_app_back
+          aip -i SDXDEV app container build --container_name backstage_app_back
           
           # TODO: remove me
-          aip app container push --container_name backstage_app_back
+          aip -i SDXDEV app container push --container_name backstage_app_back
           echo "Successfully built backstage backend container"
           
           echo "Starting to build backstage frontend container ..."
-          aip app container build --container_name backstage_app_front
+          aip -i SDXDEV app container build --container_name backstage_app_front
 
           # TODO: remove me
-          aip app container push --container_name backstage_app_front
+          aip -i SDXDEV app container push --container_name backstage_app_front
           echo "Successfully built backstage frontend container"
 
         displayName: Build containers
 
+  - job: Doc
+    displayName: Build and Push Documentation
+    dependsOn: TestAndBuild
+    pool:
+      name: DevOps agent pool NON-PROD CICD - SDP
+    steps:
       - script: |
           sudo apt-get install -qq -y graphviz
         displayName: Install docs pre-dependencies
@@ -120,7 +141,7 @@ jobs:
 
       - script: |
           if [[ -d backstage ]]; then cd backstage ; fi
-          aip core docs build --add_markdowns --add_diagrams --install_packages
+          aip -i SDXDEV core docs build --add_markdowns --add_diagrams --install_packages
           if [[ ! -d $(PATHDOC) ]];
           then
             echo "Not found generated doc at path $(PATHDOC)"
@@ -135,12 +156,12 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             if [[ -d backstage ]]; then cd backstage ; fi
-            aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
+            aip -i SDXDEV core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
         displayName: Push doc
 
 
   - job: Deploy
-    dependsOn: TestAndBuild
+    dependsOn: Doc
     condition: and(
         succeeded(),
         or(
@@ -149,7 +170,7 @@ jobs:
         )
       )
     pool:
-      vmImage: ubuntu-24.04
+      name: DevOps agent pool NON-PROD CICD - SDP
 
     steps:
       - task: UsePythonVersion@0
@@ -186,7 +207,7 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            aip app container deploy --all
+            aip -i SDXDEV app container deploy --all
         displayName: Deploy backstage app
 
       - bash: |

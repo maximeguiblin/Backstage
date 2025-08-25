@@ -36,13 +36,10 @@
     "STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "DOCS_STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "CONTAINER_APP_ENVIRONMENT": "azieca1ioe098",
-    "FRONT_ENDPOINT": "http://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "CORS_ENDPOINT": "https://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "BACK_ENDPOINT": "https://azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "CONTAINER_APP_FRONT_NAME": "azieca1aip001",
-    "CONTAINER_APP_BACK_NAME": "azieca2aip001",
-    "SERVICE_PLAN_NAME": "aziesp1aip001",
-    "SERVICE_APP_FRONT_NAME": "azieas1aip001",
-    "SERVICE_APP_BACK_NAME": "azieas2aip001",
+    "FRONT_ENDPOINT": "http://azieca2frt001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "CORS_ENDPOINT": "https://azieca2frt001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "BACK_ENDPOINT": "https://azieca3bck001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "CONTAINER_APP_FRONT_NAME": "azieca2frt001",
+    "CONTAINER_APP_BACK_NAME": "azieca3bck001",
     "ENVIRONMENT": "DEV"
 }

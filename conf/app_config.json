@@ -76,18 +76,5 @@
                 "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}"
             }
         }
-    ],
-    "service_apps": [
-        {
-            "name": "app1",
-            "service_app_name": "@infra.service_app_front_name",
-            "service_plan_name": "@infra.service_plan_name",
-            "app_type": "container",
-            "container_name": "backstage_app",
-            "args_create": [],
-            "app_settings": {
-                "WEBSITES_PORT": "8000"
-            }
-        }
     ]
 }
