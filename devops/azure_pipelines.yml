@@ -82,21 +82,20 @@ jobs:
 
       - bash: |
           set -e
-          echo "Starting to build backstage frontend container ..."
-          aip app container build --container_name backstage_app_front
-
-          # TODO: remove me
-          aip app container push --container_name backstage_app_front
-          
-          echo "Successfully built backstage frontend container"
-
           echo "Starting to build backstage backend container ..."
           aip app container build --container_name backstage_app_back
           
           # TODO: remove me
           aip app container push --container_name backstage_app_back
-          
           echo "Successfully built backstage backend container"
+          
+          echo "Starting to build backstage frontend container ..."
+          aip app container build --container_name backstage_app_front
+
+          # TODO: remove me
+          aip app container push --container_name backstage_app_front
+          echo "Successfully built backstage frontend container"
+
         displayName: Build containers
 
       - script: |
