@@ -27,8 +27,14 @@ jobs:
         displayName: Check PR target branch for main
 
   - job: TestAndBuild
+#    pool:
+#      name: DevOps agent pool NON-PROD CICD - SDP
+#    container:
+#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+#      endpoint: SrvCnx_AIP_Docker_Registry
     pool:
-      name: DevOps agent pool NON-PROD CICD - SDP
+      vmImage: ubuntu-24.04
+
     steps:
       - task: UsePythonVersion@0
         inputs:
@@ -46,6 +52,11 @@ jobs:
           onlyAddExtraIndex: true
         displayName: Pip authentication (sdxcloud only)
 
+      - bash: |
+          if [[ -d backstage ]]; then cd backstage ; fi
+          bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev
+        displayName: Install dependencies
+
       - task: Cache@2
         inputs:
           key: 'python | "pyproject.toml"'
@@ -61,11 +72,6 @@ jobs:
             node
           path: src/backstage/node_modules
         displayName: Cache Node.js dependencies
-
-      - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev
-        displayName: Install dependencies
 
       - bash: |
           set -e
@@ -95,29 +101,44 @@ jobs:
           coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
         displayName: Run tests with coverage
 
-      - bash: |
-          set -e
-          echo "Starting to build backstage backend container ..."
-          aip -i SDXDEV app container build --container_name backstage_app_back
-          
-          # TODO: remove me
-          aip -i SDXDEV app container push --container_name backstage_app_back
-          echo "Successfully built backstage backend container"
-          
-          echo "Starting to build backstage frontend container ..."
-          aip -i SDXDEV app container build --container_name backstage_app_front
+#      - bash: |
+#          set -e
+#          echo "Starting to build backstage backend container ..."
+#          aip -i SDXDEV app container build --container_name backstage_app_back
+#
+#          # TODO: remove me
+#          aip -i SDXDEV app container push --container_name backstage_app_back
+#          echo "Successfully built backstage backend container"
+#
+#          echo "Starting to build backstage frontend container ..."
+#          aip -i SDXDEV app container build --container_name backstage_app_front
+#
+#          # TODO: remove me
+#          aip -i SDXDEV app container push --container_name backstage_app_front
+#          echo "Successfully built backstage frontend container"
+#        displayName: Build containers
 
-          # TODO: remove me
-          aip -i SDXDEV app container push --container_name backstage_app_front
-          echo "Successfully built backstage frontend container"
-
-        displayName: Build containers
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(serviceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            aip -i SDXDEV app container build --container_name backstage_app_back
+            aip -i SDXDEV app container push --container_name backstage_app_back
+            echo "Successfully built backstage backend container"
+            aip -i SDXDEV app container build --container_name backstage_app_front
+            aip -i SDXDEV app container push --container_name backstage_app_front
+        displayName: REMOVE ME LATER
 
   - job: Doc
     displayName: Build and Push Documentation
     dependsOn: TestAndBuild
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
+    container:
+      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+      endpoint: SrvCnx_AIP_Docker_Registry
     steps:
       - script: |
           sudo apt-get install -qq -y graphviz
@@ -171,23 +192,7 @@ jobs:
       )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
-
     steps:
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: 3.10
-        displayName: Use Python 3.10
-
-      - task: PipAuthenticate@1
-        inputs:
-          artifactFeeds: $(artifactFeeds)
-          onlyAddExtraIndex: true
-        displayName: Pip authentication (sdxcloud only)
-
-      - bash: |
-          bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev
-        displayName: Install dependencies
-
       - bash: |
           current_tag=$(git tag --points-at HEAD)
           echo "Current tag HEAD: $current_tag"
