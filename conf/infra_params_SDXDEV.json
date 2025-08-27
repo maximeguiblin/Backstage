@@ -5,9 +5,6 @@
     "LOCATION": "northeurope",
     "TENANT_ID": "",
     "KEYVAULT_SECRETS": {
-        "CONTAINER_REGISTRY_Server": "ContainerRegistry-Server",
-        "CONTAINER_REGISTRY_Admin": "AMLS-ContainerRegistry-Admin",
-        "CONTAINER_REGISTRY_Password": "ContainerRegistry-Password",
         "SPN_ID": "SPN-ID",
         "SPN_PASSWORD": "SPN-PASSWORD",
         "VNET_ADDRESS_SPACE": "VNET-Address-Space",
