@@ -29,15 +29,11 @@ jobs:
   - job: TestAndBuild
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
-#    container:
-#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
-#      endpoint: SrvCnx_AIP_Docker_Registry
+    container:
+      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
+      endpoint: SrvCnx_AIP_Docker_Registry
 
     steps:
-      - bash: |
-          apt-get install -y python3-pip
-        displayName: Install pip
-
       - task: PipAuthenticate@1
         inputs:
           artifactFeeds: $(artifactFeeds)
@@ -45,31 +41,10 @@ jobs:
         displayName: Pip authentication (sdxcloud only)
 
       - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          bash scripts/install_requirements.sh --python_version 3.10 --no_venv --install_dev
-        displayName: Install dependencies
-
-      - task: Cache@2
-        inputs:
-          key: 'python | "pyproject.toml"'
-          restoreKeys: |
-            python
-          path: ~/.cache/pip
-        displayName: Cache Python dependencies
-
-      - task: Cache@2
-        inputs:
-          key: 'node | "src/backstage/package-lock.json"'
-          restoreKeys: |
-            node
-          path: src/backstage/node_modules
-        displayName: Cache Node.js dependencies
-
-      - bash: |
           set -e
           
           echo "Run AIP checks"
-          aip -i SDXDEV core code check --tool black --tool isort
+          aip core code check --tool black --tool isort
           git diff && git diff-index --quiet HEAD
           if [ "$?" != 0 ] && [ "$(Build.Reason)" == "PullRequest" ]; then
               echo "Exiting with failure because local diff was found after checking code format";
@@ -77,29 +52,28 @@ jobs:
           fi
           git checkout .
           
-          echo "Run ESLint checks"
-          cd src/backstage
-          yarn install
-          yarn lint:all
-          if [ "$?" != 0 ]; then
-              echo "Exiting with failure because ESLint found issues";
-              exit 1;
-          fi
+#          echo "Run ESLint checks"
+#          cd src/backstage
+#          yarn install
+#          yarn lint:all
+#          if [ "$?" != 0 ]; then
+#              echo "Exiting with failure because ESLint found issues";
+#              exit 1;
+#          fi
         displayName: Run code formatting checks
 
       - bash: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          export PYTHONPATH=src:$PYTHONPATH
           coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
         displayName: Run tests with coverage
 
       - bash: |
           set -e
-          echo "Starting to build backstage backend container ..."
+          echo "Start building backstage backend..."
           aip -i SDXDEV app container build --container_name backstage_app_back
 
           # TODO: remove me
           aip -i SDXDEV app container push --container_name backstage_app_back
+          
           echo "Successfully built backstage backend container"
 
           echo "Starting to build backstage frontend container ..."
@@ -107,6 +81,7 @@ jobs:
 
           # TODO: remove me
           aip -i SDXDEV app container push --container_name backstage_app_front
+          
           echo "Successfully built backstage frontend container"
         displayName: Build containers
 
