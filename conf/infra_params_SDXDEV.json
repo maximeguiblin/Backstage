@@ -29,7 +29,7 @@
     "PROJECT_NAME": "{{cookiecutter.project_name}}",
     "PROJECT_SLUG": "{{cookiecutter.project_slug}}",
     "KEYVAULT_NAME": "azieks1mip523",
-    "CONTAINER_REGISTRY_NAME": "aziecr1exu749",
+    "CONTAINER_REGISTRY_NAME": "aziecr1aip001",
     "STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "DOCS_STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "CONTAINER_APP_ENVIRONMENT": "azieca1ioe098",
