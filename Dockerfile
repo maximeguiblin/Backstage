@@ -1,7 +1,7 @@
 FROM node:20
 
 RUN apt-get update
-RUN apt-get install -y python3 g++ build-essential python-is-python3
+RUN apt-get install -y python3 g++ build-essential python-is-python3 python3-pip
 
 WORKDIR workspace
 COPY conf conf
@@ -46,8 +46,14 @@ RUN corepack yarn --cwd packages/backend add @parfuemerie-douglas/scaffolder-bac
 RUN corepack yarn --cwd packages/backend add @backstage/plugin-catalog-backend-module-logs@0.1.10
 RUN corepack yarn --cwd packages/backend add @roadiehq/scaffolder-backend-module-http-request@5.3.2
 RUN corepack yarn --cwd packages/backend add @drodil/backstage-plugin-qeta-backend@3.21.0
+RUN corepack yarn --cwd packages/backend add @backstage-community/plugin-sonarqube-backend@0.10.0
 # Install app plugins
 RUN corepack yarn --cwd packages/app add @drodil/backstage-plugin-qeta@3.31.4
+RUN corepack yarn --cwd packages/app add @backstage-community/plugin-sonarqube@0.15.0
+RUN corepack yarn --cwd packages/app add @backstage-community/plugin-sonarqube-react@0.8.0
+
+# Install MkDocs for TechDocs generation
+RUN pip3 install --break-system-packages mkdocs mkdocs-material mkdocs-techdocs-core
 
 # Patch config files for dev run
 RUN if [ "$START_COMMAND" != "dev" ]; then sed -i '/plugin-app-backend/d' packages/backend/src/index.ts; fi

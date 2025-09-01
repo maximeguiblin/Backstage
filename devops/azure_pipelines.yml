@@ -136,6 +136,9 @@ jobs:
 #      )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
+    container:
+      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+      endpoint: SrvCnx_AIP_Docker_Registry
     steps:
 #      - bash: |
 #          current_tag=$(git tag --points-at HEAD)
