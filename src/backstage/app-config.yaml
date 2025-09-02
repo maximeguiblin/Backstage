@@ -157,6 +157,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Bicep template
+    - type: file
+      target: ../../sodexo/templates/azure-bicep-template.yaml
+      rules:
+        - allow: [Template]
+
     # Infrastructure configuration template
     - type: file
       target: ../../sodexo/templates/infra-config-template.yaml

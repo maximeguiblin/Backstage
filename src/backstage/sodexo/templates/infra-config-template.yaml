@@ -37,14 +37,18 @@ spec:
           type: string
           title: ACR Name
           description: Name of the Azure Container Registry.
+        logAnalyticsName:
+          type: string
+          title: Log Analytics Name
+          description: Name of the Azure Log Analytics resource.
         user_login:
           title: Use your login identity
           type: string
           oneOf:
-            - title: No, use identity of Backstage to log in for retrieving resources
-              const: "false"
             - title: Yes, use my own identity to log in for retrieving resources
               const: "true"
+            - title: No, use identity of Backstage to log in for retrieving resources
+              const: "false"
         branch:
           type: string
           description: "Branch to trigger the pipeline on"
@@ -56,8 +60,8 @@ spec:
       action: azure:pipeline:run
       input:
         organization: "sdxcloud"
-        project: "GLB.GLB.DataLab.AIPlatform"
-        pipelineId: "9894"
+        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
+        pipelineId: "9917"
         branch: ${{ parameters.branch }}
         pipelineParameters:
           resource_group_name: ${{ parameters.resourceGroupName }}
@@ -65,5 +69,6 @@ spec:
           appinsights_name: ${{ parameters.appInsightsName }}
           storage_account_name: ${{ parameters.storageAccountName }}
           acr_name: ${{ parameters.acrName }}
+          log_analytics_name: ${{ parameters.logAnalyticsName }}
           user_login: ${{ parameters.user_login }}
 
