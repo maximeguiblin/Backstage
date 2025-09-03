@@ -74,7 +74,7 @@ spec:
         organization: "sdxcloud"
         project: "GLB.GLB.DataLab.AIPlatform"
         pipelineId: "10080"
-        branch: feat/651736_check_infra_html
+        branch: develop
         pipelineParameters:
           repo_url: ${{ parameters.repo_url }}
           usecase_name: ${{ parameters.usecase_name }}
