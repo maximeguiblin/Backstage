@@ -6,7 +6,8 @@
 variables:
   artifactFeeds: AIP-feed
   PythonDownloadServiceConnections: AIPFeed_PythonPackageDownload
-  serviceConnection: GLB-SDP-DEVOPS-CICD-D
+  serviceConnectionSandbox: Srv_Cnx_AIP_SANDBOX
+  serviceConnectionSdxDev: GLB-SDP-DEVOPS-CICD-D
 
 trigger:
 - main
@@ -56,112 +57,99 @@ jobs:
 #          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
 #        displayName: Run tests with coverage
 
-      - bash: |
-          set -e
-          echo "Start building backstage backend..."
-          aip -i SDXDEV app container build --container_name backstage_app_back
-
-          # TODO: remove me
-          aip -i SDXDEV app container push --container_name backstage_app_back
-
-          echo "Successfully built backstage backend container"
-
-          echo "Starting to build backstage frontend container ..."
-          aip -i SDXDEV app container build --container_name backstage_app_front
-
-          # TODO: remove me
-          aip -i SDXDEV app container push --container_name backstage_app_front
-
-          echo "Successfully built backstage frontend container"
-        displayName: Build containers
-
-  - job: Doc
-    displayName: Build and Push Documentation
-    dependsOn: TestAndBuild
-    pool:
-      name: DevOps agent pool NON-PROD CICD - SDP
-    container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
-      endpoint: SrvCnx_AIP_Docker_Registry
-    steps:
-      - script: |
-          sudo apt-get install -qq -y graphviz
-        displayName: Install docs pre-dependencies
-
-      - script: |
-          echo "Current branch is $(Build.SourceBranch)"
-          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
-            VERSION='latest'
-          elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
-            VERSION='merge'
-          else
-            VERSION='tmp'
-          fi
-          PATHDOC=docs/build/html/
-          echo "##vso[task.setvariable variable=VERSION]$VERSION"
-          echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
-          echo "Found VERSION=$VERSION"
-          echo "Found PATHDOC=$PATHDOC"
-        displayName: Get doc version
-
-      - script: |
-          if [[ -d backstage ]]; then cd backstage ; fi
-          aip -i SDXDEV core docs build --add_markdowns --add_diagrams --install_packages
-          if [[ ! -d $(PATHDOC) ]];
-          then
-            echo "Not found generated doc at path $(PATHDOC)"
-            exit 1
-          fi
-        displayName: Build doc
-
       - task: AzureCLI@2
         inputs:
-          azureSubscription: $(serviceConnection)
+          azureSubscription: $(serviceConnectionSandbox)
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            if [[ -d backstage ]]; then cd backstage ; fi
-            aip -i SDXDEV core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
-        displayName: Push doc
+            az acr login --name aziecr1aip001
+            docker pull aziecr1aip001.azurecr.io/backstage_app_front:sdxdev
+            docker tag aziecr1aip001.azurecr.io/backstage_app_front:sdxdev aziecr1exu749.azurecr.io/backstage_app_front:latest
+        displayName: TMP
+
+#      - bash: |
+#          set -e
+#          echo "Start building backstage backend..."
+#          aip -i SDXDEV app container build --container_name backstage_app_back
+#          echo "Successfully built backstage backend container"
+#
+#          echo "Starting to build backstage frontend container ..."
+#          aip -i SDXDEV app container build --container_name backstage_app_front
+#          echo "Successfully built backstage frontend container"
+#        displayName: Build containers
+
+#  - job: Doc
+#    displayName: Build and Push Documentation
+#    dependsOn: TestAndBuild
+#    pool:
+#      name: DevOps agent pool NON-PROD CICD - SDP
+#    container:
+#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+#      endpoint: SrvCnx_AIP_Docker_Registry
+#    steps:
+#      - script: |
+#          sudo apt-get install -qq -y graphviz
+#        displayName: Install docs pre-dependencies
+#
+#      - script: |
+#          echo "Current branch is $(Build.SourceBranch)"
+#          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
+#            VERSION='latest'
+#          elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
+#            VERSION='merge'
+#          else
+#            VERSION='tmp'
+#          fi
+#          PATHDOC=docs/build/html/
+#          echo "##vso[task.setvariable variable=VERSION]$VERSION"
+#          echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
+#          echo "Found VERSION=$VERSION"
+#          echo "Found PATHDOC=$PATHDOC"
+#        displayName: Get doc version
+#
+#      - script: |
+#          if [[ -d backstage ]]; then cd backstage ; fi
+#          aip -i SDXDEV core docs build --add_markdowns --add_diagrams --install_packages
+#          if [[ ! -d $(PATHDOC) ]];
+#          then
+#            echo "Not found generated doc at path $(PATHDOC)"
+#            exit 1
+#          fi
+#        displayName: Build doc
+#
+#      - task: AzureCLI@2
+#        inputs:
+#          azureSubscription: $(serviceConnection)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            if [[ -d backstage ]]; then cd backstage ; fi
+#            aip -i SDXDEV core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
+#        displayName: Push doc
 
 
   - job: Deploy
-    dependsOn: Doc
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy'], 'true')
-        )
-      )
+#    dependsOn: Doc
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy'], 'true')
+#        )
+#      )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
     container:
       image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
       endpoint: SrvCnx_AIP_Docker_Registry
     steps:
-      - bash: |
-          current_tag=$(git tag --points-at HEAD)
-          echo "Current tag HEAD: $current_tag"
-          if [ -z $current_tag ];
-          then
-              echo "No tag found on current HEAD. Will create new one";
-              pip install toml
-              python setup_packaging.py --setup_tagging
-          else
-              echo "Already found tag on current HEAD. Skipping creation."
-          fi
-        displayName: Create next tag version
-
       - task: AzureCLI@2
         inputs:
-          azureSubscription: $(serviceConnection)
+          azureSubscription: $(serviceConnectionSdxDev)
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
+            az containerapp update --subscription c0978b9d-b809-45f4-aa76-391ceb2cfdba --resource-group GLB-GLB-IENO-SDP-DEV-RG01 --name azieca2frt001 --image aziecr1exu749.azurecr.io/backstage_app_front:latest --revision-suffix latest-tfbkrhiqvf
             aip -i SDXDEV app container deploy --all --deploy_only
         displayName: Deploy backstage app
-
-      - bash: |
-          git -c http.extraheader="AUTHORIZATION:bearer $(System.AccessToken)" push origin --tags
-        displayName: Push created tag version

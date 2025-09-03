@@ -39,7 +39,7 @@
     ],
     "container_apps": [
         {
-            "name": "app1",
+            "name": "app_front",
             "container_app_name": "@infra.container_app_front_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
@@ -52,7 +52,7 @@
             ]
         },
         {
-            "name": "app2",
+            "name": "app_back",
             "container_app_name": "@infra.container_app_back_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",

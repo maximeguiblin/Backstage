@@ -1,4 +1,5 @@
-FROM node:20
+# syntax=docker/dockerfile:1
+FROM --platform=linux/amd64 node:20
 
 RUN apt-get update
 RUN apt-get install -y python3 g++ build-essential python-is-python3 python3-pip
