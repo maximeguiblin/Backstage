@@ -72,8 +72,8 @@ spec:
       action: azure:pipeline:run
       input:
         organization: "sdxcloud"
-        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
-        pipelineId: "9869"
+        project: "GLB.GLB.DataLab.AIPlatform"
+        pipelineId: "10080"
         branch: feat/651736_check_infra_html
         pipelineParameters:
           repo_url: ${{ parameters.repo_url }}
