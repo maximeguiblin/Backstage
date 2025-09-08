@@ -1,0 +1,262 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: PowerChef
+  description: AI Platform project is a made to help deliver complex data projects in a quick, secure and standardised way while being compliant with Sodexo policies in terms of security and infrastructure.
+  links:
+    - url: https://sdxcloud.visualstudio.com/GLB.GLB.GL.GDT_CDA/_workitems/recentlyupdated/
+      title: Azure DevOps Board
+spec:
+  type: usecase
+  profile:
+    displayName: PowerChef
+  lifecycle: experimental
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.PowerChef.DataModel
+  description: Description of the DataModel repository for PowerChef
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.GL.GDT_CDA/_git/GLB.GLB.DataLab.PowerChef.DataModel
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.GL.GDT_CDA/GLB.GLB.DataLab.PowerChef.DataModel
+spec:
+  type: repo
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.PowerChef.Forecasting
+  description: Description of the Forecasting repository for PowerChef
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.GL.GDT_CDA/_git/GLB.GLB.DataLab.PowerChef.Forecasting
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.GL.GDT_CDA/GLB.GLB.DataLab.PowerChef.Forecasting
+spec:
+  type: repo
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.PowerChef.Monitoring
+  description: Description of the Monitoring repository for PowerChef
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.GL.GDT_CDA/_git/GLB.GLB.DataLab.PowerChef.Monitoring
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.GL.GDT_CDA/GLB.GLB.DataLab.PowerChef.Monitoring
+spec:
+  type: repo
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.PowerChef.Backtesting
+  description: Description of the Backtesting repository for PowerChef
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.GL.GDT_CDA/_git/GLB.GLB.DataLab.PowerChef.Backtesting
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.GL.GDT_CDA/GLB.GLB.DataLab.PowerChef.Backtesting
+spec:
+  type: repo
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: IFM_DEV_PWC
+  description: Component dedicated to the SANDBOX Azure environment.
+  resource_group:
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/746ac5b9-70eb-4c76-bdf4-0664bfdff2ea/resourceGroups/GRP-EU-AIP-DEV-RG01/overview
+      title: GRP-EU-AIP-DEV-RG01
+  spn: 
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/746ac5b9-70eb-4c76-bdf4-0664bfdff2ea/resourceGroups/GRP-EU-AIP-DEV-RG01/overview
+      title: GLB-DATALAB.AZU-AIP.expareapswuk.eu-DEV
+  ad_group:
+    - url: https://portal.azure.com/#view/Microsoft_AAD_IAM/GroupDetailsMenuBlade/~/Overview/groupId/723ad0dd-b87a-45a1-9cec-d134f0a05d9b
+      title: SG.CE.GL.GRP-DATALAB.AZU.CTB
+spec:
+  type: infra-environment
+  profile:
+    displayName: IFM_DEV_PWC
+  lifecycle: experimental
+  subcomponentOf: PowerChef
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: SDX_DEV_PWC
+  description: Component dedicated to the SANDBOX Azure environment.
+  resource_group:
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/c0978b9d-b809-45f4-aa76-391ceb2cfdba/resourceGroups/GLB-GLB-IENO-AIPEAPWC-DEV-RG01/overview
+      title: GLB-GLB-IENO-AIPEAPWC-DEV-RG01
+    - url: https://portal.azure.com#resource/subscriptions/c0978b9d-b809-45f4-aa76-391ceb2cfdba/resourceGroups/GLB-GLB-USE2-AIPEAPWC-DEV-RG01
+      title: GLB-GLB-USE2-AIPEAPWC-DEV-RG01
+  spn: 
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/0bbea722-9007-40df-81f3-1a879d75c2d2/appId/4f669581-e2db-448d-b708-d761bd2f434b
+      title: FRGLB-DATALAB.AZU-.POWERCHEF.DevOps.eu-DEV
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/028af7d5-ee69-47d3-9774-9f2169c9a7f0/appId/0ebed596-5923-4bd8-96fb-07ce73526aa5
+      title: GLB-DATALAB.AZU-AIP.expareapwc.eu-DEV
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/37834f1a-2eab-4370-a7b8-af80abe63d81/appId/282722c0-22b1-465e-b135-fa2a5539aa48
+      title: GLB-DATALAB.AZU-AIP.expareapwc.us-DEV
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/a6ba4f9f-a640-4346-ad74-224c79a52ec2/appId/9813170a-20ad-4b8e-9a13-9af004a97729
+      title: POWERCHEF-EU-DEV-SPN
+  ad_group:
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/8f3fd116-929e-4306-833f-c0e0eeb060e5
+      title: SG.CE.FR-AIP_PWC_FR_EXP_DEV
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/59b11411-8784-4dd3-94a0-3bd59cd62f02
+      title: SG.CE.GLB-ADLS.DEV.EU.OSS-GLB-PowerChef.ADMIN
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/aa9e024d-3832-4441-888f-406904ad10eb
+      title: SG.CE.GLB-ADLS.DEV.EU.OSS-GLB-PowerChef.READER
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/e09eed95-4096-4898-a785-1ac2f38b129e
+      title: SG.CE.GLB-DEV.EU.PowerChef.CTB
+spec:
+  type: infra-environment
+  profile:
+    displayName: SDX_DEV_PWC
+  lifecycle: experimental
+  subcomponentOf: PowerChef
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: SDX_UAT_PWC
+  description: Component dedicated to the SANDBOX Azure environment.
+  resource_group:
+    - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/daf86ec1-725c-493f-bf09-a1f129b8588a/resourceGroups/GLB-GLB-IENO-AIPEAPWC-UAT-RG01/overview
+      title: GLB-GLB-IENO-AIPEAPWC-UAT-RG01
+    - url: https://portal.azure.com#resource/subscriptions/daf86ec1-725c-493f-bf09-a1f129b8588a/resourceGroups/GLB-GLB-USE2-AIPEAPWC-UAT-RG01
+      title: GLB-GLB-USE2-AIPEAPWC-UAT-RG01
+  spn: 
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/6a604d54-a56c-4625-9a35-6a080b7b4e62/appId/1afd5fd3-7b30-4d4b-9d54-cae1d6d57661
+      title: GLB-DATALAB.AZU-AIP.expareapwc.eu-UAT
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/332b3beb-ad8c-430c-9a57-1863212d5020/appId/0b7b709e-6c30-4f27-8bc0-161db4d4d374
+      title: GLB-DATALAB.AZU-AIP.expareapwc.us-UAT
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/d8ca7d8f-06bc-4102-9e98-a4b02d070ef9/appId/a13ee419-5f16-4d3d-a6e8-77b373ec7ec7
+      title: POWERCHEF-EU-UAT-SPN
+  ad_group:
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/2b9d4f9b-d2cb-454b-abab-adafef6c5ac8
+      title: SG.CE.FR-AIP_PWC_FR_EXP_UAT
+spec:
+  type: infra-environment
+  profile:
+    displayName: SDX_UAT_PWC
+  lifecycle: experimental
+  subcomponentOf: PowerChef
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: SDX_PRD_PWC
+  description: Component dedicated to the SANDBOX Azure environment.
+  resource_group:
+    - url: https://portal.azure.com#resource/subscriptions/cf25f2a1-4d40-45af-bb81-87ec46112b3e/resourceGroups/GLB-GLB-IENO-AIPEAPWC-PRD-RG01
+      title: GLB-GLB-IENO-AIPEAPWC-PRD-RG01
+  spn: 
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/833057fb-c25a-4041-9f46-c71ae347db6d/appId/d3c526c0-1ba3-41d7-9840-695c10246e39
+      title: GLB-DATALAB.AZU-AIP.expareapwc.eu-PRD
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/ManagedAppMenuBlade/Overview/objectId/2a5a088e-02fa-454b-a821-73afe0becce2/appId/ee0c2e2e-8c16-48cf-97ce-d1f00eefdb37
+      title: POWERCHEF-EU-PROD-SPN
+  ad_group:
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/e1306595-81cd-4983-80c2-2dd66bea238f
+      title: SG.CE.FR-AIP_PWC_FR_EXP_PRD
+    - url: https://portal.azure.com/#blade/Microsoft_AAD_IAM/GroupDetailsMenuBlade/Overview/groupId/b5d19961-520a-4284-9767-4b58e2ba9f13
+      title: SG.CE.FR-AIP_PWC_FR_EXP_PRD_READER
+spec:
+  type: infra-environment
+  profile:
+    displayName: SDX_PRD_PWC
+  lifecycle: experimental
+  subcomponentOf: PowerChef
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: IFM_PRD_PWC
+  description: Component dedicated to the SANDBOX Azure environment.
+  resource_group:
+    - url: https://portal.azure.com#resource/subscriptions/6b4a5b3f-1015-42da-a46a-2890a5abed30/resourceGroups/GRP-EU-CDA-PROD-RG01
+      title: GRP-EU-CDA-PROD-RG01
+  spn: 
+    - url: https://portal.azure.com#resource/subscriptions/cf25f2a1-4d40-45af-bb81-87ec46112b3e/resourceGroups/GLB-GLB-IENO-AIPEAPWC-PRD-RG01
+      title: GLB-DATALAB.AZU-AIP.expareapwc.eu-PRD
+    - url: https://portal.azure.com#resource/subscriptions/cf25f2a1-4d40-45af-bb81-87ec46112b3e/resourceGroups/GLB-GLB-IENO-AIPEAPWC-PRD-RG01
+      title: POWERCHEF-EU-PROD-SPN
+  ad_group:
+    - url: https://portal.azure.com/#view/Microsoft_AAD_IAM/GroupDetailsMenuBlade/~/Overview/groupId/723ad0dd-b87a-45a1-9cec-d134f0a05d9b
+      title: SG.CE.GL.GRP-DATALAB.AZU.CTB
+spec:
+  type: infra-environment
+  profile:
+    displayName: IFM_PRD_PWC
+  lifecycle: experimental
+  subcomponentOf: PowerChef
+  owner: powerchef-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: powerchef-team
+  description: PowerChef Team
+spec:
+  type: team
+  parent: sodexo
+  children: []
+  profile:
+    displayName: PowerChef Team
+    email: hamed.ky@sodexo.com
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: power-chef_powerchef-architecture
+  description: Documentation for the PowerChef architecture
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef-architecture/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: power-chef_powerchef-monitoring
+  description: Documentation for the PowerChef monitoring
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef-monitoring/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: powerchef-team
+  subcomponentOf: PowerChef
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: power-chef_powerchef
+  description: Documentation for PowerChef 
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: powerchef-team
+  subcomponentOf: PowerChef

@@ -181,6 +181,24 @@ catalog:
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
+    # 4Site catalog
+    - type: file
+      target: ../../sodexo/4site-catalog.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location]
+
+    # ProductSwap catalog
+    - type: file
+      target: ../../sodexo/productswap-catalog.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location]
+    
+    # PowerChef catalog
+    - type: file
+      target: ../../sodexo/powerchef-catalog.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location]
+
     ## Uncomment these lines to add more example data
     # - type: url
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml

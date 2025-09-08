@@ -70,7 +70,7 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: SANDBOX
+  name: SANDBOX_AIP
   description: Component dedicated to the SANDBOX Azure environment.
   resource_group:
     - url: https://portal.azure.com/#@sodexo.onmicrosoft.com/resource/subscriptions/fea1e9f0-0e20-426f-906e-bc76e5a566ad/resourceGroups/IST-GLB-IENO-AIPWE-BOX-RG01/overview
@@ -92,7 +92,7 @@ metadata:
 spec:
   type: infra-environment
   profile:
-    displayName: SANDBOX
+    displayName: SANDBOX_AIP
   lifecycle: experimental
   subcomponentOf: AI-Platform
   owner: aip-team
@@ -100,12 +100,12 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: DEV
+  name: DEV_AIP
   description: Component dedicated to the DEV Azure environment.
 spec:
   type: infra-environment
   profile:
-    displayName: DEV
+    displayName: DEV_AIP
   lifecycle: experimental
   subcomponentOf: AI-Platform
   owner: aip-team
@@ -184,4 +184,3 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
-  system: AI-Platform
