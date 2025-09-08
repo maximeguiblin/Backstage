@@ -27,20 +27,20 @@ jobs:
           fi
         displayName: Check PR target branch for main
 
-  - job: TestAndBuild
-    pool:
-      name: DevOps agent pool NON-PROD CICD - SDP
-    container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-      endpoint: SrvCnx_AIP_Docker_Registry
-
-    steps:
-      - task: PipAuthenticate@1
-        inputs:
-          artifactFeeds: $(artifactFeeds)
-          onlyAddExtraIndex: true
-        displayName: Pip authentication (sdxcloud only)
-
+#  - job: TestAndBuild
+#    pool:
+#      vmImage: ubuntu-latest
+#    container:
+#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
+#      endpoint: SrvCnx_AIP_Docker_Registry
+#
+#    steps:
+#      - task: PipAuthenticate@1
+#        inputs:
+#          artifactFeeds: $(artifactFeeds)
+#          onlyAddExtraIndex: true
+#        displayName: Pip authentication (sdxcloud only)
+#
 #      - bash: |
 #          set -e
 #          echo "Run ESLint checks"
@@ -56,18 +56,7 @@ jobs:
 #      - bash: |
 #          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
 #        displayName: Run tests with coverage
-
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: $(serviceConnectionSandbox)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            az acr login --name aziecr1aip001
-            docker pull aziecr1aip001.azurecr.io/backstage_app_front:sdxdev
-            docker tag aziecr1aip001.azurecr.io/backstage_app_front:sdxdev aziecr1exu749.azurecr.io/backstage_app_front:latest
-        displayName: TMP
-
+#
 #      - bash: |
 #          set -e
 #          echo "Start building backstage backend..."
@@ -83,7 +72,7 @@ jobs:
 #    displayName: Build and Push Documentation
 #    dependsOn: TestAndBuild
 #    pool:
-#      name: DevOps agent pool NON-PROD CICD - SDP
+#      vmImage: ubuntu-latest
 #    container:
 #      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
 #      endpoint: SrvCnx_AIP_Docker_Registry
@@ -144,12 +133,25 @@ jobs:
       image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
       endpoint: SrvCnx_AIP_Docker_Registry
     steps:
+
+#      - task: AzureCLI@2
+#        inputs:
+#          azureSubscription: $(serviceConnectionSandbox)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            az acr login --name aziecr1aip001
+#            docker pull aziecr1aip001.azurecr.io/backstage_app_front:sdxdev
+#            docker tag aziecr1aip001.azurecr.io/backstage_app_front:sdxdev aziecr1exu749.azurecr.io/backstage_app_front:latest
+#        displayName: TMP
+
       - task: AzureCLI@2
         inputs:
           azureSubscription: $(serviceConnectionSdxDev)
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            az containerapp update --subscription c0978b9d-b809-45f4-aa76-391ceb2cfdba --resource-group GLB-GLB-IENO-SDP-DEV-RG01 --name azieca2frt001 --image aziecr1exu749.azurecr.io/backstage_app_front:latest --revision-suffix latest-tfbkrhiqvf
+            az acr login --name aziecr1exu749
+            docker push aziecr1exu749.azurecr.io/backstage_app_front:latest
             aip -i SDXDEV app container deploy --all --deploy_only
         displayName: Deploy backstage app
