@@ -60,13 +60,16 @@ jobs:
 
       - bash: |
           set -e
-          echo "Start building backstage backend..."
-          aip -i SDXDEV app container build --container_name backstage_app_back
-          echo "Successfully built backstage backend container"
+          
+          aip -i SDXDEV app container build --container_name hello_world
 
-          echo "Starting to build backstage frontend container ..."
-          aip -i SDXDEV app container build --container_name backstage_app_front
-          echo "Successfully built backstage frontend container"
+#          echo "Start building backstage backend..."
+#          aip -i SDXDEV app container build --container_name backstage_app_back
+#          echo "Successfully built backstage backend container"
+#
+#          echo "Starting to build backstage frontend container ..."
+#          aip -i SDXDEV app container build --container_name backstage_app_front
+#          echo "Successfully built backstage frontend container"
         displayName: Build containers
 
 
@@ -118,13 +121,13 @@ jobs:
 
   - job: Deploy
     dependsOn: TestAndBuild
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy'], 'true')
-        )
-      )
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy'], 'true')
+#        )
+#      )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
     container:
@@ -139,8 +142,9 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             az acr login --name aziecr1exu749
-            aip -i SDXDEV app container push --container_name backstage_app_back
-            aip -i SDXDEV app container push --container_name backstage_app_front
+            aip -i SDXDEV app container push --container_name hello_world
+#            aip -i SDXDEV app container push --container_name backstage_app_back
+#            aip -i SDXDEV app container push --container_name backstage_app_front
         displayName: Push image to SDXDEV container registry
 
       - task: AzureCLI@2
@@ -149,5 +153,6 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            aip -i SDXDEV app container deploy --all --deploy_only
+            aip -i SDXDEV app container deploy --name app_hello --deploy_only
+#            aip -i SDXDEV app container deploy --all --deploy_only
         displayName: Deploy backstage app

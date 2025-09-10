@@ -35,9 +35,24 @@
                 ],
                 "tag_default": "latest"
             }
+        },
+        {
+            "name": "hello_world",
+            "build": {
+                "dir": ".",
+                "file": "hello.Dockerfile",
+                "tag_default": "latest"
+            }
         }
     ],
     "container_apps": [
+        {
+            "name": "app_hello",
+            "container_app_name": "@infra.container_app_front_name",
+            "environment_name": "@infra.container_app_environment",
+            "app_type": "app",
+            "container_name": "hello_world"
+        },
         {
             "name": "app_front",
             "container_app_name": "@infra.container_app_front_name",
