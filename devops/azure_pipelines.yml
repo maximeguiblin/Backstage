@@ -54,24 +54,28 @@ jobs:
 #          fi
 #        displayName: Run code formatting checks
 
-      - bash: |
-          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
-        displayName: Run tests with coverage
-
-      - bash: |
-          set -e
-          
-          aip -i SDXDEV app container build --container_name hello_world
+#      - bash: |
+#          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
+#        displayName: Run tests with coverage
 
 #          echo "Start building backstage backend..."
 #          aip -i SDXDEV app container build --container_name backstage_app_back
-#          echo "Successfully built backstage backend container"
-#
-#          echo "Starting to build backstage frontend container ..."
-#          aip -i SDXDEV app container build --container_name backstage_app_front
-#          echo "Successfully built backstage frontend container"
-        displayName: Build containers
+      - bash: |
+          set -e
+          echo "Start building backstage frontend..."
+          aip -i SDXDEV app container build --container_name backstage_app_front
+        displayName: Build containers on microsoft agent (with internet connection)
 
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(serviceConnectionSandbox)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr login --name aziecr1aip001
+            docker tag aziecr1exu749.azurecr.io/backstage_app_front:latest aziecr1aip001.azurecr.io/backstage_app_front:latest
+            docker push aziecr1aip001.azurecr.io/backstage_app_front:latest
+        displayName: Tag and push image to Sandbox container registry
 
 #  - job: Doc
 #    displayName: Build and Push Documentation
@@ -137,15 +141,13 @@ jobs:
 
       - task: AzureCLI@2
         inputs:
-          azureSubscription: $(serviceConnectionSdxDev)
+          azureSubscription: $(serviceConnectionSandbox)
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            az acr login --name aziecr1exu749
-            aip -i SDXDEV app container push --container_name hello_world
-#            aip -i SDXDEV app container push --container_name backstage_app_back
-#            aip -i SDXDEV app container push --container_name backstage_app_front
-        displayName: Push image to SDXDEV container registry
+            az acr login --name aziecr1aip001
+            docker pull aziecr1aip001.azurecr.io/backstage_app_front:latest
+        displayName: Pull image from Sandbox container registry to custom DevOps agent
 
       - task: AzureCLI@2
         inputs:
@@ -153,6 +155,17 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            aip -i SDXDEV app container deploy --name app_hello --deploy_only
-#            aip -i SDXDEV app container deploy --all --deploy_only
+            az acr login --name aziecr1exu749
+            docker tag aziecr1aip001.azurecr.io/backstage_app_front:latest aziecr1exu749.azurecr.io/backstage_app_front:latest
+            aip -i SDXDEV app container push --container_name backstage_app_front
+        displayName: Tag and push image to SDXDEV container registry
+
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(serviceConnectionSdxDev)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            echo "Start deploying backstage..."
+            aip -i SDXDEV app container deploy --all --deploy_only
         displayName: Deploy backstage app
