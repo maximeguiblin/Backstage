@@ -40,7 +40,7 @@ jobs:
         inputs:
           artifactFeeds: $(artifactFeeds)
           onlyAddExtraIndex: true
-        displayName: Pip authentication (sdxcloud only)
+        displayName: Pip authentication
 
 #      - bash: |
 #          set -e
@@ -54,17 +54,17 @@ jobs:
 #          fi
 #        displayName: Run code formatting checks
 
-#      - bash: |
-#          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
-#        displayName: Run tests with coverage
+      - bash: |
+          coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
+        displayName: Run tests with coverage
 
-#          echo "Start building backstage backend..."
-#          aip -i SDXDEV app container build --container_name backstage_app_back
       - bash: |
           set -e
-          echo "Start building backstage frontend..."
+          echo "Build backstage backend..."
+          aip -i SDXDEV app container build --container_name backstage_app_back
+          echo "Build backstage frontend..."
           aip -i SDXDEV app container build --container_name backstage_app_front
-        displayName: Build containers on microsoft agent (with internet connection)
+        displayName: Build docker images on default microsoft agent (with internet connection)
 
       - task: AzureCLI@2
         inputs:
@@ -73,9 +73,13 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             az acr login --name aziecr1aip001
+            echo "Push backstage backend..."
+            docker tag aziecr1exu749.azurecr.io/backstage_app_back:latest aziecr1aip001.azurecr.io/backstage_app_back:latest
+            docker push aziecr1aip001.azurecr.io/backstage_app_back:latest
+            echo "Push backstage frontend..."
             docker tag aziecr1exu749.azurecr.io/backstage_app_front:latest aziecr1aip001.azurecr.io/backstage_app_front:latest
             docker push aziecr1aip001.azurecr.io/backstage_app_front:latest
-        displayName: Tag and push image to Sandbox container registry
+        displayName: Tag and push images to Sandbox container registry
 
 #  - job: Doc
 #    displayName: Build and Push Documentation
@@ -146,8 +150,9 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             az acr login --name aziecr1aip001
+            docker pull aziecr1aip001.azurecr.io/backstage_app_back:latest
             docker pull aziecr1aip001.azurecr.io/backstage_app_front:latest
-        displayName: Pull image from Sandbox container registry to custom DevOps agent
+        displayName: Pull images from Sandbox container registry to custom DevOps agent (with SDX DEV access)
 
       - task: AzureCLI@2
         inputs:
@@ -156,9 +161,13 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             az acr login --name aziecr1exu749
+            echo "Push backstage backend..."
+            docker tag aziecr1aip001.azurecr.io/backstage_app_back:latest aziecr1exu749.azurecr.io/backstage_app_back:latest
+            aip -i SDXDEV app container push --container_name backstage_app_back
+            echo "Push backstage frontend..."
             docker tag aziecr1aip001.azurecr.io/backstage_app_front:latest aziecr1exu749.azurecr.io/backstage_app_front:latest
             aip -i SDXDEV app container push --container_name backstage_app_front
-        displayName: Tag and push image to SDXDEV container registry
+        displayName: Tag and push imags to SDXDEV container registry
 
       - task: AzureCLI@2
         inputs:
