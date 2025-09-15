@@ -1,6 +1,8 @@
 import { Content } from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { Box, Grid, Paper, Typography } from '@material-ui/core';
+
 
 interface HtmlDisplayTabProps {
   annotationKey: string;
@@ -21,8 +23,21 @@ export const HtmlDisplayTab = ({
   const heightValue = typeof height === 'number' ? `${height}px` : height;
   const { entity } = useEntity();
   
+  const configApi = useApi(configApiRef);
+  // Get the trivy storage configuration using the StackOverflow pattern
+  const storage = configApi.getOptionalConfig('customStorage');
+  const storageHost = storage.getOptionalString('host');
+  const sasToken = storage.getOptionalString('reportSasToken');
+
   // Get the HTML content URL from the entity annotation
-  const htmlContentUrl = entity.metadata.annotations?.[annotationKey];
+  const htmlContentUri = entity.metadata.annotations?.[annotationKey];
+
+  const htmlContentUrl =
+    htmlContentUri && storageHost
+      ? `https://${storageHost}/report/${htmlContentUri}${
+          sasToken ? `?${sasToken}` : ''
+        }`
+      : null;
   
   if (!htmlContentUrl) {
     return (

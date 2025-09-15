@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: post-deployment-config
   title: Post-Deployment Infra Parameters Configuration
-  description: Run post-deployment script to configure Key Vault, App Insights, Storage, and ACR.
+  description: Run post-deployment script to configure App Insights, Storage, and ACR secrets in the Key Vault.
 spec:
   owner: team-sdx
   type: service
@@ -49,10 +49,6 @@ spec:
               const: "true"
             - title: No, use identity of Backstage to log in for retrieving resources
               const: "false"
-        branch:
-          type: string
-          description: "Branch to trigger the pipeline on"
-          default: ""
   
   steps:
     - id: run-azure-pipeline
@@ -62,7 +58,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
         pipelineId: "9917"
-        branch: ${{ parameters.branch }}
+        branch: "main"
         pipelineParameters:
           resource_group_name: ${{ parameters.resourceGroupName }}
           keyvault_name: ${{ parameters.keyVaultName }}

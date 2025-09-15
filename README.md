@@ -20,19 +20,24 @@ To do so yu must specify several environment variable.
   * PG_USER : user to connect to PG, ex sdxpostgreadminuser
   * PG_PASSWORD : password used to connect to PG
   * PG_DATABASE : name of teh PG database that should be used by backstage
-  * BACKSTAGE_ACCESS_TOKEN : the access token used by backstage to access Azure DevOps(see below how to generate it)
+  * BACKSTAGE_DEVOPS_TOKEN : the access token used by backstage to access Azure DevOps(see below how to generate it)
   * BACKSTAGE_SONARQUBE_TOKEN : the token to allow sonarqube connexion to backstage
+  * BACKSTAGE_STORAGE_HOST : the host of the storage account, ex: aziest1doc001.blob.core.windows.net
+  * BACKSTAGE_STORAGE_ACCOUNT : backstage storage account name
+  * BACKSTAGE_STORAGE_KEY : backstage storage account key
+  * BACKSTAGE_STORAGE_REPORT_SAS_TOKEN : backstage report storage account sas token
 
 Than you can run at the root of the repo ex:
 
   ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_ACCESS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> backstage
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -e BACKSTAGE_STORAGE_HOST=<STORAGE_HOST> -e BACKSTAGE_STORAGE_ACCOUNT=<STORAGE_ACCOUNT> -e BACKSTAGE_STORAGE_KEY=<STORAGE_ACCOUNT_KEY> -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN=<REPORT_SAS_TOKEN>  backstage
+  
   ```
 
 If you are making changes to yaml files and want to test them locally without rebuilding the docker image and restarting the container, you can mount the folder with yaml files so that they are reloaded dynamically e.g.
 
   ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_ACCESS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\sodexo:/workspace/backstage/sodexo" -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\app-config.yaml:/workspace/backstage/app-config.yaml" backstage
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\sodexo:/workspace/backstage/sodexo" -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\app-config.yaml:/workspace/backstage/app-config.yaml" backstage
   ```
 
 Create a file app-config.local.yaml to store local configuration for backstage. This file is gitignored but even if not used should be creted and left empty to avoid errors in the log.

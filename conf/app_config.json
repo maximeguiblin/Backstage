@@ -72,8 +72,12 @@
                 "BACKSTAGE_CLIENT_ID": "{#{@infra.keyvault_secrets.backstage_client_id}}",
                 "BACKSTAGE_CLIENT_SECRET": "{#{@infra.keyvault_secrets.backstage_client_secret}}",
                 "BACKSTAGE_TENANT_ID": "{#{@infra.keyvault_secrets.backstage_tenant_id}}",
-                "BACKSTAGE_ACCESS_TOKEN": "{#{@infra.keyvault_secrets.backstage_access_token}}",
-                "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}"
+                "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}",
+                "BACKSTAGE_DEVOPS_TOKEN": "{#{@infra.keyvault_secrets.backstage_devops_token}}",
+                "BACKSTAGE_STORAGE_ACCOUNT": "{#{@infra.keyvault_secrets.backstage_storage_account}}",
+                "BACKSTAGE_STORAGE_KEY": "{#{@infra.keyvault_secrets.backstage_storage_key}}",
+                "BACKSTAGE_STORAGE_HOST": "{#{@infra.keyvault_secrets.backstage_storage_host}}",
+                "BACKSTAGE_STORAGE_REPORT_SAS_TOKEN": "{#{@infra.keyvault_secrets.backstage_storage_report_sas_token}}"
             }
         }
     ]

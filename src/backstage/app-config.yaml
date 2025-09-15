@@ -1,5 +1,5 @@
 app:
-  title: Scaffolded Backstage App
+  title: Sodexo Developer Portal
   baseUrl: http://localhost:3000
   listen:
     port: 3000
@@ -9,7 +9,7 @@ app:
 azureDevOps:
   host: dev.azure.com
   organization: sdxcloud
-  token: ${BACKSTAGE_ACCESS_TOKEN}
+  token: ${BACKSTAGE_DEVOPS_TOKEN}
 
 sonarqube:
   instances:
@@ -19,7 +19,7 @@ sonarqube:
       apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
 
 organization:
-  name: My Company
+  name: Sodexo
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -60,12 +60,12 @@ backend:
           '^/proxy/azure-devops': ''
         # Format authorization header according to Azure DevOps API requirements
         headers:
-          Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_ACCESS_TOKEN).toString('base64') }}
+          Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
         # Allow headers to pass through
         allowedHeaders: ['Authorization', 'Content-Type']
   reading:
     allow:
-      - host: aziest1doc001.blob.core.windows.net
+      - host: ${BACKSTAGE_STORAGE_HOST}
       - host: sdxcloud.visualstudio.com
       - host: dev.azure.com
 
@@ -73,14 +73,19 @@ integrations:
   azure:
     - host: dev.azure.com #sdxcloud.visualstudio.com
       credentials:
-        - personalAccessToken: ${BACKSTAGE_ACCESS_TOKEN}
+        - personalAccessToken: ${BACKSTAGE_DEVOPS_TOKEN}
         # - clientId: ${BACKSTAGE_CLIENT_ID}
         #   clientSecret: ${BACKSTAGE_CLIENT_SECRET}
         #   tenantId: ${BACKSTAGE_TENANT_ID}
   azureDevOps:
     - host: dev.azure.com
       organization: sdxcloud
-      token: ${BACKSTAGE_ACCESS_TOKEN}
+      token: ${BACKSTAGE_DEVOPS_TOKEN}
+
+# Storage account report configuration
+customStorage:
+  host: ${BACKSTAGE_STORAGE_HOST}
+  reportSasToken: ${BACKSTAGE_STORAGE_REPORT_SAS_TOKEN}
 
 proxy:
   ### Example for how to add a proxy endpoint for the frontend.
@@ -101,8 +106,8 @@ techdocs:
     azureBlobStorage:
       containerName: 'documentation'
       credentials:
-        accountName: aziest1doc001
-        accountKey: 295PqTgCec9cXl3eyKHG5hFg1lNLAh+laku6ZvbJvkQEEv79bGolTNCtSkbzcTJaSHZLvjSI4fih+AStxTnyRw==
+        accountName: ${BACKSTAGE_STORAGE_ACCOUNT}
+        accountKey: ${BACKSTAGE_STORAGE_KEY}
   # Disable search indexing for now to avoid the search index error
   search:
     enabled: false
@@ -204,16 +209,6 @@ catalog:
       target: ../../sodexo/powerchef-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
-
-    ## Uncomment these lines to add more example data
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
-
-    ## Uncomment these lines to add an example org
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
-    #   rules:
-    #     - allow: [User, Group]
 
   providers:
     azureDevOps:

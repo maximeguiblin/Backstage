@@ -22,7 +22,7 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.Cookiecutter
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Cookiecutter
-    aip.check: https://aziest1doc001.blob.core.windows.net/report/aip/cookiecutter/aip_check.html?sp=r&st=2025-08-25T15:03:15Z&se=2025-10-10T23:18:15Z&spr=https&sv=2024-11-04&sr=c&sig=4BxaIX4zz8cRI7xGDHqxaG63mQTxh89mQr6bGSLYPVA%3D
+    aip.check: aip/cookiecutter/aip_check.html
 spec:
   type: repo
   owner: aip-team
@@ -58,7 +58,8 @@ metadata:
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.SDK
     sonarqube.org/project-key: sodexoSonarqube/GLB.GLB.DataLab.AIPlatform_GLB.GLB.DataLab.AIPlatform.SDK_AZXxa6KVZNnaRRY8khLc
-    trivy.security-report: https://aziest1doc001.blob.core.windows.net/report/aip/sdk/trivy_report.html?sp=r&st=2025-08-12T07:56:19Z&se=2025-08-31T16:11:19Z&spr=https&sv=2024-11-04&sr=c&sig=QTNUVPr5srGAdNk7JEltsqTUKACn7aruTeAigB8ygD0%3D
+    trivy.security-report: aip/sdk/trivy_report.html
+    
   links:
     - url: https://aip.datalab.sodexo.com/aip/docs/sdk
       title: SDK documentation

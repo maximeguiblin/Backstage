@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: trigger-bicep-pipeline
   title: Provisioning resources in SDX Sandbox
-  description: Collects parameters and triggers an Azure DevOps pipeline with them.
+  description: Provide parameters to create requested Azure resources in SDX Sandbox.
 spec:
   owner: platform-team
   type: service
@@ -67,10 +67,6 @@ spec:
             const: "true"
           - title: No, I will do it myself using the Post-Deployment Infra Parameters Configuration template
             const: "false"
-      branch:
-          type: string
-          description: "Branch to trigger the pipeline on"
-          default: ""
 
   steps:
     - id: run-azure-pipeline
@@ -80,7 +76,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
         pipelineId: "8986"
-        branch: ${{ parameters.branch }}
+        branch: "main"
         pipelineParameters:
           resource_group: ${{ parameters.resource_group }}
           resource_suffix: ${{ parameters.resource_suffix }}
