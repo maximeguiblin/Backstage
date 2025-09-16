@@ -186,3 +186,15 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: aip-documentation
+  description: Documentation for the AIP
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/aip-manuals/ ====> aziest1doc001
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
