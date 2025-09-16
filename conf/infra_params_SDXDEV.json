@@ -5,7 +5,6 @@
     "LOCATION": "northeurope",
     "TENANT_ID": "",
     "KEYVAULT_SECRETS": {
-        "DOCS_STORAGE_ACCOUNT_KEY": "Docs-StorageAccount-Key",
         "PG_HOST": "PG-HOST",
         "PG_PORT": "PG-PORT",
         "PG_USER": "PG-USER",

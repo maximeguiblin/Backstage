@@ -193,7 +193,7 @@ metadata:
   name: aip-documentation
   description: Documentation for the AIP
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip-manuals/ ====> aziest1doc001
+    backstage.io/techdocs-ref: dir:default/component/aip-manuals/
 spec:
   type: documentation
   lifecycle: experimental

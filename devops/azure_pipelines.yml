@@ -58,28 +58,28 @@ jobs:
           coverage run --source=src -m pytest tests/** --capture=no --show-capture=no --doctest-modules --junitxml=junit/test-results.xml
         displayName: Run tests with coverage
 
-      - bash: |
-          set -e
-          echo "Build backstage backend..."
-          aip -i SDXDEV app container build --container_name backstage_app_back
-          echo "Build backstage frontend..."
-          aip -i SDXDEV app container build --container_name backstage_app_front
-        displayName: Build docker images on default microsoft agent (with internet connection)
-
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: $(serviceConnectionSandbox)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            az acr login --name aziecr1aip001
-            echo "Push backstage backend..."
-            docker tag aziecr1exu749.azurecr.io/backstage_app_back:latest aziecr1aip001.azurecr.io/backstage_app_back:latest
-            docker push aziecr1aip001.azurecr.io/backstage_app_back:latest
-            echo "Push backstage frontend..."
-            docker tag aziecr1exu749.azurecr.io/backstage_app_front:latest aziecr1aip001.azurecr.io/backstage_app_front:latest
-            docker push aziecr1aip001.azurecr.io/backstage_app_front:latest
-        displayName: Tag and push images to Sandbox container registry
+#      - bash: |
+#          set -e
+#          echo "Build backstage backend..."
+#          aip -i SDXDEV app container build --container_name backstage_app_back
+#          echo "Build backstage frontend..."
+#          aip -i SDXDEV app container build --container_name backstage_app_front
+#        displayName: Build docker images on default microsoft agent (with internet connection)
+#
+#      - task: AzureCLI@2
+#        inputs:
+#          azureSubscription: $(serviceConnectionSandbox)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            az acr login --name aziecr1aip001
+#            echo "Push backstage backend..."
+#            docker tag aziecr1exu749.azurecr.io/backstage_app_back:latest aziecr1aip001.azurecr.io/backstage_app_back:latest
+#            docker push aziecr1aip001.azurecr.io/backstage_app_back:latest
+#            echo "Push backstage frontend..."
+#            docker tag aziecr1exu749.azurecr.io/backstage_app_front:latest aziecr1aip001.azurecr.io/backstage_app_front:latest
+#            docker push aziecr1aip001.azurecr.io/backstage_app_front:latest
+#        displayName: Tag and push images to Sandbox container registry
 
 #  - job: Doc
 #    displayName: Build and Push Documentation
@@ -87,7 +87,7 @@ jobs:
 #    pool:
 #      vmImage: ubuntu-latest
 #    container:
-#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
 #      endpoint: SrvCnx_AIP_Docker_Registry
 #    steps:
 #      - script: |
@@ -108,7 +108,7 @@ jobs:
 #
 #      - script: |
 #          if [[ -d backstage ]]; then cd backstage ; fi
-#          aip -i SDXDEV core docs build --add_markdowns --install_packages
+#          aip core docs build --add_markdowns --install_packages
 #          if [[ ! -d $(PATHDOC) ]];
 #          then
 #            echo "Not found generated doc at path $(PATHDOC)"
@@ -123,7 +123,7 @@ jobs:
 #          scriptLocation: inlineScript
 #          inlineScript: |
 #            if [[ -d backstage ]]; then cd backstage ; fi
-#            aip -i SDXDEV core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
+#            aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
 #        displayName: Push doc
 
 
@@ -139,7 +139,7 @@ jobs:
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
     container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:latest
+      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
       endpoint: SrvCnx_AIP_Docker_Registry
     steps:
 
@@ -149,7 +149,7 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            az acr login --name aziecr1aip001
+            az acr login -n aziecr1aip001
             docker pull aziecr1aip001.azurecr.io/backstage_app_back:latest
             docker pull aziecr1aip001.azurecr.io/backstage_app_front:latest
         displayName: Pull images from Sandbox container registry to custom DevOps agent (with SDX DEV access)
@@ -160,7 +160,7 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            az acr login --name aziecr1exu749
+            az acr login -n aziecr1exu749
             echo "Push backstage backend..."
             docker tag aziecr1aip001.azurecr.io/backstage_app_back:latest aziecr1exu749.azurecr.io/backstage_app_back:latest
             aip -i SDXDEV app container push --container_name backstage_app_back
