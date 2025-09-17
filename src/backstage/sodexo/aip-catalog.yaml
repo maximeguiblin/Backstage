@@ -178,10 +178,22 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: sdk-documentation
-  description: Documentation for the AIP SDK
+  name: aip-sdk-code-documentation
+  description: Documentation for the AIP SDK source code
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/sdk-documentation/
+    backstage.io/techdocs-ref: dir:default/component/aip_sdk/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: aip-cli-code-documentation
+  description: Documentation for the AIP CLI source code
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/aip_cli/
 spec:
   type: documentation
   lifecycle: experimental
@@ -193,7 +205,19 @@ metadata:
   name: aip-documentation
   description: Documentation for the AIP
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip-manuals/
+    backstage.io/techdocs-ref: dir:default/component/aip_aip-manuals/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: aip-wiki
+  description: AIP Wiki
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/aip_wiki/
 spec:
   type: documentation
   lifecycle: experimental
