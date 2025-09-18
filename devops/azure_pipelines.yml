@@ -129,6 +129,12 @@ jobs:
       image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
       endpoint: SrvCnx_AIP_Docker_Registry
     steps:
+      - task: PipAuthenticate@1
+        inputs:
+          artifactFeeds: $(artifactFeeds)
+          onlyAddExtraIndex: true
+        displayName: Pip authentication
+
       - task: AzureCLI@2
         inputs:
           azureSubscription: $(serviceConnectionSandbox)
