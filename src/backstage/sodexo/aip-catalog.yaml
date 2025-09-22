@@ -222,3 +222,15 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sdk-documentation
+  description: Documentation for the AIP SDK
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/sdk-documentation/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team

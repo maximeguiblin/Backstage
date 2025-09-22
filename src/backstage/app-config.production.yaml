@@ -24,21 +24,4 @@ backend:
       #   ca: # if you have a CA file and want to verify it you can uncomment this section
       #     $file: <file-path>/ca/server.crt
 
-  reading:
-    allow:
-      - host: ${BACKSTAGE_STORAGE_HOST}
-      - host: sdxcloud.visualstudio.com
-      - host: dev.azure.com
-
-techdocs:
-  builder: 'external'
-  publisher:
-    type: 'azureBlobStorage'
-    azureBlobStorage:
-      containerName: 'documentation'
-      credentials:
-        accountName: ${BACKSTAGE_STORAGE_ACCOUNT}
-        accountKey: ${BACKSTAGE_STORAGE_KEY}
-  search:
-    enabled: false
 
