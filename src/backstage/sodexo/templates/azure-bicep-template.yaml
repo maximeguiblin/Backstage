@@ -35,14 +35,19 @@ spec:
       extra_resources:
         title: Select extra resources
         type: array
+        default: ["none"]
         items:
           type: string
           enum:
+            - none
             - databricks
             - datafactory
+            - datalake
           enumNames:
+            - None
             - Azure Databricks
             - Azure DataFactory
+            - Azure DataLake
         uniqueItems: true
         ui:options:
           widget: checkboxes
