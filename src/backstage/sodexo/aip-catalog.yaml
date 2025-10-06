@@ -186,6 +186,7 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+  subcomponentOf: GLB.GLB.DataLab.AIPlatform.SDK
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -198,6 +199,7 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+  subcomponentOf: GLB.GLB.DataLab.AIPlatform.CLI
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -210,6 +212,7 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+  subcomponentOf: AI-Platform
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -222,6 +225,7 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+  subcomponentOf: AI-Platform
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -234,3 +238,43 @@ spec:
   type: documentation
   lifecycle: experimental
   owner: aip-team
+  subcomponentOf: GLB.GLB.DataLab.AIPlatform.SDK
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: aip-manuals
+  description: AIP Documentation from the AIP WebApp
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/aip-manuals/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+  subcomponentOf: AI-Platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: user-guide
+  description: Sodexo Developer Portal's User Guide
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/user-guide/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+  subcomponentOf: AI-Platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: test-aip-manuals
+  description: AIP Documentation from the AIP WebApp
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/test-aip-manuals/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+  subcomponentOf: AI-Platform

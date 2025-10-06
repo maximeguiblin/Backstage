@@ -1,0 +1,93 @@
+site_name: 'Sodexo Developer Portal User Guide'
+site_description: 'Comprehensive user guide for Sodexo Developer Portal'
+site_author: 'Platform Team'
+
+# Repository information
+repo_name: 'IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage'
+repo_url: 'https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage'
+
+# Navigation structure
+nav:
+  - Home: index.md
+  - Documentation Management: guides/usecase-documentation.md
+  - Infrastructure Provisioning: guides/self-service-bicep.md
+  - Repository Initialization: guides/self-service-repo.md
+  - TechDocs CLI Guide: guides/techdocs-cli-guide.md
+  - Navigation and Filters: guides/navigation-and-filters.md
+
+# Theme configuration
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+  
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+
+  icon:
+    repo: fontawesome/brands/microsoft
+    edit: material/pencil
+    view: material/eye
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - techdocs-core
+
+# Extra CSS and JavaScript (optional - may not work in all TechDocs environments)
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+# Extra configuration
+extra:
+  social:
+    - icon: fontawesome/brands/microsoft
+      link: https://dev.azure.com/sdxcloud
+      name: Azure DevOps
+    - icon: material/web
+      link: https://aip.datalab.sodexo.com/
+      name: AI Platform
+  
+  version:
+    provider: mike
+    default: latest
+
+# Copyright
+copyright: Copyright &copy; 2024 Sodexo - Platform Team

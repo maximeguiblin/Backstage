@@ -1,0 +1,85 @@
+/* Custom styles for Sodexo Developer Portal User Guide */
+
+/* Sodexo brand colors */
+:root {
+    --sodexo-blue: #0066cc;
+    --sodexo-light-blue: #4d94ff;
+    --sodexo-dark-blue: #004499;
+    --sodexo-gray: #f5f5f5;
+}
+
+/* Custom header styling */
+.md-header {
+    background-color: var(--sodexo-blue);
+}
+
+/* Custom navigation styling */
+.md-nav__title {
+    font-weight: 600;
+}
+
+/* Custom admonition styling */
+.md-typeset .admonition.note {
+    border-left-color: var(--sodexo-blue);
+}
+
+.md-typeset .admonition.tip {
+    border-left-color: var(--sodexo-light-blue);
+}
+
+/* Custom code block styling */
+.md-typeset .highlight {
+    border-radius: 6px;
+}
+
+/* Custom table styling */
+.md-typeset table:not([class]) {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Custom button styling */
+.md-button {
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.md-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom card-like styling for sections */
+.md-typeset h2 {
+    border-bottom: 2px solid var(--sodexo-blue);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Custom styling for the home page cards */
+.guide-card {
+    background: var(--sodexo-gray);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-left: 4px solid var(--sodexo-blue);
+    transition: all 0.2s ease;
+}
+
+.guide-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom footer styling */
+.md-footer {
+    background-color: var(--sodexo-dark-blue);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .guide-card {
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+}

@@ -242,3 +242,65 @@ jobs:
             echo "Start deploying backstage..."
             aip -i SDXDEV app container deploy --all --deploy_only
         displayName: Deploy backstage app
+
+
+  - job: BuildAndPublishTechDocs
+    displayName: Build and Publish TechDocs
+    dependsOn: TestAndBuild
+    condition: and(
+        succeeded(),
+        or(
+            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+            eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+        )
+      )
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - task: PipAuthenticate@1
+        inputs:
+          artifactFeeds: $(artifactFeeds)
+          onlyAddExtraIndex: true
+        displayName: Pip authentication
+
+      - script: |
+          echo "Installing TechDocs CLI..."
+          npm install -g @techdocs/cli
+          echo "TechDocs CLI installed successfully"
+        displayName: Install TechDocs CLI
+
+      - script: |
+          echo "Generating TechDocs documentation..."
+          cd docs/user-guide
+          npx @techdocs/cli generate --source-dir . --output-dir ./techdocs-user-guide --verbose
+          if [[ ! -d ./techdocs-user-guide ]];
+          then
+            echo "TechDocs build directory not found"
+            exit 1
+          fi
+          echo "TechDocs generated successfully"
+        displayName: Generate TechDocs
+
+      - task: AzureCLI@2
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+        inputs:
+          azureSubscription: $(serviceConnectionSandbox)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            echo "Publishing TechDocs to Azure Blob Storage on Sandbox..."
+            aip core docs push --account_name aziest1doc001 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
+            echo "TechDocs published successfully to Sandbox"
+        displayName: Publish TechDocs to Azure Blob Storage on Sandbox
+
+      - task: AzureCLI@2
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+        inputs:
+          azureSubscription: $(serviceConnectionSdxDev)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            echo "Publishing TechDocs to Azure Blob Storage on DEV..."
+            aip core docs push --account_name aziest1fuc810 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
+            echo "TechDocs published successfully to DEV"
+        displayName: Publish TechDocs to Azure Blob Storage on SDX DEV
