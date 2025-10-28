@@ -5,14 +5,12 @@
 
 variables:
   artifactFeeds: AIP-feed
-  PythonDownloadServiceConnections: AIPFeed_PythonPackageDownload
   serviceConnectionSandbox: Srv_Cnx_AIP_SANDBOX
   serviceConnectionSdxDev: GLB-SDP-DEVOPS-CICD-D
 
 trigger:
 - main
 - develop
-
 
 jobs:
   - job: ValidateSourceBranch
@@ -33,8 +31,8 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-      endpoint: SrvCnx_AIP_Docker_Registry
+      image: aziecr1aip001.azurecr.io/aip_devcontainer
+      endpoint: SDXSandbox_Docker_Registry
     steps:
       - task: PipAuthenticate@1
         inputs:
@@ -73,8 +71,8 @@ jobs:
 #    pool:
 #      vmImage: ubuntu-latest
 #    container:
-#      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-#      endpoint: SrvCnx_AIP_Docker_Registry
+#      image: aziecr1aip001.azurecr.io/aip_devcontainer
+#      endpoint: SDXSandbox_Docker_Registry
 #    steps:
 #      - script: |
 #          echo "Current branch is $(Build.SourceBranch)"
@@ -126,8 +124,8 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-      endpoint: SrvCnx_AIP_Docker_Registry
+      image: aziecr1aip001.azurecr.io/aip_devcontainer
+      endpoint: SDXSandbox_Docker_Registry
     steps:
       - task: PipAuthenticate@1
         inputs:
@@ -147,19 +145,19 @@ jobs:
 
 
   - job: BuildForSdxDev
-    dependsOn: TestAndBuild
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy_sdxdev'], 'true')
-        )
-      )
+#    dependsOn: TestAndBuild
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy_sdxdev'], 'true')
+#        )
+#      )
     pool:
       vmImage: ubuntu-latest
     container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-      endpoint: SrvCnx_AIP_Docker_Registry
+      image: aziecr1aip001.azurecr.io/aip_devcontainer
+      endpoint: SDXSandbox_Docker_Registry
     steps:
       - task: PipAuthenticate@1
         inputs:
@@ -193,18 +191,18 @@ jobs:
 
   - job: DeploySdxDev
     dependsOn: BuildForSdxDev
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy_sdxdev'], 'true')
-        )
-      )
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy_sdxdev'], 'true')
+#        )
+#      )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
     container:
-      image: aziecr1fpt999.azurecr.io/aip_devcontainer:backstage
-      endpoint: SrvCnx_AIP_Docker_Registry
+      image: aziecr1aip001.azurecr.io/aip_devcontainer
+      endpoint: SDXSandbox_Docker_Registry
     steps:
 
       - task: AzureCLI@2

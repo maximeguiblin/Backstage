@@ -1,10 +1,7 @@
 app:
-  title: Sodexo Developer Portal
-  baseUrl: http://localhost:3000
-  listen:
-    port: 3000
-    # Uncomment the following host directive to bind to specific interfaces
-    host: 0.0.0.0
+  title: sodexo Developer Portal
+  baseUrl: ${APP_BASE_URL:-https://developer-portal.dev.sodexonet.com}
+  host: 0.0.0.0
 
 azureDevOps:
   host: dev.azure.com
@@ -19,39 +16,28 @@ sonarqube:
       apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
 
 organization:
-  name: Sodexo
+  name: sodexo
 
 backend:
-  # Used for enabling authentication, secret is shared by all backend plugins
-  # See https://backstage.io/docs/auth/service-to-service-auth for
-  # information on the format
-  # auth:
-  #   keys:
-  #     - secret: ${BACKEND_SECRET}
-  baseUrl: http://localhost:7007
+  baseUrl: ${BACKEND_BASE_URL:-https://azieca3bck001.internal.northeurope.azurecontainerapps.io}
+
   listen:
-    port: 7007
-    # Uncomment the following host directive to bind to specific interfaces
     host: 0.0.0.0
-  csp:
-    connect-src: ["'self'", 'http:', 'https:']
-    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
-    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
-  cors:
-    origin: http://localhost:3000
-    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
-    credentials: true
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
-  # This is for local development only, it is not recommended to use this in production
-  # The production database configuration is stored in app-config.production.yaml
+    port: ${BACKEND_PORT:-7007}
+    csp:
+      connect-src: [ "'self'", 'http:', 'https:' ]
+
+cors:
+  origin: ${CORS_ORIGIN:-https://developer-portal.dev.sodexonet.com}
+  methods: GET,POST,PUT,DELETE,OPTIONS
+  allowedHeaders: Content-Type,Authorization,Accept,X-Requested-With
+  credentials: true
+
   database:
     client: better-sqlite3
     connection: ':memory:'
   proxy:
     endpoints:
-      # This is an example of how to set up a proxy endpoint for Azure DevOps
-      # The path is prefixed with /proxy/azure-devops, so the full URL would be
-      # http://localhost:7007/proxy/azure-devops/{organization}/{project}/_apis/pipelines/{pipelineId}/runs
       '/proxy/azure-devops':
         target: https://dev.azure.com
         changeOrigin: true
@@ -62,7 +48,7 @@ backend:
         headers:
           Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
         # Allow headers to pass through
-        allowedHeaders: ['Authorization', 'Content-Type']
+        allowedHeaders: [ 'Authorization', 'Content-Type' ]
   reading:
     allow:
       - host: ${BACKSTAGE_STORAGE_HOST}
@@ -88,12 +74,12 @@ customStorage:
   reportSasToken: ${BACKSTAGE_STORAGE_REPORT_SAS_TOKEN}
 
 proxy:
-  ### Example for how to add a proxy endpoint for the frontend.
-  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # endpoints:
-  #   '/test':
-  #     target: 'https://example.com'
-  #     changeOrigin: true
+### Example for how to add a proxy endpoint for the frontend.
+### A typical reason to do this is to handle HTTPS and CORS for internal services.
+# endpoints:
+#   '/test':
+#     target: 'https://example.com'
+#     changeOrigin: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -116,84 +102,84 @@ auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   providers:
     # See https://backstage.io/docs/auth/guest/provider
-    guest: {}
+    guest: { }
 
 scaffolder:
-  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+# see https://backstage.io/docs/features/software-templates/configuration for software template options
 
 catalog:
   import:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [ Component, System, API, Resource, Location ]
   locations:
 
-    # Sodexo data
+    # sodexo data
     - type: file
       target: ../../sodexo/all.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
+        - allow: [ User, Group, Component, System, API, Resource, Location ]
 
     # VM template
     - type: file
       target: ../../sodexo/templates/azure-vm-template.yaml
       rules:
-        - allow: [Template]
+        - allow: [ Template ]
 
     # Patterns template
     - type: file
       target: ../../sodexo/templates/azure-patterns-template.yaml
       rules:
-        - allow: [Template]
+        - allow: [ Template ]
 
     # Bicep template
     - type: file
       target: ../../sodexo/templates/azure-bicep-template.yaml
       rules:
-        - allow: [Template]
+        - allow: [ Template ]
 
     # Infrastructure configuration template
     - type: file
       target: ../../sodexo/templates/infra-config-template.yaml
       rules:
-        - allow: [Template]
+        - allow: [ Template ]
 
     # AIP templates
     - type: file
       target: ../../sodexo/aip-template.yaml
       rules:
-        - allow: [Template] 
+        - allow: [ Template ]
 
     # AIP Infrastructure Check template
     - type: file
       target: ../../sodexo/templates/aip-infra-check-template.yaml
       rules:
-        - allow: [Template]
+        - allow: [ Template ]
 
     # AIP catalog
     - type: file
       target: ../../sodexo/aip-catalog.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
+        - allow: [ User, Group, Component, System, API, Resource, Location ]
 
     # 4Site catalog
     - type: file
       target: ../../sodexo/4site-catalog.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
+        - allow: [ User, Group, Component, System, API, Resource, Location ]
 
     # ProductSwap catalog
     - type: file
       target: ../../sodexo/productswap-catalog.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-    
+        - allow: [ User, Group, Component, System, API, Resource, Location ]
+
     # PowerChef catalog
     - type: file
       target: ../../sodexo/powerchef-catalog.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
+        - allow: [ User, Group, Component, System, API, Resource, Location ]
 
   providers:
     azureDevOps:
@@ -207,7 +193,7 @@ catalog:
           timeout: { minutes: 3 }
 
 kubernetes:
-  # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
+# see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
