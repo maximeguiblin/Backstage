@@ -167,6 +167,9 @@ jobs:
 
       - bash: |
           set -e
+          docker rm $(docker ps -aq)
+          docker rmi -f $(docker images -aq)
+          docker system prune -a --volumes -f
           echo "Build backstage backend..."
           aip -i SDXDEV app container build --container_name backstage_app_back
           echo "Build backstage frontend..."
