@@ -27,11 +27,10 @@ To do so yu must specify several environment variable.
   * BACKSTAGE_STORAGE_KEY : backstage storage account key
   * BACKSTAGE_STORAGE_REPORT_SAS_TOKEN : backstage report storage account sas token
 
-Than you can run at the root of the repo ex:
+Then you can run at the root of the repo ex:
 
   ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -e BACKSTAGE_STORAGE_HOST=<STORAGE_HOST> -e BACKSTAGE_STORAGE_ACCOUNT=<STORAGE_ACCOUNT> -e BACKSTAGE_STORAGE_KEY=<STORAGE_ACCOUNT_KEY> -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN=<REPORT_SAS_TOKEN>  backstage
-  
+  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -e BACKSTAGE_STORAGE_HOST=<STORAGE_HOST> -e BACKSTAGE_STORAGE_ACCOUNT=<STORAGE_ACCOUNT> -e BACKSTAGE_STORAGE_KEY=<STORAGE_ACCOUNT_KEY> -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN=<REPORT_SAS_TOKEN> backstage
   ```
 
 If you are making changes to yaml files and want to test them locally without rebuilding the docker image and restarting the container, you can mount the folder with yaml files so that they are reloaded dynamically e.g.
