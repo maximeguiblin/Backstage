@@ -43,11 +43,17 @@ spec:
             - databricks
             - datafactory
             - datalake
+            - aisearch
+            - openai
+            - foundry
           enumNames:
             - None
             - Azure Databricks
             - Azure DataFactory
             - Azure DataLake
+            - Azure AI Search
+            - Azure OpenAI
+            - Azure Foundry
         uniqueItems: true
         ui:options:
           widget: checkboxes
@@ -73,6 +79,81 @@ spec:
           - title: No, I will do it myself using the Post-Deployment Infra Parameters Configuration template
             const: "false"
 
+    dependencies:
+      extra_resources:
+        allOf:
+          - if:
+              properties:
+                extra_resources:
+                  contains:
+                    const: openai
+            then:
+              properties:
+                openai_location:
+                  title: Select Azure region for OpenAI
+                  type: string
+                  description: "Select an Azure region where OpenAI resources should be deployed."
+                  default: australiaeast
+                  oneOf:
+                    - title: Australia East
+                      const: australiaeast
+                    - title: Brazil South
+                      const: brazilsouth
+                    - title: Canada Central
+                      const: canadacentral
+                    - title: Central India
+                      const: centralindia
+                    - title: Central US
+                      const: centralus
+                    - title: East Asia
+                      const: eastasia
+                    - title: East US
+                      const: eastus
+                    - title: East US 2
+                      const: eastus2
+                    - title: France Central
+                      const: francecentral
+                    - title: Germany West Central
+                      const: germanywestcentral
+                    - title: Israel Central
+                      const: israelcentral
+                    - title: Italy North
+                      const: italynorth
+                    - title: Japan East
+                      const: japaneast
+                    - title: Korea Central
+                      const: koreacentral
+                    - title: North Europe
+                      const: northeurope
+                    - title: Norway East
+                      const: norwayeast
+                    - title: Poland Central
+                      const: polandcentral
+                    - title: Qatar Central
+                      const: qatarcentral
+                    - title: South Africa North
+                      const: southafricanorth
+                    - title: South Central US
+                      const: southcentralus
+                    - title: Southeast Asia
+                      const: southeastasia
+                    - title: Sweden Central
+                      const: swedencentral
+                    - title: Switzerland North
+                      const: switzerlandnorth
+                    - title: UAE North
+                      const: uaenorth
+                    - title: UK South
+                      const: uksouth
+                    - title: West Europe
+                      const: westeurope
+                    - title: West US 2
+                      const: westus2
+                    - title: West US 3
+                      const: westus3
+              required:
+                - openai_location
+
   steps:
     - id: run-azure-pipeline
       name: Trigger Azure DevOps Pipeline
@@ -87,6 +168,7 @@ spec:
           resource_suffix: ${{ parameters.resource_suffix }}
           pattern: ${{ parameters.pattern }}
           extra_resources: ${{ parameters.extra_resources | join(",") }}
+          openai_location: ${{ parameters.openai_location | default("none") }}
           user_login: ${{ parameters.user_login }}
           project_repository_url: ${{ parameters.project_repository_url }}
           configure_params: ${{ parameters.configure_params }}
