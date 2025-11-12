@@ -93,6 +93,8 @@ jobs:
         displayName: Get doc version
 
       - script: |
+          set -e
+          export PATH="$HOME/.local/bin:$PATH"
           if [[ -d backstage ]]; then cd backstage ; fi
           aip core docs build --add_markdowns --install_packages
           if [[ ! -d $(PATHDOC) ]];
