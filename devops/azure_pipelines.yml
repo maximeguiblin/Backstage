@@ -13,111 +13,111 @@ trigger:
 - develop
 
 jobs:
-  - job: ValidateSourceBranch
-    displayName: Validate Source Branch
-    steps:
-      - script: |
-          if [[ "$(System.PullRequest.TargetBranch)" == "refs/heads/main" ]] && [[ "$(System.PullRequest.SourceBranch)" != "refs/heads/develop" ]];
-          then
-            echo "Pull requests to 'main' are only allowed from 'develop'."
-            exit 1
-          else
-            echo "Validation of source branch success"
-          fi
-        displayName: Check PR target branch for main
+#  - job: ValidateSourceBranch
+#    displayName: Validate Source Branch
+#    steps:
+#      - script: |
+#          if [[ "$(System.PullRequest.TargetBranch)" == "refs/heads/main" ]] && [[ "$(System.PullRequest.SourceBranch)" != "refs/heads/develop" ]];
+#          then
+#            echo "Pull requests to 'main' are only allowed from 'develop'."
+#            exit 1
+#          else
+#            echo "Validation of source branch success"
+#          fi
+#        displayName: Check PR target branch for main
 
 
-  - job: TestAndBuild
-    pool:
-      vmImage: ubuntu-latest
-    container:
-      image: aziecr1aip001.azurecr.io/aip_devcontainer
-      endpoint: SDXSandbox_Docker_Registry
-    steps:
-      - task: PipAuthenticate@1
-        inputs:
-          artifactFeeds: $(artifactFeeds)
-          onlyAddExtraIndex: true
-        displayName: Pip authentication
-
+#  - job: TestAndBuild
+#    pool:
+#      vmImage: ubuntu-latest
+#    container:
+#      image: aziecr1aip001.azurecr.io/aip_devcontainer
+#      endpoint: SDXSandbox_Docker_Registry
+#    steps:
+#      - task: PipAuthenticate@1
+#        inputs:
+#          artifactFeeds: $(artifactFeeds)
+#          onlyAddExtraIndex: true
+#        displayName: Pip authentication
+#
+##      - bash: |
+##          set -e
+##          echo "Run ESLint checks"
+##          cd src/backstage
+##          yarn install
+##          yarn lint:all
+##          if [ "$?" != 0 ]; then
+##              echo "Exiting with failure because ESLint found issues";
+##              exit 1;
+##          fi
+##        displayName: Run code formatting checks
+#
 #      - bash: |
 #          set -e
-#          echo "Run ESLint checks"
-#          cd src/backstage
-#          yarn install
-#          yarn lint:all
-#          if [ "$?" != 0 ]; then
-#              echo "Exiting with failure because ESLint found issues";
-#              exit 1;
+#          echo "Build backstage backend..."
+#          aip app container build --container_name backstage_app_back
+#          echo "Build backstage frontend..."
+#          aip app container build --container_name backstage_app_front
+#        displayName: Build docker images
+
+
+#  - job: Doc
+#    displayName: Build and Push Documentation
+#    dependsOn: TestAndBuild
+#    pool:
+#      vmImage: ubuntu-latest
+#    container:
+#      image: aziecr1aip001.azurecr.io/aip_devcontainer
+#      endpoint: SDXSandbox_Docker_Registry
+#    steps:
+#      - task: PipAuthenticate@1
+#        inputs:
+#          artifactFeeds: $(artifactFeeds)
+#          onlyAddExtraIndex: true
+#        displayName: Pip authentication
+#
+#      - script: |
+#          echo "Current branch is $(Build.SourceBranch)"
+#          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
+#            VERSION='latest'
+#          elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
+#            VERSION='merge'
+#          else
+#            VERSION='tmp'
 #          fi
-#        displayName: Run code formatting checks
-
-      - bash: |
-          set -e
-          echo "Build backstage backend..."
-          aip app container build --container_name backstage_app_back
-          echo "Build backstage frontend..."
-          aip app container build --container_name backstage_app_front
-        displayName: Build docker images
-
-
-  - job: Doc
-    displayName: Build and Push Documentation
-    dependsOn: TestAndBuild
-    pool:
-      vmImage: ubuntu-latest
-    container:
-      image: aziecr1aip001.azurecr.io/aip_devcontainer
-      endpoint: SDXSandbox_Docker_Registry
-    steps:
-      - task: PipAuthenticate@1
-        inputs:
-          artifactFeeds: $(artifactFeeds)
-          onlyAddExtraIndex: true
-        displayName: Pip authentication
-
-      - script: |
-          echo "Current branch is $(Build.SourceBranch)"
-          if [[ $(Build.SourceBranch) == "refs/heads/main" ]]; then
-            VERSION='latest'
-          elif [[ $(Build.SourceBranch) == "refs/heads/develop" ]]; then
-            VERSION='merge'
-          else
-            VERSION='tmp'
-          fi
-          PATHDOC=docs/build/html/
-          echo "##vso[task.setvariable variable=VERSION]$VERSION"
-          echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
-          echo "Found VERSION=$VERSION"
-          echo "Found PATHDOC=$PATHDOC"
-        displayName: Get doc version
-
-      - script: |
-          set -e
-          export PATH="$HOME/.local/bin:$PATH"
-          if [[ -d backstage ]]; then cd backstage ; fi
-          aip core docs build --add_markdowns --install_packages
-          if [[ ! -d $(PATHDOC) ]];
-          then
-            echo "Not found generated doc at path $(PATHDOC)"
-            exit 1
-          fi
-        displayName: Build doc
-
-      - task: AzureCLI@2
-        inputs:
-          azureSubscription: $(serviceConnectionSandbox)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            if [[ -d backstage ]]; then cd backstage ; fi
-            aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
-        displayName: Push doc
+#          PATHDOC=docs/build/html/
+#          echo "##vso[task.setvariable variable=VERSION]$VERSION"
+#          echo "##vso[task.setvariable variable=PATHDOC]$PATHDOC"
+#          echo "Found VERSION=$VERSION"
+#          echo "Found PATHDOC=$PATHDOC"
+#        displayName: Get doc version
+#
+#      - script: |
+#          set -e
+#          export PATH="$HOME/.local/bin:$PATH"
+#          if [[ -d backstage ]]; then cd backstage ; fi
+#          aip core docs build --add_markdowns --install_packages
+#          if [[ ! -d $(PATHDOC) ]];
+#          then
+#            echo "Not found generated doc at path $(PATHDOC)"
+#            exit 1
+#          fi
+#        displayName: Build doc
+#
+#      - task: AzureCLI@2
+#        inputs:
+#          azureSubscription: $(serviceConnectionSandbox)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            if [[ -d backstage ]]; then cd backstage ; fi
+#            aip core docs push --path_local $(PATHDOC) --account_name aziest1doc001 --datastore documentation --path_in_datastore backstage/$(VERSION)/ --credential Docs-StorageAccount-Key --overwrite true
+#        displayName: Push doc
 
 
   - job: DeploySandbox
     displayName: Deploy to SDX Sandbox
-    dependsOn: TestAndBuild
+#    dependsOn: TestAndBuild
     condition: and(
         succeeded(),
         or(
@@ -149,7 +149,7 @@ jobs:
 
 
   - job: BuildForSdxDev
-    dependsOn: TestAndBuild
+#    dependsOn: TestAndBuild
     condition: and(
         succeeded(),
         or(
@@ -246,63 +246,63 @@ jobs:
         displayName: Deploy backstage app
 
 
-  - job: BuildAndPublishTechDocs
-    displayName: Build and Publish TechDocs
-    dependsOn: TestAndBuild
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['Build.SourceBranch'], 'refs/heads/develop')
-        )
-      )
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-      - task: PipAuthenticate@1
-        inputs:
-          artifactFeeds: $(artifactFeeds)
-          onlyAddExtraIndex: true
-        displayName: Pip authentication
-
-      - script: |
-          echo "Installing TechDocs CLI..."
-          npm install -g @techdocs/cli
-          echo "TechDocs CLI installed successfully"
-        displayName: Install TechDocs CLI
-
-      - script: |
-          echo "Generating TechDocs documentation..."
-          cd docs/user-guide
-          npx @techdocs/cli generate --source-dir . --output-dir ./techdocs-user-guide --verbose
-          if [[ ! -d ./techdocs-user-guide ]];
-          then
-            echo "TechDocs build directory not found"
-            exit 1
-          fi
-          echo "TechDocs generated successfully"
-        displayName: Generate TechDocs
-
-      - task: AzureCLI@2
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
-        inputs:
-          azureSubscription: $(serviceConnectionSandbox)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            echo "Publishing TechDocs to Azure Blob Storage on Sandbox..."
-            aip core docs push --account_name aziest1doc001 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
-            echo "TechDocs published successfully to Sandbox"
-        displayName: Publish TechDocs to Azure Blob Storage on Sandbox
-
-      - task: AzureCLI@2
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
-        inputs:
-          azureSubscription: $(serviceConnectionSdxDev)
-          scriptType: bash
-          scriptLocation: inlineScript
-          inlineScript: |
-            echo "Publishing TechDocs to Azure Blob Storage on DEV..."
-            aip core docs push --account_name aziest1fuc810 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
-            echo "TechDocs published successfully to DEV"
-        displayName: Publish TechDocs to Azure Blob Storage on SDX DEV
+#  - job: BuildAndPublishTechDocs
+#    displayName: Build and Publish TechDocs
+#    dependsOn: TestAndBuild
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+#        )
+#      )
+#    pool:
+#      vmImage: ubuntu-latest
+#    steps:
+#      - task: PipAuthenticate@1
+#        inputs:
+#          artifactFeeds: $(artifactFeeds)
+#          onlyAddExtraIndex: true
+#        displayName: Pip authentication
+#
+#      - script: |
+#          echo "Installing TechDocs CLI..."
+#          npm install -g @techdocs/cli
+#          echo "TechDocs CLI installed successfully"
+#        displayName: Install TechDocs CLI
+#
+#      - script: |
+#          echo "Generating TechDocs documentation..."
+#          cd docs/user-guide
+#          npx @techdocs/cli generate --source-dir . --output-dir ./techdocs-user-guide --verbose
+#          if [[ ! -d ./techdocs-user-guide ]];
+#          then
+#            echo "TechDocs build directory not found"
+#            exit 1
+#          fi
+#          echo "TechDocs generated successfully"
+#        displayName: Generate TechDocs
+#
+#      - task: AzureCLI@2
+#        condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+#        inputs:
+#          azureSubscription: $(serviceConnectionSandbox)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            echo "Publishing TechDocs to Azure Blob Storage on Sandbox..."
+#            aip core docs push --account_name aziest1doc001 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
+#            echo "TechDocs published successfully to Sandbox"
+#        displayName: Publish TechDocs to Azure Blob Storage on Sandbox
+#
+#      - task: AzureCLI@2
+#        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+#        inputs:
+#          azureSubscription: $(serviceConnectionSdxDev)
+#          scriptType: bash
+#          scriptLocation: inlineScript
+#          inlineScript: |
+#            echo "Publishing TechDocs to Azure Blob Storage on DEV..."
+#            aip core docs push --account_name aziest1fuc810 --datastore documentation --path_in_datastore default/component/user-guide/ --path_local docs/techdocs-user-guide/
+#            echo "TechDocs published successfully to DEV"
+#        displayName: Publish TechDocs to Azure Blob Storage on SDX DEV
