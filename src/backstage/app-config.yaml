@@ -159,12 +159,6 @@ catalog:
       rules:
         - allow: [Template]
 
-    # AIP templates
-    - type: file
-      target: ../../sodexo/aip-template.yaml
-      rules:
-        - allow: [Template]
-
     # AIP Infrastructure Check template
     - type: file
       target: ../../sodexo/templates/aip-infra-check-template.yaml

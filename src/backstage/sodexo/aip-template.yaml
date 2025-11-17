@@ -78,10 +78,6 @@ spec:
             const: "true"
           - title: No, I will do it myself using the Post-Deployment Infra Parameters Configuration template
             const: "false"
-      branch:
-        title: Select the branch to trigger the pipeline on
-        type: string
-        default: "main"
 
     dependencies:
       extra_resources:
@@ -166,7 +162,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
         pipelineId: "8986"
-        branch: ${{ parameters.branch }}
+        branch: "main"
         pipelineParameters:
           resource_group: ${{ parameters.resource_group }}
           resource_suffix: ${{ parameters.resource_suffix }}
