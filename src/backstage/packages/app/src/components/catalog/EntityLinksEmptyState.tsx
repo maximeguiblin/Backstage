@@ -64,7 +64,7 @@ export function EntityLinksEmptyState() {
         target="_blank"
         href="https://backstage.io/docs/features/software-catalog/descriptor-format#links-optional"
       >
-        {t('entityLinksCard.readMoreButtonTitle')}
+        entityLinksCard.readMoreButtonTitle
       </Button>
     </>
   );

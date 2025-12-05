@@ -51,10 +51,9 @@
     "DATALAKE_NAME": "aziedl1aip001",
     "NETWORK_SECURITYGROUP_NAME": "",
     "CONTAINER_APP_ENVIRONMENT": "aziece1aip001",
-    "FRONT_ENDPOINT": "http://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "CORS_ENDPOINT": "https://azieca1aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "BACK_ENDPOINT": "https://azieca2aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
-    "CONTAINER_APP_FRONT_NAME": "azieca1aip001",
-    "CONTAINER_APP_BACK_NAME": "azieca2aip001",
+    "FRONT_ENDPOINT": "http://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "CORS_ENDPOINT": "https://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "BACK_ENDPOINT": "https://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
+    "CONTAINER_APP_NAME": "azieca0aip001",
     "ENVIRONMENT": "DEV"
 }

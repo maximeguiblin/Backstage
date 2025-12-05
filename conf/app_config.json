@@ -1,31 +1,13 @@
 {
     "containers": [
         {
-            "name": "backstage_app_front",
+            "name": "backstage_app",
             "build": {
-                "dir": ".",
-                "file": "Dockerfile",
+                "dir": "src/backstage",
+                "file": "src/backstage/Dockerfile",
                 "args": [
                     "--build-arg",
-                    "START_COMMAND=start",
-                    "--build-arg",
-                    "FRONT_ENDPOINT={@infra.front_endpoint}",
-                    "--build-arg",
-                    "CORS_ENDPOINT={@infra.cors_endpoint}",
-                    "--build-arg",
-                    "BACK_ENDPOINT={@infra.back_endpoint}"
-                ],
-                "tag_default": "latest"
-            }
-        },
-        {
-            "name": "backstage_app_back",
-            "build": {
-                "dir": ".",
-                "file": "Dockerfile",
-                "args": [
-                    "--build-arg",
-                    "START_COMMAND=start-backend",
+                    "START_COMMAND=dev",
                     "--build-arg",
                     "FRONT_ENDPOINT={@infra.front_endpoint}",
                     "--build-arg",
@@ -39,24 +21,11 @@
     ],
     "container_apps": [
         {
-            "name": "app_front",
-            "container_app_name": "@infra.container_app_front_name",
+            "name": "app",
+            "container_app_name": "@infra.container_app_name",
             "environment_name": "@infra.container_app_environment",
             "app_type": "app",
-            "container_name": "backstage_app_front",
-            "args_create": [
-                "--ingress",
-                "external",
-                "--target-port",
-                "3000"
-            ]
-        },
-        {
-            "name": "app_back",
-            "container_app_name": "@infra.container_app_back_name",
-            "environment_name": "@infra.container_app_environment",
-            "app_type": "app",
-            "container_name": "backstage_app_back",
+            "container_name": "backstage_app",
             "args_create": [
                 "--ingress",
                 "external",

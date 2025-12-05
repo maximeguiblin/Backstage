@@ -26,8 +26,8 @@ export const HtmlDisplayTab = ({
   const configApi = useApi(configApiRef);
   // Get the trivy storage configuration using the StackOverflow pattern
   const storage = configApi.getOptionalConfig('customStorage');
-  const storageHost = storage.getOptionalString('host');
-  const sasToken = storage.getOptionalString('reportSasToken');
+  const storageHost = storage?.getOptionalString('host');
+  const sasToken = storage?.getOptionalString('reportSasToken');
 
   // Get the HTML content URL from the entity annotation
   const htmlContentUri = entity.metadata.annotations?.[annotationKey];

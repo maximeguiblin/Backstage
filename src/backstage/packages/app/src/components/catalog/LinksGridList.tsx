@@ -37,7 +37,7 @@ interface LinksGridListProps {
 }
 
 export function LinksGridList(props: LinksGridListProps) {
-  const { items, cols = undefined } = props;
+  const { items, cols: _cols } = props;
   const numOfCols = undefined;
 
   return (

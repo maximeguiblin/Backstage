@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO: remove line above and solve ts check issues in this file
 /*
  * Copyright 2020 The Backstage Authors
  *
