@@ -112,11 +112,25 @@ techdocs:
   search:
     enabled: false
 
+# auth:
+#   # see https://backstage.io/docs/auth/ to learn about auth providers
+#   providers:
+#     # See https://backstage.io/docs/auth/guest/provider
+#     guest: {}
+
 auth:
-  # see https://backstage.io/docs/auth/ to learn about auth providers
+  environment: development
   providers:
-    # See https://backstage.io/docs/auth/guest/provider
-    guest: {}
+    microsoft:
+      development:
+        clientId: ${BACKSTAGE_CLIENT_ID}
+        clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+        tenantId: ${BACKSTAGE_TENANT_ID}
+        domainHint: ${BACKSTAGE_TENANT_ID}
+        signIn:
+          resolvers:
+            # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
+            - resolver: userIdMatchingUserEntityAnnotation
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
