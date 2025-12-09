@@ -116,13 +116,13 @@ jobs:
   - job: DeploySandbox
     displayName: Deploy to SDX Sandbox
 #    dependsOn: TestAndBuild
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/develop'),
-            eq(variables['deploy_sandbox'], 'true')
-        )
-      )
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/develop'),
+#            eq(variables['deploy_sandbox'], 'true')
+#        )
+#      )
     pool:
       vmImage: ubuntu-latest
     container:
@@ -148,13 +148,13 @@ jobs:
 
   - job: BuildForSdxDev
 #    dependsOn: TestAndBuild
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy_sdxdev'], 'true')
-        )
-      )
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy_sdxdev'], 'true')
+#        )
+#      )
     pool:
       vmImage: ubuntu-24.04
     container:
@@ -188,13 +188,13 @@ jobs:
 
   - job: DeploySdxDev
     dependsOn: BuildForSdxDev
-    condition: and(
-        succeeded(),
-        or(
-            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
-            eq(variables['deploy_sdxdev'], 'true')
-        )
-      )
+#    condition: and(
+#        succeeded(),
+#        or(
+#            eq(variables['Build.SourceBranch'], 'refs/heads/main'),
+#            eq(variables['deploy_sdxdev'], 'true')
+#        )
+#      )
     pool:
       name: DevOps agent pool NON-PROD CICD - SDP
     container:

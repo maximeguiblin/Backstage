@@ -127,16 +127,19 @@ techdocs:
 auth:
   environment: development
   providers:
-    microsoft:
-      development:
-        clientId: ${BACKSTAGE_CLIENT_ID}
-        clientSecret: ${BACKSTAGE_CLIENT_SECRET}
-        tenantId: ${BACKSTAGE_TENANT_ID}
-        domainHint: ${BACKSTAGE_TENANT_ID}
-        signIn:
-          resolvers:
-            # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
-            - resolver: userIdMatchingUserEntityAnnotation
+    guest: {}
+    # Microsoft auth disabled for local development
+    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
+    # microsoft:
+    #   development:
+    #     clientId: ${BACKSTAGE_CLIENT_ID}
+    #     clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+    #     tenantId: ${BACKSTAGE_TENANT_ID}
+    #     domainHint: ${BACKSTAGE_TENANT_ID}
+    #     signIn:
+    #       resolvers:
+    #         # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
+    #         - resolver: userIdMatchingUserEntityAnnotation
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
