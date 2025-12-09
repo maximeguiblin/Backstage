@@ -5,43 +5,153 @@ This repository contains the source code for a backstage based developer portal
 This project package was initiated based on Sodexo AI Platform Cookiecutter project template.
 
 
-## Run in local using docker
+## Run Locally Using Docker
 
-First, you need to build a docker image locally by running the command at the root of the repo:
+### Building the Docker Image
 
-  ```
-  $ docker build -t backstage .
-  ```
+Navigate to the Backstage directory and build the image:
 
-Then, you can run the docker image locally.
-To do so yu must specify several environment variable.
-  * PG_HOST : hostname of the server running Postgresql, ex azieps1aip001.postgres.database.azure.com
-  * PG_PORT : port used to connect to PG, ex 5432
-  * PG_USER : user to connect to PG, ex sdxpostgreadminuser
-  * PG_PASSWORD : password used to connect to PG
-  * PG_DATABASE : name of teh PG database that should be used by backstage
-  * BACKSTAGE_DEVOPS_TOKEN : the access token used by backstage to access Azure DevOps(see below how to generate it)
-  * BACKSTAGE_SONARQUBE_TOKEN : the token to allow sonarqube connexion to backstage
-  * BACKSTAGE_STORAGE_HOST : the host of the storage account, ex: aziest1doc001.blob.core.windows.net
-  * BACKSTAGE_STORAGE_ACCOUNT : backstage storage account name
-  * BACKSTAGE_STORAGE_KEY : backstage storage account key
-  * BACKSTAGE_STORAGE_REPORT_SAS_TOKEN : backstage report storage account sas token
+```bash
+cd src/backstage
+docker build -t backstage -f Dockerfile .
+```
 
-Then you can run at the root of the repo ex:
+**Fast rebuild with cache** (recommended after first build):
+```bash
+docker build -t backstage -f Dockerfile .
+```
 
-  ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -e BACKSTAGE_STORAGE_HOST=<STORAGE_HOST> -e BACKSTAGE_STORAGE_ACCOUNT=<STORAGE_ACCOUNT> -e BACKSTAGE_STORAGE_KEY=<STORAGE_ACCOUNT_KEY> -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN=<REPORT_SAS_TOKEN> backstage
-  ```
+**Clean rebuild without cache** (use only if needed):
+```bash
+docker build --no-cache -t backstage -f Dockerfile .
+```
 
-If you are making changes to yaml files and want to test them locally without rebuilding the docker image and restarting the container, you can mount the folder with yaml files so that they are reloaded dynamically e.g.
+### Running Modes
 
-  ```
-  $ docker run -p 3000:3000 -p 7007:7007 -e PG_HOST=azieps1aip001.postgres.database.azure.com -e PG_PORT=5432 -e PG_USER=sdxpostgreadminuser -e PG_PASSWORD=<password> -e PG_DATABASE=<db> -e BACKSTAGE_DEVOPS_TOKEN=<PAT_TOKEN> -e BACKSTAGE_SONARQUBE_TOKEN=<SONARQUBE_TOKEN> -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\sodexo:/workspace/backstage/sodexo" -v "C:\IST.GLB.GLB.DataFactory_DeveloperPlatform.Backstage\src\backstage\app-config.yaml:/workspace/backstage/app-config.yaml" backstage
-  ```
+The application supports two deployment modes:
 
-Create a file app-config.local.yaml to store local configuration for backstage. This file is gitignored but even if not used should be creted and left empty to avoid errors in the log.
+#### 1. **Local Mode** (SQLite - Development)
+Uses an in-memory SQLite database. Perfect for local testing without external dependencies.
 
-Finally you can open the backstage portal by going into the URL: http://localhost:3000
+```bash
+docker run -d \
+  --name backstage-local \
+  -p 7007:7007 \
+  -e USE_PRODUCTION_CONFIG=false \
+  -e BACKSTAGE_DEVOPS_TOKEN="<your-token>" \
+  -e BACKSTAGE_SONARQUBE_TOKEN="<your-token>" \
+  -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
+  -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
+  -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
+  -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN="<sas-token>" \
+  backstage
+```
+
+Access the application at: **http://localhost:7007**
+
+#### 2. **Production Mode** (PostgreSQL)
+Uses Azure PostgreSQL database for persistent storage.
+
+```bash
+docker run -d \
+  --name backstage-prod \
+  -p 7007:7007 \
+  -e USE_PRODUCTION_CONFIG=true \
+  -e POSTGRES_HOST="<your-host>.postgres.database.azure.com" \
+  -e POSTGRES_PORT="5432" \
+  -e POSTGRES_USER="<your-user>" \
+  -e POSTGRES_PASSWORD="<your-password>" \
+  -e BACKEND_SECRET="<your-secret>" \
+  -e BACKSTAGE_DEVOPS_TOKEN="<your-token>" \
+  -e BACKSTAGE_SONARQUBE_TOKEN="<your-token>" \
+  -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
+  -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
+  -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
+  -e BACKSTAGE_STORAGE_REPORT_SAS_TOKEN="<sas-token>" \
+  backstage
+```
+
+**For local PostgreSQL testing**, use `host.docker.internal`:
+```bash
+-e POSTGRES_HOST="host.docker.internal"
+```
+
+### Environment Variables Reference
+
+| Variable | Required | Description | Example |
+|----------|----------|-------------|---------|
+| `USE_PRODUCTION_CONFIG` | No | Set to `false` for SQLite, `true` for PostgreSQL | `false` |
+| `POSTGRES_HOST` | Prod only | PostgreSQL hostname | `azieps1aip001.postgres.database.azure.com` |
+| `POSTGRES_PORT` | Prod only | PostgreSQL port | `5432` |
+| `POSTGRES_USER` | Prod only | Database user | `sdxpostgreadminuser` |
+| `POSTGRES_PASSWORD` | Prod only | Database password | `<secure-password>` |
+| `BACKEND_SECRET` | Prod only | Backend auth secret | `<random-secret>` |
+| `BACKSTAGE_DEVOPS_TOKEN` | Yes | Azure DevOps PAT | `<your-pat-token>` |
+| `BACKSTAGE_SONARQUBE_TOKEN` | Yes | SonarQube token | `squ_...` |
+| `BACKSTAGE_STORAGE_HOST` | Yes | Azure Blob Storage host | `aziest1doc001.blob.core.windows.net` |
+| `BACKSTAGE_STORAGE_ACCOUNT` | Yes | Storage account name | `aziest1doc001` |
+| `BACKSTAGE_STORAGE_KEY` | Yes | Storage account key | `<storage-key>` |
+| `BACKSTAGE_STORAGE_REPORT_SAS_TOKEN` | Yes | SAS token for reports | `sp=r&st=...` |
+
+### Useful Docker Commands
+
+```bash
+# View logs
+docker logs -f backstage-local
+
+# Stop container
+docker stop backstage-local
+
+# Remove container
+docker rm backstage-local
+
+# Clean up unused images
+docker system prune -a --volumes
+docker rmi $(docker images -f "dangling=true" -q)
+
+# Mount local files for live development
+docker run -d \
+  -p 7007:7007 \
+  -v "$(pwd)/sodexo:/app/sodexo" \
+  -v "$(pwd)/app-config.yaml:/app/app-config.yaml" \
+  -e USE_PRODUCTION_CONFIG=false \
+  backstage
+```
+
+### Troubleshooting
+
+**Port 7007 already in use:**
+```bash
+lsof -ti:7007 | xargs kill -9
+```
+
+**Cannot connect to PostgreSQL:**
+- Ensure PostgreSQL is running
+- Use `host.docker.internal` instead of `localhost` for local databases
+- Check firewall rules for Azure PostgreSQL
+
+**401 Unauthorized errors:**
+- Verify `BACKEND_SECRET` is set in production mode
+- Check Azure DevOps token permissions
+
+**TechDocs not loading:**
+- Verify Azure Storage credentials
+- Check SAS token expiration date
+
+### Architecture
+
+The Docker image uses a multi-stage build for optimization:
+1. **Stage 1 (packages)**: Extracts package.json files
+2. **Stage 2 (build)**: Installs dependencies and compiles TypeScript
+3. **Stage 3 (final)**: Creates minimal runtime image with production dependencies only
+
+The final image is ~2.1GB and includes:
+- Node.js 22 (Bookworm Slim)
+- Compiled Backstage backend bundle
+- Production dependencies only
+- Local catalog files (`sodexo/*.yaml`)
+
+Both frontend and backend run on **port 7007** in a monolithic setup
 
 
 ## Deploy in Azure
