@@ -1,7 +1,71 @@
-dist-types
+# ==============================================================================
+# Docker Ignore File for Backstage
+# Excludes unnecessary files from Docker build context for faster builds
+# ==============================================================================
+
+# Node.js dependencies (will be installed by Yarn in the container)
+**/node_modules/
 node_modules
-packages/*/dist
-packages/*/node_modules
-plugins/*/dist
-plugins/*/node_modules
-*.local.yaml
+
+# Build artifacts and cache directories
+**/dist/
+**/dist-types/
+**/build/
+**/.cache/
+.yarn/cache
+.yarn/install-state.gz
+
+# Testing and coverage
+**/coverage/
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/e2e-tests/
+
+# Development and IDE files
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env.local
+.env.*.local
+
+# Documentation
+**/README.md
+docs/
+*.md
+!backstage.json
+
+# CI/CD
+.github/
+.gitlab/
+azure-pipelines.yml
+Jenkinsfile
+
+# Logs
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker files (not needed inside the image)
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Playwright and E2E testing
+playwright.config.ts
+**/playwright-report/
+**/test-results/
+
+# Miscellaneous
+.eslintrc*
+.prettierrc*
+jest.config*

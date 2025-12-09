@@ -28,6 +28,12 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
+  
+  # Disable default auth policy for local development
+  # WARNING: DO NOT use this in production!
+  auth:
+    dangerouslyDisableDefaultAuthPolicy: true
+  
   baseUrl: http://localhost:7007
   listen:
     port: 7007
@@ -145,31 +151,31 @@ catalog:
 
     # Sodexo data
     - type: file
-      target: ../../sodexo/all.yaml
+      target: ./sodexo/all.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
     # VM template
     - type: file
-      target: ../../sodexo/templates/azure-vm-template.yaml
+      target: ./sodexo/templates/azure-vm-template.yaml
       rules:
         - allow: [Template]
 
     # Patterns template
     - type: file
-      target: ../../sodexo/templates/azure-patterns-template.yaml
+      target: ./sodexo/templates/azure-patterns-template.yaml
       rules:
         - allow: [Template]
 
     # Bicep template
     - type: file
-      target: ../../sodexo/templates/azure-bicep-template.yaml
+      target: ./sodexo/templates/azure-bicep-template.yaml
       rules:
         - allow: [Template]
 
     # Infrastructure configuration template
     - type: file
-      target: ../../sodexo/templates/infra-config-template.yaml
+      target: ./sodexo/templates/infra-config-template.yaml
       rules:
         - allow: [Template]
 
@@ -181,31 +187,31 @@ catalog:
 
     # AIP Infrastructure Check template
     - type: file
-      target: ../../sodexo/templates/aip-infra-check-template.yaml
+      target: ./sodexo/templates/aip-infra-check-template.yaml
       rules:
         - allow: [Template]
 
     # AIP catalog
     - type: file
-      target: ../../sodexo/aip-catalog.yaml
+      target: ./sodexo/aip-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
     # 4Site catalog
     - type: file
-      target: ../../sodexo/4site-catalog.yaml
+      target: ./sodexo/4site-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
     # ProductSwap catalog
     - type: file
-      target: ../../sodexo/productswap-catalog.yaml
+      target: ./sodexo/productswap-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
     # PowerChef catalog
     - type: file
-      target: ../../sodexo/powerchef-catalog.yaml
+      target: ./sodexo/powerchef-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
