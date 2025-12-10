@@ -176,10 +176,10 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: trigger-azure-pipeline
-  title: Initialize repository with CookieCutter template
-  description: Initialize a new repository based on AIP CookieCutter template by providing information to this template.
+  title: Initialize a project repository with CookieCutter template
+  description: Provide information to initialize a new project repository with CookieCutter template.
 spec:
-  owner: aip-team
+  owner: platform-team
   type: service
 
   parameters:
@@ -198,18 +198,23 @@ spec:
       properties:
         author_name:
           type: string
+          description: "Name of the author or team"
           default: "Data Factory"
         author_email:
           type: string
+          description: "Email of the author or team"
           default: "nicolas.marchand@sodexo.com"
         project_name:
           type: string
+          description: "Name of the project"
           default: "GLB.GLB.DataLab.AIPlatform"
         project_slug:
           type: string
+          description: "Name of the project slug for CookieCutter template"
           default: "test_dummy_project"
         project_short_description:
           type: string
+          description: "Short description of the project"
           default: "This repository contains all the structure code you need to create a AIP Project compatible with Sodexo Data Factory AI Platform."
         project_infra:
           type: string
@@ -217,16 +222,20 @@ spec:
           enum: ["adb", "aml", "aml2", "app", "all"]
         usecase_name:
           type: string
+          description: "Name of the UseCase"
           default: "test_dummy_project"
         version:
           type: string
+          description: "Version of the project"
           default: "0.1.0"
         code_license:
           type: string
+          description: "License of the project"
           enum: ["SODEXO license", "MIT license", "BSD license", "ISC license", "Apache Software License 2.0", "GNU General Public License v3"]
           default: "SODEXO license"
         add_notebooks:
           type: string
+          description: "Add notebooks to the project"
           enum: ["y", "n"]
           default: "n"
 
@@ -254,10 +263,6 @@ spec:
               const: "false"
             - title: Yes, use my own identity to log in for retrieving resources
               const: "true"
-        branch:
-          type: string
-          description: "Branch to trigger the pipeline on"
-          default: "develop"
         
 
   steps:
@@ -268,7 +273,7 @@ spec:
         organization: "sdxcloud"
         project: "GLB.GLB.DataLab.AIPlatform"
         pipelineId: "8853"
-        branch: master
+        branch: "master"
         pipelineParameters:
           author_name: ${{ parameters.author_name }}
           author_email: ${{ parameters.author_email }}

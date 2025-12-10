@@ -170,6 +170,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Repository template
+    - type: file
+      target: ./sodexo/templates/azure-repo-template.yaml
+      rules:
+        - allow: [Template]
+
     # Bicep template
     - type: file
       target: ./sodexo/templates/azure-bicep-template.yaml
