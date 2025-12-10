@@ -28,9 +28,9 @@
     "STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "DOCS_STORAGE_ACCOUNT_NAME": "aziest1fuc810",
     "CONTAINER_APP_ENVIRONMENT": "azieca1ioe098",
-    "FRONT_ENDPOINT": "http://azieca2frt001.delightfulpond-c2014141.northeurope.azurecontainerapps.io",
-    "CORS_ENDPOINT": "https://azieca2frt001.delightfulpond-c2014141.northeurope.azurecontainerapps.io",
-    "BACK_ENDPOINT": "https://azieca2frt001.delightfulpond-c2014141.northeurope.azurecontainerapps.io",
+    "FRONT_ENDPOINT": "https://developer-portal.dev.sodexonet.com",
+    "CORS_ENDPOINT": "https://developer-portal.dev.sodexonet.com",
+    "BACK_ENDPOINT": "https://developer-portal.dev.sodexonet.com",
     "CONTAINER_APP_NAME": "azieca2frt001",
     "ENVIRONMENT": "DEV"
 }
