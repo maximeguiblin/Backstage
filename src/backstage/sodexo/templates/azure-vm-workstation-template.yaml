@@ -139,18 +139,3 @@ spec:
         url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DevVMWorkstations/_build?definitionId=5294
       - title: Wiki Documentation
         url: https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_DevVMWorkstations/_wiki/wikis/IST.GLB.GLB.DataFactory_DevVMWorkstations.wiki/23912/Deploy-a-virtual-machine-for-new-Data-Factory-developer
-    text: |
-      ## ✅ VM Workstation Provisioning Initiated
-      
-      **VM Name(s):** ${{ parameters.virtualMachineNames }}
-      
-      ### Pipeline Status
-      - 🚀 VM Deployment: Triggered
-      ${{ parameters.runHardening && '- 🔒 Hardening: Triggered' || '- ⏭️ Hardening: Skipped' }}
-      ${{ parameters.configureBackup && '- 💾 Backup Configuration: Triggered' || '- ⏭️ Backup: Skipped' }}
-      ${{ parameters.installTools && '- 🛠️ Tools Installation: Triggered' || '- ⏭️ Tools: Skipped' }}
-      
-      ### Next Steps
-      1. Monitor the pipeline runs in Azure DevOps
-      2. Once complete, submit network flow request on SoUnified (ports 22 & 3389)
-      3. For non-Sodexo laptops, request Pulse Web VPN access
