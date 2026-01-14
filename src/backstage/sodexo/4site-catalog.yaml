@@ -16,6 +16,42 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  name: IST.GLB.GLB.DataFactory_4site.DataIntegrationPipeline
+  description: Description of the data integration pipeline for 4Site
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_4site/_git/IST.GLB.GLB.DataFactory_4site.DataIntegrationPipeline
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: IST.GLB.GLB.DataFactory_4site/IST.GLB.GLB.DataFactory_4site.DataIntegrationPipeline
+  links:
+    - url: https://aip.datalab.sodexo.com/4-site/docs/4site-integration
+      title: 4Site Integration documentation
+spec:
+  type: repo
+  owner: 4site-team
+  subcomponentOf: 4Site
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: IST.GLB.GLB.DataFactory_4site.DataPublication
+  description: Description of the data publication for 4Site
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataFactory_4site/_git/IST.GLB.GLB.DataFactory_4site.DataPublication
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: IST.GLB.GLB.DataFactory_4site/IST.GLB.GLB.DataFactory_4site.DataPublication
+  links:
+    - url: https://aip.datalab.sodexo.com/4-site/docs/4site
+      title: 4Site documentation
+spec:
+  type: repo
+  owner: 4site-team
+  subcomponentOf: 4Site
+  lifecycle: experimental
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
   name: IST.GLB.GLB.Datafactory_4site.CorePipeline
   description: Description of the Core Pipeline repository for 4Site
   annotations:
