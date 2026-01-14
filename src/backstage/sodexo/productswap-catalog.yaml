@@ -134,7 +134,7 @@ metadata:
   name: product-swap_config
   description: Documentation for the ProductSwap config
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/product-swap_config/
+    backstage.io/techdocs-ref: dir:default/component/product-swap/product-swap_config/
 spec:
   type: documentation
   lifecycle: experimental
@@ -147,7 +147,7 @@ metadata:
   name: product-swap_python
   description: Documentation for the ProductSwap python
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/product-swap_python/
+    backstage.io/techdocs-ref: dir:default/component/product-swap/product-swap_python/
 spec:
   type: documentation
   lifecycle: experimental
@@ -160,7 +160,7 @@ metadata:
   name: product-swap_technical
   description: Documentation for the ProductSwap technical
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/product-swap_technical/
+    backstage.io/techdocs-ref: dir:default/component/product-swap/product-swap_technical/
 spec:
   type: documentation
   lifecycle: experimental

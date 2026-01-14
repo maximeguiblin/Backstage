@@ -228,7 +228,7 @@ metadata:
   name: power-chef_powerchef-architecture
   description: Documentation for the PowerChef architecture
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef-architecture/
+    backstage.io/techdocs-ref: dir:default/component/powerchef/powerchef_architecture/
 spec:
   type: documentation
   lifecycle: experimental
@@ -241,7 +241,7 @@ metadata:
   name: power-chef_powerchef-monitoring
   description: Documentation for the PowerChef monitoring
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef-monitoring/
+    backstage.io/techdocs-ref: dir:default/component/powerchef/powerchef_monitoring/
 spec:
   type: documentation
   lifecycle: experimental
@@ -254,7 +254,7 @@ metadata:
   name: power-chef_powerchef
   description: Documentation for PowerChef 
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/power-chef_powerchef/
+    backstage.io/techdocs-ref: dir:default/component/powerchef/powerchef_powerchef/
 spec:
   type: documentation
   lifecycle: experimental

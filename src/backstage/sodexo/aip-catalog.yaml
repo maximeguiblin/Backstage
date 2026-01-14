@@ -181,7 +181,7 @@ metadata:
   name: aip_sdk
   description: Documentation for the AIP SDK source code
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip_sdk/
+    backstage.io/techdocs-ref: dir:default/component/aip/aip_sdk/
 spec:
   type: documentation
   lifecycle: experimental
@@ -194,7 +194,7 @@ metadata:
   name: aip_cli
   description: Documentation for the AIP CLI source code
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip_cli/
+    backstage.io/techdocs-ref: dir:default/component/aip/aip_cli/
 spec:
   type: documentation
   lifecycle: experimental
@@ -207,7 +207,7 @@ metadata:
   name: aip_aip-manuals
   description: Documentation for the AIP
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip_aip-manuals/
+    backstage.io/techdocs-ref: dir:default/component/aip/aip_AI Platform Documentation/
 spec:
   type: documentation
   lifecycle: experimental
@@ -220,33 +220,7 @@ metadata:
   name: aip_wiki
   description: AIP Wiki
   annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip_wiki/
-spec:
-  type: documentation
-  lifecycle: experimental
-  owner: aip-team
-  subcomponentOf: AI-Platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: sdk-documentation
-  description: Documentation for the AIP SDK
-  annotations:
-    backstage.io/techdocs-ref: dir:default/component/sdk-documentation/
-spec:
-  type: documentation
-  lifecycle: experimental
-  owner: aip-team
-  subcomponentOf: GLB.GLB.DataLab.AIPlatform.SDK
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: aip-manuals
-  description: AIP Documentation from the AIP WebApp
-  annotations:
-    backstage.io/techdocs-ref: dir:default/component/aip-manuals/
+    backstage.io/techdocs-ref: dir:default/component/aip/aip_wiki/
 spec:
   type: documentation
   lifecycle: experimental
@@ -260,19 +234,6 @@ metadata:
   description: Sodexo Developer Portal's User Guide
   annotations:
     backstage.io/techdocs-ref: dir:default/component/user-guide/
-spec:
-  type: documentation
-  lifecycle: experimental
-  owner: aip-team
-  subcomponentOf: AI-Platform
----
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: test-aip-manuals
-  description: AIP Documentation from the AIP WebApp
-  annotations:
-    backstage.io/techdocs-ref: dir:default/component/test-aip-manuals/
 spec:
   type: documentation
   lifecycle: experimental
