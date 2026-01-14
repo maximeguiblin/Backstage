@@ -200,6 +200,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Data Factory VM Workstation template
+    - type: file
+      target: ./sodexo/templates/azure-vm-workstation-template.yaml
+      rules:
+        - allow: [Template]
+
     # AIP catalog
     - type: file
       target: ./sodexo/aip-catalog.yaml
