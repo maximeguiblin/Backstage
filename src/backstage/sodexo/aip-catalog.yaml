@@ -239,3 +239,16 @@ spec:
   lifecycle: experimental
   owner: aip-team
   subcomponentOf: AI-Platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: user-guide-test
+  description: Sodexo Developer Portal's User Guide Test
+  annotations:
+    backstage.io/techdocs-ref: dir:default/component/user-guide-test/
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: aip-team
+  subcomponentOf: AI-Platform
