@@ -142,7 +142,6 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             echo "Start deploying backstage..."
-            # Sandbox uses conf/infra_params.json: USE_PRODUCTION_CONFIG=false (SQLite)
             aip app container deploy --all
         displayName: Deploy backstage app
 

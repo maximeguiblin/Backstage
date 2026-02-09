@@ -108,7 +108,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DevVMWorkstations"
         pipelineId: "5302"
-        branch: "main"
+        branch: "dev"
         pipelineParameters:
           virtualMachinesNames: ${{ parameters.virtualMachineNames }}
 
@@ -121,7 +121,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DevVMWorkstations"
         pipelineId: "5307"
-        branch: "main"
+        branch: "dev"
         pipelineParameters:
           vmResourceGroup: ${{ parameters.vmResourceGroup }}
           vmSubscription: ${{ parameters.vmSubscription }}
@@ -136,9 +136,9 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DevVMWorkstations"
         pipelineId: "5294"
-        branch: "main"
+        branch: "dev"
         pipelineParameters:
-          whatIfInfraDeployment: ${{ parameters.whatIfInfraDeployment | lower }}
+          whatIfInfraDeployment: ${{ parameters.whatIfInfraDeployment }}
 
   output:
     links:
