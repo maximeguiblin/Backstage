@@ -64,8 +64,8 @@ COPY --chown=node:node sodexo ./sodexo
 
 USER node
 
-# Build (combines tsc and backend build for speed)
-RUN yarn tsc && yarn --cwd packages/backend build
+# Build (Backstage CLI builds app + backend and produces bundle)
+RUN yarn build:all
 
 # Extract build artifacts
 RUN mkdir -p packages/backend/dist/skeleton packages/backend/dist/bundle && \
@@ -119,9 +119,5 @@ ENV FRONT_ENDPOINT=$FRONT_ENDPOINT \
 
 EXPOSE 7007
 
-# Start Backstage backend
-CMD sh -c 'if [ "$USE_PRODUCTION_CONFIG" = "true" ]; then \
-    exec node packages/backend --config app-config.yaml --config app-config.production.yaml; \
-  else \
-    exec node packages/backend --config app-config.yaml; \
-  fi'
+# Start Backstage backend (JSON CMD for correct signal handling)
+CMD ["sh", "-c", "if [ \"$USE_PRODUCTION_CONFIG\" = \"true\" ]; then exec node packages/backend --config app-config.yaml --config app-config.production.yaml; else exec node packages/backend --config app-config.yaml; fi"]
