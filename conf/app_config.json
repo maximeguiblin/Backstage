@@ -1,53 +1,54 @@
 {
-    "containers": [
-        {
-            "name": "backstage_app",
-            "build": {
-                "dir": "src/backstage",
-                "file": "src/backstage/Dockerfile",
-                "args": [
-                    "--build-arg",
-                    "START_COMMAND=dev",
-                    "--build-arg",
-                    "FRONT_ENDPOINT={@infra.front_endpoint}",
-                    "--build-arg",
-                    "CORS_ENDPOINT={@infra.cors_endpoint}",
-                    "--build-arg",
-                    "BACK_ENDPOINT={@infra.back_endpoint}"
-                ],
-                "tag_default": "latest"
-            }
-        }
-    ],
-    "container_apps": [
-        {
-            "name": "app",
-            "container_app_name": "@infra.container_app_name",
-            "environment_name": "@infra.container_app_environment",
-            "app_type": "app",
-            "container_name": "backstage_app",
-            "args_create": [
-                "--ingress",
-                "external",
-                "--target-port",
-                "7007"
-            ],
-            "env_vars": {
-                "PG_HOST": "{#{@infra.keyvault_secrets.pg_host}}",
-                "PG_PORT": "{#{@infra.keyvault_secrets.pg_port}}",
-                "PG_USER": "{#{@infra.keyvault_secrets.pg_user}}",
-                "PG_PASSWORD": "{#{@infra.keyvault_secrets.pg_password}}",
-                "PG_DATABASE": "{#{@infra.keyvault_secrets.pg_database}}",
-                "BACKSTAGE_CLIENT_ID": "{#{@infra.keyvault_secrets.backstage_client_id}}",
-                "BACKSTAGE_CLIENT_SECRET": "{#{@infra.keyvault_secrets.backstage_client_secret}}",
-                "BACKSTAGE_TENANT_ID": "{#{@infra.keyvault_secrets.backstage_tenant_id}}",
-                "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}",
-                "BACKSTAGE_DEVOPS_TOKEN": "{#{@infra.keyvault_secrets.backstage_devops_token}}",
-                "BACKSTAGE_STORAGE_ACCOUNT": "{#{@infra.keyvault_secrets.backstage_storage_account}}",
-                "BACKSTAGE_STORAGE_KEY": "{#{@infra.keyvault_secrets.backstage_storage_key}}",
-                "BACKSTAGE_STORAGE_HOST": "{#{@infra.keyvault_secrets.backstage_storage_host}}",
-                "BACKSTAGE_STORAGE_REPORT_SAS_TOKEN": "{#{@infra.keyvault_secrets.backstage_storage_report_sas_token}}"
-            }
-        }
-    ]
+  "containers": [
+    {
+      "name": "backstage_app",
+      "build": {
+        "dir": "src/backstage",
+        "file": "src/backstage/Dockerfile",
+        "args": [
+          "--build-arg",
+          "START_COMMAND=dev",
+          "--build-arg",
+          "FRONT_ENDPOINT={@infra.front_endpoint}",
+          "--build-arg",
+          "CORS_ENDPOINT={@infra.cors_endpoint}",
+          "--build-arg",
+          "BACK_ENDPOINT={@infra.back_endpoint}"
+        ],
+        "tag_default": "latest"
+      }
+    }
+  ],
+  "container_apps": [
+    {
+      "name": "app",
+      "container_app_name": "@infra.container_app_name",
+      "environment_name": "@infra.container_app_environment",
+      "app_type": "app",
+      "container_name": "backstage_app",
+      "args_create": [
+        "--ingress",
+        "external",
+        "--target-port",
+        "7007"
+      ],
+      "env_vars": {
+        "PG_HOST": "{#{@infra.keyvault_secrets.pg_host}}",
+        "PG_PORT": "{#{@infra.keyvault_secrets.pg_port}}",
+        "PG_USER": "{#{@infra.keyvault_secrets.pg_user}}",
+        "PG_PASSWORD": "{#{@infra.keyvault_secrets.pg_password}}",
+        "PG_DATABASE": "{#{@infra.keyvault_secrets.pg_database}}",
+        "BACKSTAGE_CLIENT_ID": "{#{@infra.keyvault_secrets.backstage_client_id}}",
+        "BACKSTAGE_CLIENT_SECRET": "{#{@infra.keyvault_secrets.backstage_client_secret}}",
+        "BACKSTAGE_TENANT_ID": "{#{@infra.keyvault_secrets.backstage_tenant_id}}",
+        "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}",
+        "BACKSTAGE_DEVOPS_TOKEN": "{#{@infra.keyvault_secrets.backstage_devops_token}}",
+        "BACKSTAGE_STORAGE_ACCOUNT": "{#{@infra.keyvault_secrets.backstage_storage_account}}",
+        "BACKSTAGE_STORAGE_KEY": "{#{@infra.keyvault_secrets.backstage_storage_key}}",
+        "BACKSTAGE_STORAGE_HOST": "{#{@infra.keyvault_secrets.backstage_storage_host}}",
+        "BACKSTAGE_STORAGE_REPORT_SAS_TOKEN": "{#{@infra.keyvault_secrets.backstage_storage_report_sas_token}}",
+        "USE_PRODUCTION_CONFIG": "{@infra.use_production_config}"
+      }
+    }
+  ]
 }

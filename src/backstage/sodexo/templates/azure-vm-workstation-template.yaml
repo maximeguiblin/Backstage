@@ -23,12 +23,15 @@ spec:
       properties:
         virtualMachineNames:
           title: VM Name(s)
-          type: string
-          description: |
-            Name(s) of the virtual machine(s) to provision.
-            For multiple VMs, separate names with commas (e.g., VM01,VM02,VM03).
+          type: array
+          description: List of virtual machine names to provision.
+          items:
+            type: string
+            pattern: "^[A-Za-z0-9-]+$"
           ui:autofocus: true
-          pattern: "^[A-Za-z0-9-]+(,[A-Za-z0-9-]+)*$"
+          ui:options:
+            addable: true
+            orderable: false
         requesterEmail:
           title: Requester Email
           type: string
@@ -52,16 +55,36 @@ spec:
         configureBackup:
           title: Configure Backup
           type: boolean
-          description: Automatically configure backup in Recovery Services vault
+          description: Trigger the infrastructure backup pipeline
           default: true
-        installTools:
-          title: Install Development Tools
+        vmResourceGroup:
+          title: VM Resource Group
+          type: string
+          description: Resource group for hardening pipeline
+          default: GLB-GLB-IENO-VMDWS-PRD-RG01
+        vmSubscription:
+          title: VM Subscription
+          type: string
+          description: Subscription for hardening pipeline
+          default: SDX STA/PRD
+        whatIfInfraDeployment:
+          title: What-If infra deployment (dry run)
           type: boolean
-          description: Install standard development tools on the VM
-          default: true
+          description: Only show changes during backup pipeline execution
+          default: false
 
   steps:
-    # Step 1: Log request details
+    # Step 1: Validate inputs
+    - id: validate-inputs
+      name: Validate VM Names
+      action: debug:log
+      input:
+        message: |
+          Validating inputs...
+          VM Names count: ${{ parameters.virtualMachineNames | length }}
+          VM Names: ${{ parameters.virtualMachineNames | join(",") }}
+
+    # Step 2: Log request details
     - id: log-request
       name: Log VM Provisioning Request
       action: debug:log
@@ -69,16 +92,15 @@ spec:
         message: |
           🖥️ VM Workstation Provisioning Request
           ========================================
-          VM Name(s): ${{ parameters.virtualMachineNames }}
+          VM Name(s): ${{ parameters.virtualMachineNames | join(",") }}
           Requester: ${{ parameters.requesterEmail }}
           Justification: ${{ parameters.businessJustification }}
           
           Options:
           - Run Hardening: ${{ parameters.runHardening }}
           - Configure Backup: ${{ parameters.configureBackup }}
-          - Install Tools: ${{ parameters.installTools }}
 
-    # Step 2: Deploy VM using CSL pipeline
+    # Step 3: Deploy VM using CSL pipeline
     - id: deploy-vm
       name: Deploy Virtual Machine(s)
       action: azure:pipeline:run
@@ -88,9 +110,9 @@ spec:
         pipelineId: "5302"
         branch: "main"
         pipelineParameters:
-          virtualMachines: ${{ parameters.virtualMachineNames }}
+          virtualMachinesNames: ${{ parameters.virtualMachineNames }}
 
-    # Step 3: Run Hardening pipeline (conditional)
+    # Step 4: Run Hardening pipeline (conditional)
     - id: run-hardening
       name: Run Security Hardening
       if: ${{ parameters.runHardening }}
@@ -101,9 +123,11 @@ spec:
         pipelineId: "5307"
         branch: "main"
         pipelineParameters:
-          virtualMachines: ${{ parameters.virtualMachineNames }}
+          vmResourceGroup: ${{ parameters.vmResourceGroup }}
+          vmSubscription: ${{ parameters.vmSubscription }}
+          virtualMachinesNames: ${{ parameters.virtualMachineNames }}
 
-    # Step 4: Configure Backup (conditional)
+    # Step 5: Configure Backup (conditional)
     - id: configure-backup
       name: Configure Backup
       if: ${{ parameters.configureBackup }}
@@ -114,20 +138,7 @@ spec:
         pipelineId: "5294"
         branch: "main"
         pipelineParameters:
-          virtualMachines: ${{ parameters.virtualMachineNames }}
-
-    # Step 5: Install Tools (conditional)
-    - id: install-tools
-      name: Install Development Tools
-      if: ${{ parameters.installTools }}
-      action: azure:pipeline:run
-      input:
-        organization: "sdxcloud"
-        project: "IST.GLB.GLB.DataFactory_DevVMWorkstations"
-        pipelineId: "7792"
-        branch: "main"
-        pipelineParameters:
-          virtualMachines: ${{ parameters.virtualMachineNames }}
+          whatIfInfraDeployment: ${{ parameters.whatIfInfraDeployment | lower }}
 
   output:
     links:

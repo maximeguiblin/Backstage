@@ -12,7 +12,7 @@ backend:
     connection:
       host: ${PG_HOST}
       port: ${PG_PORT}
-      database: ${PG_DB}
+      database: ${PG_DATABASE}
       user: ${PG_USER}
       password: ${PG_PASSWORD}
       ssl:
