@@ -33,5 +33,5 @@
   "BACK_ENDPOINT": "https://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
   "CONTAINER_APP_NAME": "azieca0aip001",
   "ENVIRONMENT": "DEV",
-  "USE_PRODUCTION_CONFIG": "false"
+  "USE_PRODUCTION_CONFIG": "true"
 }
