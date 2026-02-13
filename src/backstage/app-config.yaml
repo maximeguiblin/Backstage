@@ -44,7 +44,7 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: http://localhost:3000
+    origin: http://localhost:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
@@ -205,6 +205,12 @@ catalog:
       target: ./sodexo/templates/azure-vm-workstation-template.yaml
       rules:
         - allow: [Template]
+
+    # Bicep template
+    - type: file
+      target: ./sodexo/templates/azure-bicep-template-api.yaml
+      rules:
+        - allow: [API]
 
     # AIP catalog
     - type: file
