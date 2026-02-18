@@ -9,7 +9,7 @@ metadata:
 spec:
   type: mcp-server
   lifecycle: experimental
-  owner: platform-team
+  owner: aip-team
   definition: |
     name: com.spotify/notion-mcp
     description: "Notion MCP"
