@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  title: Notion MCP Server
+  name: notion-mcp
+  description: Notion MCP
+  annotations:
+    mcp.spotify.com/schema-version: "2025-09-29"
+spec:
+  type: mcp-server
+  lifecycle: experimental
+  owner: platform-team
+  definition: |
+    name: com.spotify/notion-mcp
+    description: "Notion MCP"
+    version: "0.0.1"
+    remotes:
+      - type: streamable-http
+        url: "https://mcp.notion.com/mcp"
