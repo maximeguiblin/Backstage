@@ -148,7 +148,7 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: christophe.gougam
+  name: christophe.gougam.ext
 spec:
   profile:
     displayName: Christophe Gougam
@@ -168,11 +168,11 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: adrien.broussolle
+  name: maxime.guiblin.ext
 spec:
   profile:
-    displayName: Adrien Broussolle
-    email: adrien.broussolle.ext@sodexo.com
+    displayName: Maxime Guiblin
+    email: maxime.guiblin.ext@sodexo.com
   memberOf: [aip-team]
 ---
 apiVersion: backstage.io/v1alpha1

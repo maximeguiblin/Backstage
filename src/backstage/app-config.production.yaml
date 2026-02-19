@@ -5,7 +5,9 @@ backend:
   baseUrl: ${BACK_ENDPOINT}
 
   cors:
-    origin: ${CORS_ENDPOINT}
+    origin: 
+      - ${CORS_ENDPOINT}
+      - ${BACK_ENDPOINT}
 
   database:
     client: pg
@@ -24,4 +26,26 @@ backend:
       #   ca: # if you have a CA file and want to verify it you can uncomment this section
       #     $file: <file-path>/ca/server.crt
 
-
+auth:
+  environment: production
+  experimentalExtraAllowedOrigins:
+    - http://developer-portal.dev.sodexonet.com
+    - https://developer-portal.dev.sodexonet.com
+  providers:
+    guest: {}
+    # Microsoft auth disabled for local development
+    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
+    microsoft:
+      production:
+        clientId: ${BACKSTAGE_CLIENT_ID}
+        clientSecret: ${BACKSTAGE_CLIENT_SECRET}
+        tenantId: ${BACKSTAGE_TENANT_ID}
+        domainHint: ${BACKSTAGE_TENANT_ID}
+        signIn:
+          resolvers:
+            # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
+            - resolver: emailLocalPartMatchingUserEntityName
+              allowedDomains:
+                - sodexo.com
+              # Allow SSO users from allowed domains even if they have no User entity in the catalog
+              dangerouslyAllowSignInWithoutUserInCatalog: true

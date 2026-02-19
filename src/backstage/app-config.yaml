@@ -44,7 +44,8 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: http://localhost:7007
+    origin: 
+      - http://localhost:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
@@ -126,6 +127,9 @@ techdocs:
 
 auth:
   environment: development
+  experimentalExtraAllowedOrigins:
+    - http://localhost:3000
+    - http://localhost:7007
   providers:
     guest: {}
     # Microsoft auth disabled for local development
@@ -139,7 +143,11 @@ auth:
         signIn:
           resolvers:
             # See https://backstage.io/docs/auth/microsoft/provider#resolvers for more resolvers
-            - resolver: userIdMatchingUserEntityAnnotation
+            - resolver: emailLocalPartMatchingUserEntityName
+              allowedDomains:
+                - sodexo.com
+              # Allow SSO users from allowed domains even if they have no User entity in the catalog
+              dangerouslyAllowSignInWithoutUserInCatalog: true
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
