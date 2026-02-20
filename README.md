@@ -163,23 +163,24 @@ Before deploying in Azure, you must setup your working environment by running th
 
 * Open the URL and log in with your AZ account https://azeuvs1gct987.visualstudio.com/_usersSettings/tokens
 * Generate an Azure Devops Personal Access Token by selecting "All accessible organizations" and at least the permission "Read" under section "Packaging"
-* Copy the generated token and put it into the following command in replacement of the string REPLACE_BY_TOKEN :
+* Install and use uv auth (or set env var => `export UV_EXTRA_INDEX_URL=https://build:YOUR_PAT@sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/`):
 
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:${PATH}"
+  echo "YOUR_PAT" | uv auth login --username build --password - sdxcloud.pkgs.visualstudio.com
   ```
-  $ export PIP_EXTRA_INDEX_URL=https://build:REPLACE_BY_TOKEN@sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/
-  ```
-
-* Copy the resuling command at the end of your file ~/.bashrc
-
 
 ### Installing
 
 * Clone the project repository
-* Install the dependencies of the project into a new virtual environment with Python >= 3.8 (recommending 3.10)
+* Install the dependencies with **uv** (Python >= 3.10). This creates a virtual environment and installs the `aip` CLI.
 
+  ```bash
+  uv sync --all-extras
   ```
-  $ bash scripts/install_requirements.sh --python_version 3.10
-  ```
+
+* To (re)generate the lock file (`uv.lock`), ensure PPP auth is configured then run `uv lock` and commit the file for reproducible installs. The first run of `scripts/install_requirements.sh` with PPP auth will also create `uv.lock` if it is missing.
 
 
 ### How to deploy
