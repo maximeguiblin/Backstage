@@ -163,7 +163,11 @@ const overviewContent = (
     </Grid>
 
     <EntitySwitch>
-      <EntitySwitch.Case if={isSonarQubeAvailable}>
+      <EntitySwitch.Case
+        if={(entity) =>
+          isComponentType('repo')(entity) && isSonarQubeAvailable(entity)
+        }
+      >
         <Grid item md={6}>
           <EntitySonarQubeCard variant="gridItem" />
         </Grid>
@@ -271,7 +275,11 @@ const repoEntityPage = (
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/sonarqube" title="Sonarqube">
+    <EntityLayout.Route
+      if={isSonarQubeAvailable}
+      path="/sonarqube"
+      title="Sonarqube"
+    >
       <SonarQubeRelatedEntitiesOverview relationType={RELATION_HAS_PART} entityKind="component" />
     </EntityLayout.Route>
 

@@ -13,9 +13,9 @@ azureDevOps:
 
 sonarqube:
   instances:
-    - name: sodexoSonarqube
-      instanceKey: sodexoSonarqube
-      baseUrl: https://scrutineer.sodexonet.com
+    - name: sodexoSonarCloud
+      instanceKey: sodexoSonarCloud
+      baseUrl: https://sonarcloud.io/
       apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
 
 organization:
