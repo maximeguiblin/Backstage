@@ -1,0 +1,16 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: GLB.GLB.DataLab.AIPlatform.Sonar
+  description: Sonar is a utility providing a command line interface to interact with AI Platform environments and assets.
+  annotations:
+    backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.Sonar
+    dev.azure.com/host-org: dev.azure.com/sdxcloud
+    dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Sonar
+    sonarqube.org/project-key: sonarcloud/sdxcloud_digitalai-aip-aipcli
+spec:
+  type: repo
+  owner: aip-team
+  subcomponentOf: AI-Platform
+  lifecycle: experimental

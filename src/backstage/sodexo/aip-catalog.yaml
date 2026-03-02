@@ -39,7 +39,7 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.CLI
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.CLI
-    sonarqube.org/project-key: sdxcloud_digitalai-aip-aipcli
+    sonarqube.org/project-key: sonarcloud/sdxcloud_digitalai-aip-aipcli
   links:
     - url: https://aip.datalab.sodexo.com/aip/docs/cli
       title: CLI documentation
@@ -58,7 +58,7 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.SDK
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.SDK
-    sonarqube.org/project-key: sdxcloud/aipsdk
+    sonarqube.org/project-key: sonarcloud/sdxcloud_digitalai-aip-aipsdk
     trivy.security-report: aip/sdk/trivy_report.html
     
   links:

@@ -13,10 +13,12 @@ azureDevOps:
 
 sonarqube:
   instances:
-    - name: sodexoSonarCloud
-      instanceKey: sodexoSonarCloud
-      baseUrl: https://sonarcloud.io/
+    - name: sonarcloud
+      instanceKey: sdxcloud
+      baseUrl: https://sonarcloud.io
+      externalBaseUrl: https://sonarcloud.io
       apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
+      authType: Bearer
 
 organization:
   name: Sodexo
@@ -45,6 +47,7 @@ backend:
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
     origin: 
+      - http://localhost:3000
       - http://localhost:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
@@ -70,11 +73,21 @@ backend:
           Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
         # Allow headers to pass through
         allowedHeaders: ['Authorization', 'Content-Type']
+      # Optional: proxy for SonarCloud (e.g. if frontend needs it). SonarCloud uses Bearer token.
+      '/sonarcloud':
+        target: https://sonarcloud.io
+        changeOrigin: true
+        pathRewrite:
+          '^/sonarcloud': ''
+        headers:
+          Authorization: ${{ 'Bearer ' + env.BACKSTAGE_SONARQUBE_TOKEN }}
+        allowedHeaders: ['Authorization', 'Content-Type']
   reading:
     allow:
       - host: ${BACKSTAGE_STORAGE_HOST}
       - host: sdxcloud.visualstudio.com
       - host: dev.azure.com
+      - host: sonarcloud.io
 
 integrations:
   azure:
