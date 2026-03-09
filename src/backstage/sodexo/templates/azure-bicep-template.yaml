@@ -32,6 +32,8 @@ spec:
             const: pattern_sandbox_adb
           - title: Pattern 2 (Azure Machine Learning + Azure Storage Account + Azure Key Vault + Azure Container Registry + Azure App Insight)
             const: pattern_sandbox_amls
+          - title: Pattern 3 (Azure Storage Account + Azure Key Vault + Azure RedisCache + Azure Postgres SQL Server + Azure Static Webapp)
+            const: pattern_sandbox_module_family
       extra_resources:
         title: Select extra resources
         type: array
