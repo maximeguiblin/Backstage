@@ -69,8 +69,8 @@ import { CustomEntityLinksCard } from './SimpleLinksTable';
 
 import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstage-community/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
-import { TrivyReportTab } from './TrivyReportTab';
 import { AipCheckTab } from './AipCheckTab';
+import { TrivyReportTab } from './TrivyReportTab';
 
 
 const techdocsContent = (
@@ -81,6 +81,7 @@ const techdocsContent = (
   </EntityTechdocsContent>
 );
 
+const MISSING_ANNOTATION_READ_MORE_URL = 'https://backstage.io/docs/features/software-catalog/descriptor';
 
 const cicdContent = (
   // This is an example of how you can implement your company's logic in entity page.
@@ -151,6 +152,9 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+    <Grid item md={6}>
+      <EntitySonarQubeCard variant="gridItem" missingAnnotationReadMoreUrl={MISSING_ANNOTATION_READ_MORE_URL} />
+    </Grid>
     <Grid item md={6} xs={12}>
       <EntityCatalogGraphCard variant="gridItem" height={400} />
     </Grid>
@@ -163,11 +167,7 @@ const overviewContent = (
     </Grid>
 
     <EntitySwitch>
-      <EntitySwitch.Case
-        if={(entity) =>
-          isComponentType('repo')(entity) && isSonarQubeAvailable(entity)
-        }
-      >
+      <EntitySwitch.Case if={isSonarQubeAvailable}>
         <Grid item md={6}>
           <EntitySonarQubeCard variant="gridItem" />
         </Grid>
@@ -275,11 +275,7 @@ const repoEntityPage = (
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
 
-    <EntityLayout.Route
-      if={isSonarQubeAvailable}
-      path="/sonarqube"
-      title="Sonarqube"
-    >
+    <EntityLayout.Route path="/sonarqube" title="Code Quality">
       <SonarQubeRelatedEntitiesOverview relationType={RELATION_HAS_PART} entityKind="component" />
     </EntityLayout.Route>
 
