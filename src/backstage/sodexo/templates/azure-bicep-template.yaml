@@ -162,7 +162,7 @@ spec:
         organization: "sdxcloud"
         project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
         pipelineId: "8986"
-        branch: "main"
+        branch: "test"
         pipelineParameters:
           resource_group: ${{ parameters.resource_group }}
           resource_suffix: ${{ parameters.resource_suffix }}
