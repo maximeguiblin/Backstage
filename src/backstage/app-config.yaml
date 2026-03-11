@@ -16,7 +16,7 @@ sonarqube:
     - name: default
       instanceKey: sonarcloud
       baseUrl: https://sonarcloud.io # optional, defaults to https://sonarcloud.io
-      apiKey: f659d7beefe969db57afff141582e46ee3a63b4b # optional, defaults to empty string
+      apiKey: ${BACKSTAGE_SONARQUBE_TOKEN} 
 
 organization:
   name: Sodexo

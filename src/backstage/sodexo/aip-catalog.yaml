@@ -23,7 +23,7 @@ metadata:
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.Cookiecutter
     aip.check: aip/cookiecutter/aip_check.html
-    sonarqube.org/project-key: sdxcloud/DigitalAI_AIP_AIPCookiecutter
+    sonarqube.org/project-key: default/DigitalAI_AIP_AIPCookiecutter
 spec:
   type: repo
   owner: aip-team
@@ -58,7 +58,7 @@ metadata:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/GLB.GLB.DataLab.AIPlatform/_git/GLB.GLB.DataLab.AIPlatform.SDK
     dev.azure.com/host-org: dev.azure.com/sdxcloud
     dev.azure.com/project-repo: GLB.GLB.DataLab.AIPlatform/GLB.GLB.DataLab.AIPlatform.SDK
-    sonarqube.org/project-key: sonarcloud/sdxcloud_digitalai-aip-aipsdk
+    sonarqube.org/project-key: default/sdxcloud_digitalai-aip-aipsdk
     trivy.security-report: aip/sdk/trivy_report.html
     
   links:
