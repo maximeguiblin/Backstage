@@ -1,0 +1,50 @@
+# =============================================================================
+# RBAC conditional catalog policies (single file)
+# Docs: https://github.com/backstage/community-plugins/blob/HEAD/workspaces/rbac/plugins/rbac-backend/README.md
+#
+# Role assignments live in sodexo/rbac-policy.csv (g, user/group, role).
+# Each block below is one YAML document (--- separates documents).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 4SITE — role:default/4site-users (group:default/4site-team in rbac-policy.csv)
+# Catalog read + update only for entities owned by group:default/4site-team.
+# -----------------------------------------------------------------------------
+---
+result: CONDITIONAL
+roleEntityRef: role:default/4site-users
+pluginId: catalog
+resourceType: catalog-entity
+permissionMapping:
+  - read
+  - update
+conditions:
+  rule: IS_ENTITY_OWNER
+  resourceType: catalog-entity
+  params:
+    claims:
+      - group:default/4site-team
+
+# -----------------------------------------------------------------------------
+# AIP — role:default/maeliza-aip-docs (user:default/maeliza.seymour in rbac-policy.csv)
+# Catalog read only for aip-team–owned components with spec.type: documentation.
+# -----------------------------------------------------------------------------
+---
+result: CONDITIONAL
+roleEntityRef: role:default/maeliza-aip-docs
+pluginId: catalog
+resourceType: catalog-entity
+permissionMapping:
+  - read
+conditions:
+  allOf:
+    - rule: IS_ENTITY_OWNER
+      resourceType: catalog-entity
+      params:
+        claims:
+          - group:default/aip-team
+    - rule: HAS_SPEC
+      resourceType: catalog-entity
+      params:
+        key: type
+        value: documentation

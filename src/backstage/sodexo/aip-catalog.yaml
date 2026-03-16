@@ -133,7 +133,7 @@ spec:
   profile:
     displayName: Hamed Ky
     email: hamed.ky@sodexo.com
-  memberOf: [aip-team]
+  memberOf: [aip-team,admins]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -153,7 +153,7 @@ spec:
   profile:
     displayName: Christophe Gougam
     email: christophe.gougam.ext@sodexo.com
-  memberOf: [aip-team]
+  memberOf: [aip-team,admins]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -163,7 +163,7 @@ spec:
   profile:
     displayName: Samuel Rochette
     email: samuel.rochette@sodexo.com
-  memberOf: [aip-team]
+  memberOf: [aip-team,admins]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: User
@@ -173,7 +173,7 @@ spec:
   profile:
     displayName: Maxime Guiblin
     email: maxime.guiblin.ext@sodexo.com
-  memberOf: [aip-team]
+  memberOf: [aip-team,admins]
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -252,3 +252,16 @@ spec:
   lifecycle: experimental
   owner: aip-team
   subcomponentOf: AI-Platform
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: admins
+  description: Admins group
+spec:
+  type: team
+  parent: sodexo
+  children: []
+  profile:
+    displayName: Admins
+    email: christophe.gougam.ext@sodexo.com

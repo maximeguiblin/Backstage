@@ -33,7 +33,12 @@ backend:
   # WARNING: DO NOT use this in production!
   auth:
     dangerouslyDisableDefaultAuthPolicy: true
-  
+
+  # Give permission/RBAC plugin time to finish init before returning 503 on /authorize.
+  # Catalog calls /authorize early; in Docker RBAC init can exceed the default 5s.
+  lifecycle:
+    startupRequestPauseTimeout: 60s
+
   baseUrl: http://localhost:7007
   listen:
     port: 7007
@@ -260,8 +265,21 @@ kubernetes:
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
-  # setting this to `false` will disable permissions
   enabled: true
+  rbac:
+    policies-csv-file: sodexo/rbac-policy.csv
+    conditionalPoliciesFile: sodexo/conditional-policies.yaml
+    policyFileReload: true
+    pluginsWithPermission:
+      - catalog
+      - scaffolder
+      - permission
+    admin:
+      superUsers:
+        - name: user:default/christophe.gougam.ext
+      users:
+        - name: user:default/christophe.gougam.ext
+        - name: group:default/admins
 
 qeta:
   permissions: false

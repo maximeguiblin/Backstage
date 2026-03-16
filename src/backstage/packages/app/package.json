@@ -14,6 +14,7 @@
     "lint": "backstage-cli package lint"
   },
   "dependencies": {
+    "@backstage-community/plugin-rbac": "^1.50.1",
     "@backstage-community/plugin-sonarqube": "0.20.1",
     "@backstage-community/plugin-sonarqube-react": "0.12.0",
     "@backstage/app-defaults": "^1.7.2",
