@@ -1912,6 +1912,87 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: 6.0.0-beta.0 || ^6.3.0
   checksum: 10c0/e337ca93fcfd73361e2e3f2bc047422300ebc57de96cec3c3022f3ea5e358622e224d2943a0bcdbad0910f904ae33c604fc695ac52fae851337e9d8117c8594e
+"@backstage-community/plugin-rbac-backend@npm:^7.9.0":
+  version: 7.9.0
+  resolution: "@backstage-community/plugin-rbac-backend@npm:7.9.0"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": "npm:^1.24.0"
+    "@backstage-community/plugin-rbac-node": "npm:^1.18.0"
+    "@backstage/backend-defaults": "npm:^0.15.2"
+    "@backstage/backend-plugin-api": "npm:^1.7.0"
+    "@backstage/catalog-client": "npm:^1.13.0"
+    "@backstage/catalog-model": "npm:^1.7.6"
+    "@backstage/errors": "npm:^1.2.7"
+    "@backstage/plugin-auth-node": "npm:^0.6.13"
+    "@backstage/plugin-permission-backend": "npm:^0.7.9"
+    "@backstage/plugin-permission-common": "npm:^0.9.6"
+    "@backstage/plugin-permission-node": "npm:^0.10.10"
+    "@dagrejs/graphlib": "npm:^2.1.13"
+    casbin: "npm:^5.27.1"
+    chokidar: "npm:^3.6.0"
+    csv-parse: "npm:^5.5.5"
+    express: "npm:^4.18.2"
+    express-promise-router: "npm:^4.1.0"
+    js-yaml: "npm:^4.1.0"
+    knex: "npm:^3.0.0"
+    lodash: "npm:^4.17.21"
+    typeorm-adapter: "npm:^1.6.1"
+    zod: "npm:^3.25.76"
+    zod-to-json-schema: "npm:^3.25.1"
+  checksum: 10c0/6b94bd9d12b2ea11645441117df901b6f699e3bcfac00e46ecb409fe9bd0b77483961744304e5bd1283532c2ef4e5e16ca4043ae80f4c923d057d9e94a3b8bd1
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-common@npm:^1.24.0":
+  version: 1.24.0
+  resolution: "@backstage-community/plugin-rbac-common@npm:1.24.0"
+  peerDependencies:
+    "@backstage/errors": ^1.2.7
+    "@backstage/plugin-permission-common": ^0.9.6
+  checksum: 10c0/cd588720ec9dbef6fcf220ccfc93980bb1b03c7efe8fe56e4b85230535c804d688a10210e0f58ec4191f5892318ea29a7e8777109a6d1636051b11e0a3bf3b9c
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac-node@npm:^1.18.0":
+  version: 1.18.0
+  resolution: "@backstage-community/plugin-rbac-node@npm:1.18.0"
+  dependencies:
+    "@backstage/backend-plugin-api": "npm:^1.7.0"
+  checksum: 10c0/941bf7e843f551ec5c6b3106c1fc9c25d3dbb0dd51a11a8d73e2058d6be095ac4cf9e1bad30dcc886ef2743673181289a903c2036fbff5469e7ecdf1a050b2ea
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-rbac@npm:^1.50.1":
+  version: 1.50.1
+  resolution: "@backstage-community/plugin-rbac@npm:1.50.1"
+  dependencies:
+    "@backstage-community/plugin-rbac-common": "npm:^1.24.0"
+    "@backstage/catalog-model": "npm:^1.7.6"
+    "@backstage/core-components": "npm:^0.18.7"
+    "@backstage/core-plugin-api": "npm:^1.12.3"
+    "@backstage/frontend-plugin-api": "npm:^0.14.1"
+    "@backstage/plugin-app-react": "npm:^0.2.0"
+    "@backstage/plugin-catalog": "npm:^1.33.1"
+    "@backstage/plugin-catalog-common": "npm:^1.1.8"
+    "@backstage/plugin-permission-common": "npm:^0.9.6"
+    "@backstage/plugin-permission-react": "npm:^0.4.40"
+    "@backstage/theme": "npm:^0.7.2"
+    "@mui/icons-material": "npm:5.18.0"
+    "@mui/material": "npm:^5.14.18"
+    "@mui/styles": "npm:^6.1.7"
+    "@rjsf/core": "npm:^5.21.2"
+    "@rjsf/mui": "npm:^5.21.2"
+    "@rjsf/utils": "npm:^5.21.2"
+    "@rjsf/validator-ajv8": "npm:^5.21.2"
+    autosuggest-highlight: "npm:^3.3.4"
+    formik: "npm:^2.4.5"
+    react-use: "npm:^17.4.0"
+    yup: "npm:^1.3.2"
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: ^6.0.0
+  checksum: 10c0/0a6755f57eeb9759cff73fce0536e2bfb66d2fc3f2bd5fb2d4aa1610e6ecd54770abe2d82105153eb15a36f22ca550b8c46d049330db3c58c6ed731ad78f0fbf
   languageName: node
   linkType: hard
 
