@@ -1847,6 +1847,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@backstage-community/plugin-azure-devops-common@npm:^0.20.1":
+  version: 0.20.1
+  resolution: "@backstage-community/plugin-azure-devops-common@npm:0.20.1"
+  dependencies:
+    "@backstage/catalog-model": "npm:^1.7.6"
+    "@backstage/plugin-catalog-common": "npm:^1.1.8"
+    "@backstage/plugin-permission-common": "npm:^0.9.6"
+  checksum: 10c0/bd85bde1c8c9884988e7dda4aca1c1777dc1a16f02d2ce889df207833a0672fb6bab62c336ff0fc9a893a25965d4dea663419dadf47d74632acce2ef47966566
+  languageName: node
+  linkType: hard
+
 "@backstage-community/plugin-azure-devops@npm:0.22.0":
   version: 0.22.0
   resolution: "@backstage-community/plugin-azure-devops@npm:0.22.0"
@@ -1871,6 +1882,36 @@ __metadata:
     react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
     react-router-dom: 6.0.0-beta.0 || ^6.3.0
   checksum: 10c0/e8ec04af5be70ff6f609c8c5f3cbcb99dc69ffcd576720e68c7608c5fbad967d82f4c80adbe35229fb040415b2a58857e5bb4a5be19d5fae2d7531367e8c54b2
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-azure-devops@npm:^0.28.2":
+  version: 0.28.2
+  resolution: "@backstage-community/plugin-azure-devops@npm:0.28.2"
+  dependencies:
+    "@backstage-community/plugin-azure-devops-common": "npm:^0.20.1"
+    "@backstage/catalog-model": "npm:^1.7.6"
+    "@backstage/core-compat-api": "npm:^0.5.8"
+    "@backstage/core-components": "npm:^0.18.7"
+    "@backstage/core-plugin-api": "npm:^1.12.3"
+    "@backstage/errors": "npm:^1.2.7"
+    "@backstage/frontend-plugin-api": "npm:^0.14.1"
+    "@backstage/plugin-catalog-react": "npm:^2.0.0"
+    "@backstage/plugin-permission-react": "npm:^0.4.40"
+    "@backstage/plugin-search-common": "npm:^1.2.22"
+    "@backstage/plugin-search-react": "npm:^1.10.4"
+    "@backstage/ui": "npm:^0.12.0"
+    "@material-ui/core": "npm:^4.12.2"
+    "@remixicon/react": "npm:^4.9.0"
+    "@types/react": "npm:^16.13.1 || ^17.0.0 || ^18.0.0"
+    humanize-duration: "npm:^3.27.0"
+    luxon: "npm:^3.0.0"
+    react-use: "npm:^17.2.4"
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-router-dom: 6.0.0-beta.0 || ^6.3.0
+  checksum: 10c0/e337ca93fcfd73361e2e3f2bc047422300ebc57de96cec3c3022f3ea5e358622e224d2943a0bcdbad0910f904ae33c604fc695ac52fae851337e9d8117c8594e
   languageName: node
   linkType: hard
 
@@ -13676,6 +13717,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remixicon/react@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "@remixicon/react@npm:4.9.0"
+  peerDependencies:
+    react: ">=18.2.0"
+  checksum: 10c0/91bbadb677f45cf8b6687fdf9d273511fddb4e862f1da6c11bc7932acb578bcb26ae5b9e1eb62143a4e916b71797739a36d689866d5b0949f0f0f22c1684cb96
+  languageName: node
+  linkType: hard
+
 "@repeaterjs/repeater@npm:^3.0.4, @repeaterjs/repeater@npm:^3.0.6":
   version: 3.0.6
   resolution: "@repeaterjs/repeater@npm:3.0.6"
@@ -17897,6 +17947,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
   dependencies:
+    "@backstage-community/plugin-azure-devops": "npm:^0.28.2"
     "@backstage-community/plugin-rbac": "npm:^1.50.1"
     "@backstage-community/plugin-sonarqube": "npm:0.20.1"
     "@backstage-community/plugin-sonarqube-react": "npm:0.12.0"
