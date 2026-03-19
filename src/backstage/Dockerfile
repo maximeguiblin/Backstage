@@ -1,12 +1,3 @@
-# ==============================================================================
-# Backstage Multi-Stage Build
-# This Dockerfile builds a production-ready Backstage application
-# ==============================================================================
-
-# ==============================================================================
-# Stage 1: Create package skeleton
-# Purpose: Extract package.json files to prepare dependency installation
-# ==============================================================================
 FROM node:22-bookworm-slim AS packages
 
 WORKDIR /app
@@ -19,23 +10,16 @@ COPY .yarnrc.yml ./
 # Copy package directories (will be cleaned below)
 COPY packages packages
 COPY sodexo sodexo
-
-# Uncomment if you have internal plugins
-# COPY plugins plugins
+COPY plugins plugins
 
 # Remove all files except package.json to create a minimal dependency tree
 # This allows Docker to cache dependency installation separately from code changes
 RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {} \+
 
-# ==============================================================================
-# Stage 2: Build application
-# Purpose: Install dependencies, compile TypeScript, and build backend bundle
-# ==============================================================================
+# Build application
 FROM node:22-bookworm-slim AS build
 
 # Install system dependencies required for native Node.js modules
-# - python3, g++, build-essential: Required by node-gyp for isolate-vm (@backstage/plugin-scaffolder-backend)
-# - libsqlite3-dev: Required by better-sqlite3 (can be removed if using PostgreSQL only)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3 \
@@ -73,14 +57,10 @@ RUN mkdir packages/backend/dist/skeleton packages/backend/dist/bundle && \
     tar xzf packages/backend/dist/skeleton.tar.gz -C packages/backend/dist/skeleton && \
     tar xzf packages/backend/dist/bundle.tar.gz -C packages/backend/dist/bundle
 
-# ==============================================================================
-# Stage 3: Production runtime image
-# Purpose: Minimal production image with only runtime dependencies
-# ==============================================================================
+# Production runtime image
 FROM node:22-bookworm-slim
 
 # Install runtime system dependencies
-# Same as build stage but only needed for running the application
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3 \
@@ -114,8 +94,6 @@ RUN yarn workspaces focus --all --production && \
 COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
 
 # Copy runtime configuration files
-# app-config.yaml: Base configuration
-# app-config.production.yaml: Production overrides
 COPY --chown=node:node app-config*.yaml ./
 
 # Copy Sodexo catalog files and templates
@@ -132,7 +110,6 @@ ARG CORS_ENDPOINT="http://localhost:7007"
 ARG BACK_ENDPOINT="http://localhost:7007"
 
 # Expose runtime environment variables
-# Set USE_PRODUCTION_CONFIG=false for local testing with SQLite
 ENV FRONT_ENDPOINT=$FRONT_ENDPOINT \
     CORS_ENDPOINT=$CORS_ENDPOINT \
     BACK_ENDPOINT=$BACK_ENDPOINT
