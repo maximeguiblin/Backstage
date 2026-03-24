@@ -249,6 +249,12 @@ catalog:
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
+    # PAG catalog
+    - type: file
+      target: ./sodexo/pag-catalog.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location]
+
   providers:
     azureDevOps:
       sdxcloudBackstageCatalogProvider: # identifies your dataset / provider independent of config changes
