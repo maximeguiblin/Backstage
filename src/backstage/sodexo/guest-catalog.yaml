@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: guest-group
+  description: Guest users group
+spec:
+  type: team
+  parent: sodexo
+  children: []
+  profile:
+    displayName: Guest Group
+    email: guest-group@sodexo.com
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: neerav.tripathi.ext
+spec:
+  profile:
+    displayName: Neerav Tripathi
+    email: neerav.tripathi.ext@sodexo.com
+  memberOf: [guest-group]

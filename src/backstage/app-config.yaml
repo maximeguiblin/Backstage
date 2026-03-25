@@ -137,8 +137,6 @@ auth:
     - http://localhost:7007
   providers:
     guest: {}
-    # Microsoft auth disabled for local development
-    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
     microsoft:
       development:
         clientId: ${BACKSTAGE_CLIENT_ID}
@@ -170,6 +168,12 @@ catalog:
       target: ./sodexo/all.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
+
+    # Guest identity entities (group + user)
+    - type: file
+      target: ./sodexo/guest-catalog.yaml
+      rules:
+        - allow: [User, Group]
 
     # VM template
     - type: file

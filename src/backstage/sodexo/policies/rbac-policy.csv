@@ -1,21 +1,15 @@
-# RBAC policy: role assignments and base permissions
-# See https://github.com/backstage/community-plugins/blob/HEAD/workspaces/rbac/plugins/rbac-backend/docs/permissions.md
-#
-# p = policy (role, permission, action, effect)
-# g = grouping (user or group -> role)
-
-# --- 4site: members of 4site-team get restricted catalog access (see conditional-policies.yaml) ---
-# g, group:default/4site-team, role:default/4site-users
-
-# --- maeliza: restricted to read-only access on aip-team documentation components ---
-g, user:default/maeliza.seymour, role:default/maeliza-aip-docs
-
-# --- (Temporary) Guest: read access to the full catalog (all components and related entities) ---
-# Identity ref matches Backstage guest auth (user:default/guest).
 p, role:default/guest-catalog-read, catalog.entity.read, read, allow
 p, role:default/guest-catalog-read, catalog-entity, read, allow
 p, role:default/guest-catalog-read, catalog.location.read, read, allow
+p, role:default/guest-catalog-read, scaffolder.template.parameter.read, read, allow
+p, role:default/guest-catalog-read, scaffolder.template.step.read, read, allow
+g, group:default/guest-group, role:default/guest-catalog-read
 g, user:default/guest, role:default/guest-catalog-read
-
-# --- Other roles (admins, etc.) can be defined here ---
-# g, group:default/admins, role:default/admins
+g, user:development/guest, role:default/guest-catalog-read
+g, user:default/maeliza.seymour, role:default/maeliza-aip-docs
+p, role:default/admins, catalog.entity.read, read, allow
+p, role:default/admins, catalog-entity, read, allow
+p, role:default/admins, catalog.location.read, read, allow
+p, role:default/admins, scaffolder.template.parameter.read, read, allow
+p, role:default/admins, scaffolder.template.step.read, read, allow
+g, group:default/admins, role:default/admins

@@ -4,10 +4,15 @@ app:
 backend:
   baseUrl: ${BACK_ENDPOINT}
 
+  # RBAC + DB on cold start can exceed default pause; avoids 503 on /api/permission/* during catalog load.
+  lifecycle:
+    startupRequestPauseTimeout: 120s
+
   cors:
     origin: 
       - ${CORS_ENDPOINT}
       - ${BACK_ENDPOINT}
+    credentials: true
 
   database:
     client: pg
@@ -32,9 +37,10 @@ auth:
     - http://developer-portal.dev.sodexonet.com
     - https://developer-portal.dev.sodexonet.com
   providers:
-    guest: {}
-    # Microsoft auth disabled for local development
-    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
+    guest:
+      production:
+        userEntityRef: user:default/guest
+        dangerouslyAllowOutsideDevelopment: true
     microsoft:
       production:
         clientId: ${BACKSTAGE_CLIENT_ID}
@@ -49,3 +55,8 @@ auth:
                 - sodexo.com
               # Allow SSO users from allowed domains even if they have no User entity in the catalog
               dangerouslyAllowSignInWithoutUserInCatalog: true
+
+# Disable CSV hot-reload in deployed environments (avoids file watcher issues in containers).
+permission:
+  rbac:
+    policyFileReload: false
