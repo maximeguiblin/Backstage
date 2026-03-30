@@ -71,6 +71,7 @@ import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstag
 import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
 import { TrivyReportTab } from './TrivyReportTab';
 import { AipCheckTab } from './AipCheckTab';
+import { WebAppIFrameTab, isWebAppAvailable } from './WebAppIFrameTab';
 
 
 const techdocsContent = (
@@ -226,6 +227,10 @@ const websiteEntityPage = (
   <EntityLayout>
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/webapp" title="Web App" if={isWebAppAvailable}>
+      <WebAppIFrameTab />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/ci-cd" title="CI/CD">

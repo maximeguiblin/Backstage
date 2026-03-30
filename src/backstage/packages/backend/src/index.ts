@@ -69,4 +69,9 @@ backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
 backend.add(import('@drodil/backstage-plugin-qeta-backend'));
 backend.add(import('@backstage-community/plugin-sonarqube-backend'));
 
+// Custom http:request action for external HTTP calls
+import { httpRequestModule } from './httpRequestAction';
+
+backend.add(httpRequestModule);
+
 backend.start();

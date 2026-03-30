@@ -28,28 +28,29 @@ backend:
   # auth:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
-  
+
   # Disable default auth policy for local development
   # WARNING: DO NOT use this in production!
   auth:
     dangerouslyDisableDefaultAuthPolicy: true
-  
+
   # Give permission/RBAC plugin time to finish init before returning 503 on /authorize.
   # Catalog calls /authorize early; in Docker RBAC init can exceed the default 5s.
   lifecycle:
     startupRequestPauseTimeout: 60s
-  
+
   baseUrl: http://localhost:7007
   listen:
     port: 7007
     # Uncomment the following host directive to bind to specific interfaces
     host: 0.0.0.0
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src: ["'self'", "http:", "https:"]
+    frame-src: ["'self'", "https://*.azurecontainerapps.io"]
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin: 
+    origin:
       - http://localhost:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
@@ -58,23 +59,24 @@ backend:
   # The production database configuration is stored in app-config.production.yaml
   database:
     client: better-sqlite3
-    connection: ':memory:'
+    connection: ":memory:"
   proxy:
     endpoints:
       # This is an example of how to set up a proxy endpoint for Azure DevOps
       # The path is prefixed with /proxy/azure-devops, so the full URL would be
       # http://localhost:7007/proxy/azure-devops/{organization}/{project}/_apis/pipelines/{pipelineId}/runs
-      '/proxy/azure-devops':
+      "/proxy/azure-devops":
         target: https://dev.azure.com
         changeOrigin: true
         # Remove the proxy path when forwarding the request
         pathRewrite:
-          '^/proxy/azure-devops': ''
+          "^/proxy/azure-devops": ""
         # Format authorization header according to Azure DevOps API requirements
         headers:
           Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
         # Allow headers to pass through
-        allowedHeaders: ['Authorization', 'Content-Type']
+        allowedHeaders: ["Authorization", "Content-Type"]
+
   reading:
     allow:
       - host: ${BACKSTAGE_STORAGE_HOST}
@@ -99,24 +101,16 @@ customStorage:
   host: ${BACKSTAGE_STORAGE_HOST}
   reportSasToken: ${BACKSTAGE_STORAGE_REPORT_SAS_TOKEN}
 
-proxy:
-  ### Example for how to add a proxy endpoint for the frontend.
-  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
-  # endpoints:
-  #   '/test':
-  #     target: 'https://example.com'
-  #     changeOrigin: true
-
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: 'external'
+  builder: "external"
   publisher:
-    type: 'azureBlobStorage'
+    type: "azureBlobStorage"
     azureBlobStorage:
-      containerName: 'documentation'
+      containerName: "documentation"
       credentials:
         accountName: ${BACKSTAGE_STORAGE_ACCOUNT}
         accountKey: ${BACKSTAGE_STORAGE_KEY}
@@ -164,7 +158,6 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
-
     # Sodexo data
     - type: file
       target: ./sodexo/all.yaml
@@ -198,6 +191,12 @@ catalog:
     # Infrastructure configuration template
     - type: file
       target: ./sodexo/templates/infra-config-template.yaml
+      rules:
+        - allow: [Template]
+
+    # Deploy Web App to Azure Container App template
+    - type: file
+      target: ./sodexo/templates/deploy-webapp-template.yaml
       rules:
         - allow: [Template]
 
@@ -249,6 +248,11 @@ catalog:
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
+    # Dynamic entities registered by scaffolder templates
+    - type: file
+      target: ./dynamic-entities/*.yaml
+      rules:
+        - allow: [Component, System, API, Resource, Location]
     # PAG catalog
     - type: file
       target: ./sodexo/pag-catalog.yaml
@@ -259,8 +263,8 @@ catalog:
     azureDevOps:
       sdxcloudBackstageCatalogProvider: # identifies your dataset / provider independent of config changes
         organization: sdxcloud
-        project: 'IST.GLB.GLB.DataFactory_DeveloperPlatform'
-        repository: '*'
+        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
+        repository: "*"
         path: /**/catalog-info.yaml
         schedule:
           frequency: { minutes: 2 }
