@@ -130,9 +130,6 @@ auth:
     - http://localhost:3000
     - http://localhost:7007
   providers:
-    guest: {}
-    # Microsoft auth disabled for local development
-    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
     microsoft:
       development:
         clientId: ${BACKSTAGE_CLIENT_ID}
@@ -277,6 +274,29 @@ kubernetes:
 permission:
   enabled: true
   rbac:
+    defaultPermissions:
+      defaultRole: role:default/default-role
+      basicPermissions:
+        - permission: catalog.entity.read
+          action: read
+        - permission: catalog-entity
+          action: read
+        - permission: catalog.entity.create
+          action: create
+        - permission: scaffolder.task.create
+          action: create
+        - permission: scaffolder.task.read
+          action: read
+        - permission: scaffolder.task.cancel
+          action: use
+        - permission: scaffolder.action.execute
+          action: use
+        - permission: scaffolder.template.parameter.read
+          action: read
+        - permission: scaffolder.template.step.read
+          action: read
+        - permission: scaffolder.action.execute
+          action: use
     policies-csv-file: sodexo/policies/rbac-policy.csv
     conditionalPoliciesFile: sodexo/policies/conditional-policies.yaml
     policyFileReload: true

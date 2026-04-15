@@ -1,26 +1,30 @@
 import { createBackendModule } from '@backstage/backend-plugin-api';
-import {
-    scaffolderActionsExtensionPoint,
-    createTemplateAction,
-} from '@backstage/plugin-scaffolder-node';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
+import { z } from 'zod';
 
 const createHttpRequestAction = () => {
     return createTemplateAction({
         id: 'http:request',
         description: 'Sends an HTTP request to an external URL.',
         schema: {
-            input: {
-                method: z => z.enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']).describe('HTTP method'),
-                url: z => z.string().describe('The full URL to send the request to'),
-                headers: z => z.record(z.string()).optional().describe('Request headers'),
-                body: z => z.string().optional().describe('Request body'),
-                continueOnBadResponse: z => z.boolean().optional().describe('If true, continue to next step even on 4xx/5xx responses'),
-            },
-            output: {
-                code: z => z.number().optional().describe('HTTP response status code'),
-                headers: z => z.record(z.any()).optional().describe('Response headers'),
-                body: z => z.any().optional().describe('Response body'),
-            },
+            input: z.object({
+                method: z
+                    .enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'])
+                    .describe('HTTP method'),
+                url: z.string().describe('The full URL to send the request to'),
+                headers: z.record(z.string()).optional().describe('Request headers'),
+                body: z.string().optional().describe('Request body'),
+                continueOnBadResponse: z
+                    .boolean()
+                    .optional()
+                    .describe('If true, continue to next step even on 4xx/5xx responses'),
+            }),
+            output: z.object({
+                code: z.number().optional().describe('HTTP response status code'),
+                headers: z.record(z.any()).optional().describe('Response headers'),
+                body: z.any().optional().describe('Response body'),
+            }),
         },
         async handler(ctx) {
             const { url, method, headers, body, continueOnBadResponse } = ctx.input;
@@ -40,13 +44,20 @@ const createHttpRequestAction = () => {
             }
 
             const contentType = responseHeaders['content-type'] ?? '';
+            const text = await response.text();
             let responseBody: unknown;
             try {
-                responseBody = contentType.includes('application/json')
-                    ? await response.json()
-                    : { message: await response.text() };
+                if (contentType.includes('application/json')) {
+                    const trimmed = text.trim();
+                    responseBody = trimmed === '' ? null : JSON.parse(trimmed);
+                } else {
+                    responseBody = { message: text };
+                }
             } catch (e) {
-                responseBody = { message: `Could not parse response: ${e}` };
+                responseBody = {
+                    message: `Could not parse response: ${e}`,
+                    raw: text,
+                };
             }
 
             if (response.status >= 400) {
@@ -72,25 +83,37 @@ const createHttpRequestPollAction = () => {
         id: 'http:request:poll',
         description: 'Polls an HTTP endpoint until a condition is met or timeout is reached.',
         schema: {
-            input: {
-                url: z => z.string().describe('The URL to poll'),
-                headers: z => z.record(z.string()).optional().describe('Request headers'),
-                jsonPathField: z => z.string().describe('Dot-notation path to the field in the JSON response to check (e.g. properties.provisioningState)'),
-                expectedValue: z => z.string().describe('The expected value of the field'),
-                intervalMs: z => z.number().optional().describe('Polling interval in milliseconds (default: 10000)'),
-                timeoutMs: z => z.number().optional().describe('Max time to wait in milliseconds (default: 300000)'),
-            },
-            output: {
-                code: z => z.number().optional().describe('Last HTTP response status code'),
-                body: z => z.any().optional().describe('Last response body'),
-            },
+            input: z.object({
+                url: z.string().describe('The URL to poll'),
+                headers: z.record(z.string()).optional().describe('Request headers'),
+                jsonPathField: z
+                    .string()
+                    .describe(
+                        'Dot-notation path to the field in the JSON response to check (e.g. properties.provisioningState)',
+                    ),
+                expectedValue: z.string().describe('The expected value of the field'),
+                intervalMs: z
+                    .number()
+                    .optional()
+                    .describe('Polling interval in milliseconds (default: 10000)'),
+                timeoutMs: z
+                    .number()
+                    .optional()
+                    .describe('Max time to wait in milliseconds (default: 300000)'),
+            }),
+            output: z.object({
+                code: z.number().optional().describe('Last HTTP response status code'),
+                body: z.any().optional().describe('Last response body'),
+            }),
         },
         async handler(ctx) {
             const { url, headers, jsonPathField, expectedValue } = ctx.input;
             const intervalMs = (ctx.input as { intervalMs?: number }).intervalMs ?? 10000;
             const timeoutMs = (ctx.input as { timeoutMs?: number }).timeoutMs ?? 300000;
 
-            ctx.logger.info(`Polling ${url} until ${jsonPathField} equals "${expectedValue}" (timeout: ${timeoutMs / 1000}s)`);
+            ctx.logger.info(
+                `Polling ${url} until ${jsonPathField} equals "${expectedValue}" (timeout: ${timeoutMs / 1000}s)`,
+            );
 
             const startTime = Date.now();
             while (Date.now() - startTime < timeoutMs) {
@@ -100,14 +123,17 @@ const createHttpRequestPollAction = () => {
                     signal: AbortSignal.timeout(30000),
                 });
 
+                const pollText = await response.text();
                 let body: Record<string, unknown> = {};
                 try {
-                    body = await response.json() as Record<string, unknown>;
+                    const trimmed = pollText.trim();
+                    if (trimmed !== '') {
+                        body = JSON.parse(trimmed) as Record<string, unknown>;
+                    }
                 } catch {
                     ctx.logger.warn('Could not parse poll response as JSON');
                 }
 
-                // Navigate the dot-notation path
                 let current: unknown = body;
                 for (const key of jsonPathField.split('.')) {
                     if (current && typeof current === 'object' && key in current) {
@@ -118,7 +144,9 @@ const createHttpRequestPollAction = () => {
                     }
                 }
 
-                ctx.logger.info(`Poll: ${jsonPathField} = "${current}" (expected: "${expectedValue}")`);
+                ctx.logger.info(
+                    `Poll: ${jsonPathField} = "${current}" (expected: "${expectedValue}")`,
+                );
 
                 if (String(current) === expectedValue) {
                     ctx.logger.info('Polling condition met.');
@@ -134,7 +162,9 @@ const createHttpRequestPollAction = () => {
                 await new Promise(resolve => setTimeout(resolve, intervalMs));
             }
 
-            throw new Error(`Polling timed out after ${timeoutMs / 1000}s waiting for ${jsonPathField} to equal "${expectedValue}"`);
+            throw new Error(
+                `Polling timed out after ${timeoutMs / 1000}s waiting for ${jsonPathField} to equal "${expectedValue}"`,
+            );
         },
     });
 };
@@ -142,15 +172,18 @@ const createHttpRequestPollAction = () => {
 const createCatalogRegisterInlineAction = () => {
     return createTemplateAction({
         id: 'catalog:register:inline',
-        description: 'Registers an entity by writing a catalog YAML file to a dynamic entities directory that the catalog watches.',
+        description:
+            'Registers an entity by writing a catalog YAML file to a dynamic entities directory that the catalog watches.',
         schema: {
-            input: {
-                entity: z => z.record(z.any()).describe('The entity object to register (apiVersion, kind, metadata, spec)'),
-            },
-            output: {
-                entityRef: z => z.string().optional().describe('The entity reference of the registered entity'),
-                filePath: z => z.string().optional().describe('The path of the written catalog file'),
-            },
+            input: z.object({
+                entity: z
+                    .any()
+                    .describe('The entity object to register (apiVersion, kind, metadata, spec)'),
+            }),
+            output: z.object({
+                entityRef: z.string().optional().describe('The entity reference of the registered entity'),
+                filePath: z.string().optional().describe('The path of the written catalog file'),
+            }),
         },
         async handler(ctx) {
             const { entity } = ctx.input;
@@ -166,7 +199,6 @@ const createCatalogRegisterInlineAction = () => {
             const fileName = `${entityName}.yaml`;
             const filePath = path.join(dynamicDir, fileName);
 
-            // Build YAML content manually to avoid extra dependencies
             const lines: string[] = [
                 `apiVersion: ${entity.apiVersion ?? 'backstage.io/v1alpha1'}`,
                 `kind: ${entity.kind ?? 'Component'}`,
@@ -178,7 +210,9 @@ const createCatalogRegisterInlineAction = () => {
             }
             if (entity.metadata?.annotations) {
                 lines.push('  annotations:');
-                for (const [key, value] of Object.entries(entity.metadata.annotations as Record<string, string>)) {
+                for (const [key, value] of Object.entries(
+                    entity.metadata.annotations as Record<string, string>,
+                )) {
                     lines.push(`    ${key}: "${value}"`);
                 }
             }
@@ -207,7 +241,8 @@ const createCatalogRegisterInlineAction = () => {
 
             ctx.logger.info(`Wrote entity file to ${filePath}`);
 
-            const entityRef = `${entity.kind}:${entity.metadata?.namespace ?? 'default'}/${entityName}`.toLowerCase();
+            const entityRef =
+                `${entity.kind}:${entity.metadata?.namespace ?? 'default'}/${entityName}`.toLowerCase();
             ctx.output('entityRef', entityRef);
             ctx.output('filePath', filePath);
         },

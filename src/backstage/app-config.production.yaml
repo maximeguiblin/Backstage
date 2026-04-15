@@ -32,9 +32,6 @@ auth:
     - http://developer-portal.dev.sodexonet.com
     - https://developer-portal.dev.sodexonet.com
   providers:
-    guest: {}
-    # Microsoft auth disabled for local development
-    # Uncomment and set env vars to enable: BACKSTAGE_CLIENT_ID, BACKSTAGE_CLIENT_SECRET, BACKSTAGE_TENANT_ID
     microsoft:
       production:
         clientId: ${BACKSTAGE_CLIENT_ID}

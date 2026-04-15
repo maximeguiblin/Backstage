@@ -123,5 +123,5 @@ EXPOSE 7007
 CMD sh -c 'if [ "$USE_PRODUCTION_CONFIG" = "true" ]; then \
     exec node packages/backend --config app-config.yaml --config app-config.production.yaml; \
   else \
-    exec node packages/backend --config app-config.yaml; \
+    exec node packages/backend --config app-config.yaml --config app-config.sandbox.yaml; \
   fi'
