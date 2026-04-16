@@ -161,125 +161,15 @@ catalog:
     pullRequestBranchName: backstage-integration
   rules:
     - allow: [Component, System, API, Resource, Location]
+
+  # All catalog entities and templates are maintained in the BackstageCatalog repo.
+  # The root catalog-info.yaml is a Location entity that references all individual files.
+  # Updating that repo automatically updates the portal without redeployment.
   locations:
-    # Sodexo data
-    - type: file
-      target: ./sodexo/all.yaml
+    - type: url
+      target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # VM template
-    - type: file
-      target: ./sodexo/templates/azure-vm-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Patterns template
-    - type: file
-      target: ./sodexo/templates/azure-patterns-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Repository template
-    - type: file
-      target: ./sodexo/templates/azure-repo-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Bicep template
-    - type: file
-      target: ./sodexo/templates/azure-bicep-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Infrastructure configuration template
-    - type: file
-      target: ./sodexo/templates/infra-config-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Deploy Web App to Azure Container App template
-    - type: file
-      target: ./sodexo/templates/deploy-webapp-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Register Web App in Backstage Catalog template
-    - type: file
-      target: ./sodexo/templates/register-webapp-template.yaml
-      rules:
-        - allow: [Template]
-
-    # AIP templates
-    - type: file
-      target: ../../sodexo/aip-template.yaml
-      rules:
-        - allow: [Template]
-
-    # AIP Infrastructure Check template
-    - type: file
-      target: ./sodexo/templates/aip-infra-check-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Data Factory VM Workstation template
-    - type: file
-      target: ./sodexo/templates/azure-vm-workstation-template.yaml
-      rules:
-        - allow: [Template]
-
-    # Bicep template
-    - type: file
-      target: ./sodexo/templates/azure-bicep-template-api.yaml
-      rules:
-        - allow: [API]
-
-    # AIP catalog
-    - type: file
-      target: ./sodexo/aip-catalog.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # 4Site catalog
-    - type: file
-      target: ./sodexo/4site-catalog.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # ProductSwap catalog
-    - type: file
-      target: ./sodexo/productswap-catalog.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # PowerChef catalog
-    - type: file
-      target: ./sodexo/powerchef-catalog.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # PAG catalog
-    - type: file
-      target: ./sodexo/pag-catalog.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location]
-
-    # Dynamic entities registered by scaffolder templates
-    - type: file
-      target: ./dynamic-entities/*.yaml
-      rules:
-        - allow: [Component, System, API, Resource, Location]
-
-  providers:
-    azureDevOps:
-      sdxcloudBackstageCatalogProvider: # identifies your dataset / provider independent of config changes
-        organization: sdxcloud
-        project: "IST.GLB.GLB.DataFactory_DeveloperPlatform"
-        repository: "*"
-        path: /**/catalog-info.yaml
-        schedule:
-          frequency: { minutes: 2 }
-          timeout: { minutes: 3 }
+        - allow: [User, Group, Component, System, API, Resource, Location, Template]
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
@@ -311,19 +201,16 @@ permission:
           action: read
         - permission: scaffolder.action.execute
           action: use
-    policies-csv-file: sodexo/policies/rbac-policy.csv
-    conditionalPoliciesFile: sodexo/policies/conditional-policies.yaml
-    policyFileReload: true
     pluginsWithPermission:
       - catalog
       - scaffolder
       - permission
     admin:
       superUsers:
+        - name: user:default/hamed.ky
         - name: user:default/christophe.gougam.ext
         - name: group:default/admins
       users:
-        - name: user:default/christophe.gougam.ext
         - name: group:default/admins
 
 qeta:

@@ -96,7 +96,7 @@ COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
 # Copy runtime configuration files
 COPY --chown=node:node app-config*.yaml ./
 
-# Copy Sodexo catalog files and templates
+# Copy Sodexo custom assets
 COPY --chown=node:node sodexo ./sodexo
 
 # Create certs directory — certificates are injected at runtime via
