@@ -1,45 +1,55 @@
-# Developer portal with Backstage
+# Sodexo Developer Portal
 
-This repository contains the source code for a backstage based developer portal
+Backstage-based developer portal for the Sodexo Data Factory organization. It provides a unified software catalog, scaffolder templates, TechDocs, RBAC-based permissions, and integrations with Azure DevOps and SonarQube.
 
-This project package was initiated based on Sodexo AI Platform Cookiecutter project template.
+## Software Catalog
 
+Catalog entities and scaffolder templates are maintained in a **separate repository**:
+[`IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog`](https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog)
+
+The Backstage instance loads a `type: url` location pointing to the root `catalog-info.yaml` in that repo. That file is a `kind: Location` entity whose targets reference all individual catalog and template files. Changes pushed to the catalog repo are picked up automatically — no redeployment of this instance is needed. See the BackstageCatalog repo README for the full list of files and how to add new entities or templates.
+
+## Prerequisites
+
+- **Node.js** 20 or 22
+- **Yarn** 4.4+ (via Corepack)
+- **Docker** (for containerized runs)
+- **Python** >= 3.10 + **uv** (only for AIP CLI deployment commands)
 
 ## Run Locally Using Docker
 
-### Building the Docker Image
-
-Navigate to the Backstage directory and build the image:
+### Build the Docker Image
 
 ```bash
 cd src/backstage
 docker build -t backstage -f Dockerfile .
 ```
 
-**Fast rebuild with cache** (recommended after first build):
+Rebuild with cache (fast, recommended after first build):
 ```bash
 docker build -t backstage -f Dockerfile .
 ```
 
-**Clean rebuild without cache** (use only if needed):
+Clean rebuild without cache:
 ```bash
 docker build --no-cache -t backstage -f Dockerfile .
 ```
 
 ### Running Modes
 
-The application supports two deployment modes:
+The application supports two modes controlled by the `USE_PRODUCTION_CONFIG` environment variable.
 
-#### 1. **Local Mode** (SQLite - Development)
-Uses an in-memory SQLite database. Perfect for local testing without external dependencies.
+#### Local Mode (SQLite + guest auth)
+
+Uses an in-memory SQLite database and guest authentication. No external dependencies required.
 
 ```bash
 docker run -d \
   --name backstage-local \
   -p 7007:7007 \
   -e USE_PRODUCTION_CONFIG=false \
-  -e BACKSTAGE_DEVOPS_TOKEN="<your-token>" \
-  -e BACKSTAGE_SONARQUBE_TOKEN="<your-token>" \
+  -e BACKSTAGE_DEVOPS_TOKEN="<your-azure-devops-pat>" \
+  -e BACKSTAGE_SONARQUBE_TOKEN="<your-sonarqube-token>" \
   -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
   -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
   -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
@@ -47,23 +57,27 @@ docker run -d \
   backstage
 ```
 
-Access the application at: **http://localhost:7007**
+Open **http://localhost:7007** in a browser.
 
-#### 2. **Production Mode** (PostgreSQL)
-Uses Azure PostgreSQL database for persistent storage.
+#### Production Mode (PostgreSQL + Microsoft SSO)
+
+Uses Azure PostgreSQL for persistent storage and Microsoft Entra ID for authentication.
 
 ```bash
 docker run -d \
   --name backstage-prod \
   -p 7007:7007 \
   -e USE_PRODUCTION_CONFIG=true \
-  -e POSTGRES_HOST="<your-host>.postgres.database.azure.com" \
-  -e POSTGRES_PORT="5432" \
-  -e POSTGRES_USER="<your-user>" \
-  -e POSTGRES_PASSWORD="<your-password>" \
-  -e BACKEND_SECRET="<your-secret>" \
-  -e BACKSTAGE_DEVOPS_TOKEN="<your-token>" \
-  -e BACKSTAGE_SONARQUBE_TOKEN="<your-token>" \
+  -e PG_HOST="<host>.postgres.database.azure.com" \
+  -e PG_PORT="5432" \
+  -e PG_USER="<db-user>" \
+  -e PG_PASSWORD="<db-password>" \
+  -e PG_DATABASE="<db-name>" \
+  -e BACKSTAGE_CLIENT_ID="<azure-ad-client-id>" \
+  -e BACKSTAGE_CLIENT_SECRET="<azure-ad-client-secret>" \
+  -e BACKSTAGE_TENANT_ID="<azure-ad-tenant-id>" \
+  -e BACKSTAGE_DEVOPS_TOKEN="<your-azure-devops-pat>" \
+  -e BACKSTAGE_SONARQUBE_TOKEN="<your-sonarqube-token>" \
   -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
   -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
   -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
@@ -71,27 +85,27 @@ docker run -d \
   backstage
 ```
 
-**For local PostgreSQL testing**, use `host.docker.internal`:
-```bash
--e POSTGRES_HOST="host.docker.internal"
-```
+To connect to a local PostgreSQL instance from inside Docker, use `host.docker.internal` as `PG_HOST`.
 
-### Environment Variables Reference
+### Environment Variables
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `USE_PRODUCTION_CONFIG` | No | Set to `false` for SQLite, `true` for PostgreSQL | `false` |
-| `POSTGRES_HOST` | Prod only | PostgreSQL hostname | `azieps1aip001.postgres.database.azure.com` |
-| `POSTGRES_PORT` | Prod only | PostgreSQL port | `5432` |
-| `POSTGRES_USER` | Prod only | Database user | `sdxpostgreadminuser` |
-| `POSTGRES_PASSWORD` | Prod only | Database password | `<secure-password>` |
-| `BACKEND_SECRET` | Prod only | Backend auth secret | `<random-secret>` |
-| `BACKSTAGE_DEVOPS_TOKEN` | Yes | Azure DevOps PAT | `<your-pat-token>` |
-| `BACKSTAGE_SONARQUBE_TOKEN` | Yes | SonarQube token | `squ_...` |
-| `BACKSTAGE_STORAGE_HOST` | Yes | Azure Blob Storage host | `aziest1doc001.blob.core.windows.net` |
-| `BACKSTAGE_STORAGE_ACCOUNT` | Yes | Storage account name | `aziest1doc001` |
-| `BACKSTAGE_STORAGE_KEY` | Yes | Storage account key | `<storage-key>` |
-| `BACKSTAGE_STORAGE_REPORT_SAS_TOKEN` | Yes | SAS token for reports | `sp=r&st=...` |
+| Variable | When Required | Description |
+|----------|---------------|-------------|
+| `USE_PRODUCTION_CONFIG` | Always | `true` for PostgreSQL + SSO, `false` for SQLite + guest auth |
+| `PG_HOST` | Production | PostgreSQL hostname |
+| `PG_PORT` | Production | PostgreSQL port (default `5432`) |
+| `PG_USER` | Production | PostgreSQL username |
+| `PG_PASSWORD` | Production | PostgreSQL password |
+| `PG_DATABASE` | Production | PostgreSQL database name |
+| `BACKSTAGE_CLIENT_ID` | Production | Microsoft Entra ID application client ID |
+| `BACKSTAGE_CLIENT_SECRET` | Production | Microsoft Entra ID application client secret |
+| `BACKSTAGE_TENANT_ID` | Production | Microsoft Entra ID tenant ID |
+| `BACKSTAGE_DEVOPS_TOKEN` | Always | Azure DevOps Personal Access Token |
+| `BACKSTAGE_SONARQUBE_TOKEN` | Always | SonarQube API token |
+| `BACKSTAGE_STORAGE_HOST` | Always | Azure Blob Storage hostname for TechDocs |
+| `BACKSTAGE_STORAGE_ACCOUNT` | Always | Azure Storage account name |
+| `BACKSTAGE_STORAGE_KEY` | Always | Azure Storage account key |
+| `BACKSTAGE_STORAGE_REPORT_SAS_TOKEN` | Always | SAS token for report access |
 
 ### Useful Docker Commands
 
@@ -145,24 +159,21 @@ The Docker image uses a multi-stage build for optimization:
 2. **Stage 2 (build)**: Installs dependencies and compiles TypeScript
 3. **Stage 3 (final)**: Creates minimal runtime image with production dependencies only
 
-The final image is ~2.1GB and includes:
+The final image includes:
 - Node.js 22 (Bookworm Slim)
 - Compiled Backstage backend bundle
 - Production dependencies only
-- Local catalog files (`sodexo/*.yaml`)
 
-Both frontend and backend run on **port 7007** in a monolithic setup
-
+Both frontend and backend run on **port 7007** in a monolithic setup.
 
 ## Deploy in Azure
 
-
 ### Setup working environment
 
-Before deploying in Azure, you must setup your working environment by running the following steps:
+Before deploying in Azure, you must set up your working environment by running the following steps:
 
 * Open the URL and log in with your AZ account https://azeuvs1gct987.visualstudio.com/_usersSettings/tokens
-* Generate an Azure Devops Personal Access Token by selecting "All accessible organizations" and at least the permission "Read" under section "Packaging"
+* Generate an Azure DevOps Personal Access Token by selecting "All accessible organizations" and at least the permission "Read" under section "Packaging"
 * Install and use uv auth (or set env var => `export UV_EXTRA_INDEX_URL=https://build:YOUR_PAT@sdxcloud.pkgs.visualstudio.com/_packaging/AIP-feed/pypi/simple/`):
 
   ```bash
@@ -182,7 +193,6 @@ Before deploying in Azure, you must setup your working environment by running th
 
 * To (re)generate the lock file (`uv.lock`), ensure PPP auth is configured then run `uv lock` and commit the file for reproducible installs. The first run of `scripts/install_requirements.sh` with PPP auth will also create `uv.lock` if it is missing.
 
-
 ### How to deploy
 
 To deploy in Azure Container Apps, you can use the command:
@@ -191,13 +201,18 @@ To deploy in Azure Container Apps, you can use the command:
   $ aip app container deploy
   ```
 
+### Deployment Environments
+
+| Environment | Subscription | Container App | URL |
+|-------------|-------------|---------------|-----|
+| Sandbox | SDX Sandbox | `azieca0aip001` | `https://azieca0aip001.*.northeurope.azurecontainerapps.io` |
+| SDX DEV | SDX DEV/TEST | `azieca2frt001` | `https://developer-portal.dev.sodexonet.com` |
 
 ## Documentation
 
 The documentation of the project is available in the following links: To be filled
 
 Please fill here the links to code and product documentations
-
 
 ## Contributing
 
