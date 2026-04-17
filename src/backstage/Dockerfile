@@ -99,6 +99,10 @@ COPY --chown=node:node app-config*.yaml ./
 # Copy Sodexo catalog files and templates
 COPY --chown=node:node sodexo ./sodexo
 
+# Create certs directory — certificates are injected at runtime via
+# WEBAPP_CLIENT_CERT / WEBAPP_CLIENT_KEY env vars (sourced from Key Vault)
+RUN mkdir -p /app/certs
+
 # Set production environment variables
 ENV NODE_ENV=production \
     NODE_OPTIONS="--no-node-snapshot" \
@@ -118,9 +122,13 @@ ENV FRONT_ENDPOINT=$FRONT_ENDPOINT \
 EXPOSE 7007
 
 # Start Backstage backend
+# - Write mTLS certs from env vars (Key Vault secrets) to disk before startup
 # - If USE_PRODUCTION_CONFIG=true (default): Uses PostgreSQL (app-config.production.yaml)
 # - If USE_PRODUCTION_CONFIG=false: Uses SQLite for local testing (app-config.yaml only)
-CMD sh -c 'if [ "$USE_PRODUCTION_CONFIG" = "true" ]; then \
+CMD sh -c '\
+  if [ -n "$WEBAPP_CLIENT_CERT" ]; then printf "%s" "$WEBAPP_CLIENT_CERT" > /app/certs/client.pem; fi && \
+  if [ -n "$WEBAPP_CLIENT_KEY" ]; then printf "%s" "$WEBAPP_CLIENT_KEY" > /app/certs/client-key.pem; fi && \
+  if [ "$USE_PRODUCTION_CONFIG" = "true" ]; then \
     exec node packages/backend --config app-config.yaml --config app-config.production.yaml; \
   else \
     exec node packages/backend --config app-config.yaml --config app-config.sandbox.yaml; \

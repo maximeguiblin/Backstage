@@ -73,4 +73,9 @@ import { httpRequestModule } from './httpRequestAction';
 
 backend.add(httpRequestModule);
 
+// Webapp proxy plugin - proxies requests to deployed container apps
+import { webappProxyPlugin } from './webappProxyPlugin';
+
+backend.add(webappProxyPlugin);
+
 backend.start();

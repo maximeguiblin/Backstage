@@ -10,7 +10,7 @@ metadata:
     - webapp
     - deployment
 spec:
-  owner: platform-team
+  owner: aip-team
   type: service
 
   parameters:
@@ -79,6 +79,7 @@ spec:
           title: Container App Environment Name
           type: string
           description: Name of the Azure Container Apps Environment. A new one will be created if it does not exist.
+          default: aziece1poc001
 
     - title: Container Image Configuration
       required:
@@ -115,6 +116,11 @@ spec:
           type: boolean
           description: Enable external HTTP ingress to the container app.
           default: true
+        backstageIp:
+          title: Backstage Server Public IP
+          type: string
+          description: "Public IP of the Backstage server. Only this IP will be allowed to reach the Container App ingress."
+          ui:help: "Get it by running: curl -s ifconfig.me"
         cpuCores:
           title: CPU Cores
           type: string
@@ -250,7 +256,15 @@ spec:
                   "external": ${{ parameters.ingressEnabled }},
                   "targetPort": ${{ parameters.targetPort }},
                   "transport": "auto",
-                  "allowInsecure": false
+                  "allowInsecure": false,
+                  "ipSecurityRestrictions": [
+                    {
+                      "name": "backstage-server",
+                      "description": "Allow only Backstage server",
+                      "ipAddressRange": "${{ parameters.backstageIp }}/32",
+                      "action": "Allow"
+                    }
+                  ]
                 },
                 "registries": ${{ ("[{\"server\": \"" + parameters.acrName + ".azurecr.io\", \"identity\": \"system\"}]") if parameters.acrName else "[]" }}
               },
@@ -308,7 +322,7 @@ spec:
           spec:
             type: website
             lifecycle: production
-            owner: platform-team
+            owner: aip-team
 
   output:
     links:

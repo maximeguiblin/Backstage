@@ -46,7 +46,7 @@ backend:
     host: 0.0.0.0
   csp:
     connect-src: ["'self'", "http:", "https:"]
-    frame-src: ["'self'", "https://*.azurecontainerapps.io"]
+    frame-src: ["'self'"]
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
@@ -95,6 +95,13 @@ integrations:
     - host: dev.azure.com
       organization: sdxcloud
       token: ${BACKSTAGE_DEVOPS_TOKEN}
+
+# Webapp proxy mTLS configuration
+webappProxy:
+  clientCertPath: /app/certs/client.pem
+  clientKeyPath: /app/certs/client-key.pem
+  # Azure App Gateway IP — requests are sent to this IP with the original hostname as SNI
+  gatewayIp: ${WEBAPP_GATEWAY_IP}
 
 # Storage account report configuration
 customStorage:
@@ -197,6 +204,12 @@ catalog:
       rules:
         - allow: [Template]
 
+    # Register Web App in Backstage Catalog template
+    - type: file
+      target: ./sodexo/templates/register-webapp-template.yaml
+      rules:
+        - allow: [Template]
+
     # AIP templates
     - type: file
       target: ../../sodexo/aip-template.yaml
@@ -245,16 +258,17 @@ catalog:
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
 
-    # Dynamic entities registered by scaffolder templates
-    - type: file
-      target: ./dynamic-entities/*.yaml
-      rules:
-        - allow: [Component, System, API, Resource, Location]
     # PAG catalog
     - type: file
       target: ./sodexo/pag-catalog.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location]
+
+    # Dynamic entities registered by scaffolder templates
+    - type: file
+      target: ./dynamic-entities/*.yaml
+      rules:
+        - allow: [Component, System, API, Resource, Location]
 
   providers:
     azureDevOps:
@@ -307,6 +321,7 @@ permission:
     admin:
       superUsers:
         - name: user:default/christophe.gougam.ext
+        - name: group:default/admins
       users:
         - name: user:default/christophe.gougam.ext
         - name: group:default/admins

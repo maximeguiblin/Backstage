@@ -47,6 +47,9 @@
         "BACKSTAGE_STORAGE_KEY": "{#{@infra.keyvault_secrets.backstage_storage_key}}",
         "BACKSTAGE_STORAGE_HOST": "{#{@infra.keyvault_secrets.backstage_storage_host}}",
         "BACKSTAGE_STORAGE_REPORT_SAS_TOKEN": "{#{@infra.keyvault_secrets.backstage_storage_report_sas_token}}",
+        "WEBAPP_CLIENT_CERT": "{#{@infra.keyvault_secrets.webapp_client_cert}}",
+        "WEBAPP_CLIENT_KEY": "{#{@infra.keyvault_secrets.webapp_client_key}}",
+        "WEBAPP_GATEWAY_IP": "{#{@infra.keyvault_secrets.webapp_gateway_ip}}",
         "USE_PRODUCTION_CONFIG": "{@infra.use_production_config}"
       }
     }

@@ -172,8 +172,7 @@ const createHttpRequestPollAction = () => {
 const createCatalogRegisterInlineAction = () => {
     return createTemplateAction({
         id: 'catalog:register:inline',
-        description:
-            'Registers an entity by writing a catalog YAML file to a dynamic entities directory that the catalog watches.',
+        description: 'Registers an entity by writing a catalog YAML file to the dynamic-entities directory watched by the catalog.',
         schema: {
             input: z.object({
                 entity: z

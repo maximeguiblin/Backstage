@@ -4,12 +4,23 @@ import { Box, Grid, Paper, Typography } from '@material-ui/core';
 
 const WEBAPP_URL_ANNOTATION = 'webapp.io/url';
 
+const getProxyUrl = (directUrl: string | undefined): string | undefined => {
+  if (!directUrl) return undefined;
+  try {
+    const url = new URL(directUrl);
+    return `/api/webapp-proxy/${url.hostname}${url.pathname}`;
+  } catch {
+    return undefined;
+  }
+};
+
 export const isWebAppAvailable = (entity: { metadata: { annotations?: Record<string, string> } }) =>
   Boolean(entity.metadata.annotations?.[WEBAPP_URL_ANNOTATION]);
 
 export const WebAppIFrameTab = () => {
   const { entity } = useEntity();
-  const webAppUrl = entity.metadata.annotations?.[WEBAPP_URL_ANNOTATION];
+  const directUrl = entity.metadata.annotations?.[WEBAPP_URL_ANNOTATION];
+  const webAppUrl = getProxyUrl(directUrl);
 
   if (!webAppUrl) {
     return (
@@ -43,8 +54,8 @@ export const WebAppIFrameTab = () => {
             </Typography>
             <Typography variant="body2" color="textSecondary" paragraph>
               Live preview of the deployed application.{' '}
-              <a href={webAppUrl} target="_blank" rel="noopener noreferrer">
-                Open in new tab
+              <a href={directUrl} target="_blank" rel="noopener noreferrer">
+                Open in new tab (direct)
               </a>
             </Typography>
             <Box style={{ marginTop: '16px' }}>

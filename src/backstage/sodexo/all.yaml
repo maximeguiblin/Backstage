@@ -105,7 +105,7 @@ metadata:
   annotations:
     backstage.io/source-location: url:https://sdxcloud.visualstudio.com/IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/_git/PATTERN.DataPatterns_Global.AZ
     dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/POC.TestPipeline
-    dev.azure.com/build-definition: POC.TestPipeline      
+    dev.azure.com/build-definition: POC.TestPipeline
 spec:
   owner: devsecops
   lifecycle: production
@@ -116,7 +116,7 @@ metadata:
   name: patterns-architecture
   title: Patterns Arch
 spec:
-  type: resource 
+  type: resource
   lifecycle: production
   owner: devsecops
   system: patterns
@@ -143,13 +143,13 @@ metadata:
     dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/POC.TestPipeline
     dev.azure.com/build-definition: POC.TestPipeline
 spec:
-  type: service 
+  type: service
   lifecycle: production
   owner: devsecops
   system: patterns
   providesApis:
     - run-adfb-pattern
-    - run-poc-pattern  
+    - run-poc-pattern
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -173,7 +173,7 @@ metadata:
     dev.azure.com/project-repo: IST.GLB.GLB.DataDigitalFactory_24HCloudFormation/PATTERN.DataDigital_ADFB.AZ
     dev.azure.com/build-definition: Azure Test Framework - Supply PriCat
 spec:
-  type: service 
+  type: service
   lifecycle: production
   owner: devsecops
   system: patterns
@@ -258,7 +258,7 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: run-adfb-pattern
-  description: Run the ADFB Pattern which deploys Azure Databricks & Datafactory along with supporting resources such as Key Vaults, Storage Accounts, Azure DevOps agent, etc. 
+  description: Run the ADFB Pattern which deploys Azure Databricks & Datafactory along with supporting resources such as Key Vaults, Storage Accounts, Azure DevOps agent, etc.
   tags:
     - patterns
     - adfb
@@ -365,7 +365,7 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: run-poc-pattern
-  description: Run the POC Pattern pipeline for project onboarding. 
+  description: Run the POC Pattern pipeline for project onboarding.
   tags:
     - patterns
     - adfb
