@@ -1,6 +1,6 @@
 # Sodexo Developer Portal
 
-Backstage-based developer portal for the Sodexo Data Factory organization. It provides a unified software catalog, scaffolder templates, TechDocs, RBAC-based permissions, and integrations with Azure DevOps and SonarQube.
+Backstage-based developer portal for the Sodexo Data Factory organization. It provides a unified software catalog, scaffolder templates, TechDocs, RBAC-based permissions, and integrations with Azure DevOps, self-hosted SonarQube, and SonarCloud.
 
 ## Software Catalog
 
@@ -50,6 +50,7 @@ docker run -d \
   -e USE_PRODUCTION_CONFIG=false \
   -e BACKSTAGE_DEVOPS_TOKEN="<your-azure-devops-pat>" \
   -e BACKSTAGE_SONARQUBE_TOKEN="<your-sonarqube-token>" \
+  -e BACKSTAGE_SONARCLOUD_TOKEN="<your-sonarcloud-token>" \
   -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
   -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
   -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
@@ -78,6 +79,7 @@ docker run -d \
   -e BACKSTAGE_TENANT_ID="<azure-ad-tenant-id>" \
   -e BACKSTAGE_DEVOPS_TOKEN="<your-azure-devops-pat>" \
   -e BACKSTAGE_SONARQUBE_TOKEN="<your-sonarqube-token>" \
+  -e BACKSTAGE_SONARCLOUD_TOKEN="<your-sonarcloud-token>" \
   -e BACKSTAGE_STORAGE_HOST="<storage-host>" \
   -e BACKSTAGE_STORAGE_ACCOUNT="<storage-account>" \
   -e BACKSTAGE_STORAGE_KEY="<storage-key>" \
@@ -101,7 +103,8 @@ To connect to a local PostgreSQL instance from inside Docker, use `host.docker.i
 | `BACKSTAGE_CLIENT_SECRET` | Production | Microsoft Entra ID application client secret |
 | `BACKSTAGE_TENANT_ID` | Production | Microsoft Entra ID tenant ID |
 | `BACKSTAGE_DEVOPS_TOKEN` | Always | Azure DevOps Personal Access Token |
-| `BACKSTAGE_SONARQUBE_TOKEN` | Always | SonarQube API token |
+| `BACKSTAGE_SONARQUBE_TOKEN` | Always | SonarQube API token (self-hosted instance) |
+| `BACKSTAGE_SONARCLOUD_TOKEN` | When using SonarCloud | User token from [SonarCloud security](https://sonarcloud.io/account/security) for the `sonarcloud` instance in `app-config.yaml` |
 | `BACKSTAGE_STORAGE_HOST` | Always | Azure Blob Storage hostname for TechDocs |
 | `BACKSTAGE_STORAGE_ACCOUNT` | Always | Azure Storage account name |
 | `BACKSTAGE_STORAGE_KEY` | Always | Azure Storage account key |

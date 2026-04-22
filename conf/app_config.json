@@ -42,6 +42,7 @@
         "BACKSTAGE_CLIENT_SECRET": "{#{@infra.keyvault_secrets.backstage_client_secret}}",
         "BACKSTAGE_TENANT_ID": "{#{@infra.keyvault_secrets.backstage_tenant_id}}",
         "BACKSTAGE_SONARQUBE_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarqube_token}}",
+        "BACKSTAGE_SONARCLOUD_TOKEN": "{#{@infra.keyvault_secrets.backstage_sonarcloud_token}}",
         "BACKSTAGE_DEVOPS_TOKEN": "{#{@infra.keyvault_secrets.backstage_devops_token}}",
         "BACKSTAGE_STORAGE_ACCOUNT": "{#{@infra.keyvault_secrets.backstage_storage_account}}",
         "BACKSTAGE_STORAGE_KEY": "{#{@infra.keyvault_secrets.backstage_storage_key}}",

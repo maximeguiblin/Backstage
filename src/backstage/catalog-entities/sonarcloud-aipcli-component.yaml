@@ -1,0 +1,16 @@
+# Example Component wired to SonarCloud (org: sdxcloud, project key: sdxcloud_digitalai-aip-aipcli).
+# Loaded via catalog.locations in app-config.yaml.
+# Instance prefix `sonarcloud/` matches the `name: sonarcloud` entry in app-config.yaml.
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: digitalai-aip-aipcli
+  title: Digital AI AIP CLI
+  description: Example component with SonarCloud quality metrics.
+  annotations:
+    sonarqube.org/project-key: sonarcloud/sdxcloud_digitalai-aip-aipcli
+spec:
+  type: library
+  owner: group:default/admins
+  lifecycle: experimental

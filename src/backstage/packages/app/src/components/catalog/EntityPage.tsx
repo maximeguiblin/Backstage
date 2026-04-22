@@ -69,10 +69,12 @@ import { CustomEntityLinksCard } from './SimpleLinksTable';
 
 import { EntitySonarQubeCard, SonarQubeRelatedEntitiesOverview } from '@backstage-community/plugin-sonarqube';
 import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-react';
-import { TrivyReportTab } from './TrivyReportTab';
 import { AipCheckTab } from './AipCheckTab';
+import { TrivyReportTab } from './TrivyReportTab';
 import { WebAppIFrameTab, isWebAppAvailable } from './WebAppIFrameTab';
 
+const MISSING_ANNOTATION_READ_MORE_URL =
+  'https://backstage.io/docs/features/software-catalog/descriptor';
 
 const techdocsContent = (
   <EntityTechdocsContent>
@@ -166,7 +168,10 @@ const overviewContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isSonarQubeAvailable}>
         <Grid item md={6}>
-          <EntitySonarQubeCard variant="gridItem" />
+          <EntitySonarQubeCard
+            variant="gridItem"
+            missingAnnotationReadMoreUrl={MISSING_ANNOTATION_READ_MORE_URL}
+          />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -217,6 +222,13 @@ const serviceEntityPage = (
       {techdocsContent}
     </EntityLayout.Route>
 
+    <EntityLayout.Route path="/sonarqube" title="Code Quality">
+      <SonarQubeRelatedEntitiesOverview
+        relationType={RELATION_HAS_PART}
+        entityKind="component"
+      />
+    </EntityLayout.Route>
+
     <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
@@ -259,6 +271,13 @@ const websiteEntityPage = (
     <EntityLayout.Route path="/docs" title="Docs">
       {techdocsContent}
     </EntityLayout.Route>
+
+    <EntityLayout.Route path="/sonarqube" title="Code Quality">
+      <SonarQubeRelatedEntitiesOverview
+        relationType={RELATION_HAS_PART}
+        entityKind="component"
+      />
+    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -276,8 +295,11 @@ const repoEntityPage = (
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/sonarqube" title="Sonarqube">
-      <SonarQubeRelatedEntitiesOverview relationType={RELATION_HAS_PART} entityKind="component" />
+    <EntityLayout.Route path="/sonarqube" title="Code Quality">
+      <SonarQubeRelatedEntitiesOverview
+        relationType={RELATION_HAS_PART}
+        entityKind="component"
+      />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">
@@ -488,6 +510,12 @@ const systemPage = (
           RELATION_DEPENDS_ON,
         ]}
         unidirectional={false}
+      />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/sonarqube" title="Code Quality">
+      <SonarQubeRelatedEntitiesOverview
+        relationType={RELATION_HAS_PART}
+        entityKind="component"
       />
     </EntityLayout.Route>
   </EntityLayout>

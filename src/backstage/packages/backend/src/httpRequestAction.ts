@@ -1,10 +1,14 @@
 import { createBackendModule } from '@backstage/backend-plugin-api';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
+import * as scaffolderNodeAlpha from '@backstage/plugin-scaffolder-node/alpha';
 import { z } from 'zod';
 
+const scaffolderActionsExtensionPoint = (
+    scaffolderNodeAlpha as { scaffolderActionsExtensionPoint?: unknown }
+).scaffolderActionsExtensionPoint;
+
 const createHttpRequestAction = () => {
-    return createTemplateAction({
+    return (createTemplateAction as any)({
         id: 'http:request',
         description: 'Sends an HTTP request to an external URL.',
         schema: {
@@ -26,7 +30,7 @@ const createHttpRequestAction = () => {
                 body: z.any().optional().describe('Response body'),
             }),
         },
-        async handler(ctx) {
+        async handler(ctx: any) {
             const { url, method, headers, body, continueOnBadResponse } = ctx.input;
 
             ctx.logger.info(`Creating ${method} request to ${url}`);
@@ -79,7 +83,7 @@ const createHttpRequestAction = () => {
 };
 
 const createHttpRequestPollAction = () => {
-    return createTemplateAction({
+    return (createTemplateAction as any)({
         id: 'http:request:poll',
         description: 'Polls an HTTP endpoint until a condition is met or timeout is reached.',
         schema: {
@@ -106,7 +110,7 @@ const createHttpRequestPollAction = () => {
                 body: z.any().optional().describe('Last response body'),
             }),
         },
-        async handler(ctx) {
+        async handler(ctx: any) {
             const { url, headers, jsonPathField, expectedValue } = ctx.input;
             const intervalMs = (ctx.input as { intervalMs?: number }).intervalMs ?? 10000;
             const timeoutMs = (ctx.input as { timeoutMs?: number }).timeoutMs ?? 300000;
@@ -170,7 +174,7 @@ const createHttpRequestPollAction = () => {
 };
 
 const createCatalogRegisterInlineAction = () => {
-    return createTemplateAction({
+    return (createTemplateAction as any)({
         id: 'catalog:register:inline',
         description: 'Registers an entity by writing a catalog YAML file to the dynamic-entities directory watched by the catalog.',
         schema: {
@@ -184,7 +188,7 @@ const createCatalogRegisterInlineAction = () => {
                 filePath: z.string().optional().describe('The path of the written catalog file'),
             }),
         },
-        async handler(ctx) {
+        async handler(ctx: any) {
             const { entity } = ctx.input;
             const fs = await import('fs');
             const path = await import('path');
@@ -252,11 +256,23 @@ export const httpRequestModule = createBackendModule({
     pluginId: 'scaffolder',
     moduleId: 'http-request-external',
     register({ registerInit }) {
+        if (!scaffolderActionsExtensionPoint) {
+            // Keep module valid on Backstage versions that don't expose this extension point.
+            // Backend module wiring requires registerInit to always be called.
+            registerInit({
+                deps: {},
+                async init() {
+                    // no-op
+                },
+            });
+            return;
+        }
+
         registerInit({
             deps: {
-                scaffolder: scaffolderActionsExtensionPoint,
+                scaffolder: scaffolderActionsExtensionPoint as any,
             },
-            async init({ scaffolder }) {
+            async init({ scaffolder }: any) {
                 scaffolder.addActions(
                     createHttpRequestAction(),
                     createHttpRequestPollAction(),

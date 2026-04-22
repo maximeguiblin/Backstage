@@ -95,6 +95,7 @@ COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
 
 # Copy runtime configuration files
 COPY --chown=node:node app-config*.yaml ./
+COPY --chown=node:node catalog-entities ./catalog-entities
 
 # Copy Sodexo custom assets
 COPY --chown=node:node sodexo ./sodexo

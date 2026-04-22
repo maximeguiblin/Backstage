@@ -11,12 +11,21 @@ azureDevOps:
   organization: sdxcloud
   token: ${BACKSTAGE_DEVOPS_TOKEN}
 
+# SonarQube / SonarCloud: https://roadie.io/backstage/plugins/sonarqube/
+# Entities use metadata.annotations["sonarqube.org/project-key"]: INSTANCE_NAME/PROJECT_KEY
+# (omit INSTANCE_NAME/ to use the instance named "default" — not configured here.)
 sonarqube:
   instances:
     - name: sodexoSonarqube
       instanceKey: sodexoSonarqube
       baseUrl: https://scrutineer.sodexonet.com
       apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
+    # SonarCloud (https://sonarcloud.io) — token from Account → Security
+    - name: sonarcloud
+      instanceKey: sonarcloud
+      baseUrl: https://sonarcloud.io
+      apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
+      authType: Bearer
 
 organization:
   name: Sodexo
@@ -170,6 +179,11 @@ catalog:
       target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location, Template]
+    # Local example (SonarCloud); path is relative to the Backstage app root (src/backstage)
+    - type: file
+      target: ./catalog-entities/sonarcloud-aipcli-component.yaml
+      rules:
+        - allow: [Component]
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
