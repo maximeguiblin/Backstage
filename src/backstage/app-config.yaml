@@ -73,7 +73,8 @@ backend:
           "^/proxy/azure-devops": ""
         # Format authorization header according to Azure DevOps API requirements
         headers:
-          Authorization: ${{ 'Basic ' + Buffer.from(':' + env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
+          Authorization: ${{ 'Basic ' + Buffer.from(':' +
+            env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
         # Allow headers to pass through
         allowedHeaders: ["Authorization", "Content-Type"]
 
@@ -152,9 +153,6 @@ auth:
               # Allow SSO users from allowed domains even if they have no User entity in the catalog
               dangerouslyAllowSignInWithoutUserInCatalog: true
 
-scaffolder:
-  # see https://backstage.io/docs/features/software-templates/configuration for software template options
-
 catalog:
   import:
     entityFilename: catalog-info.yaml
@@ -170,9 +168,10 @@ catalog:
       target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml
       rules:
         - allow: [User, Group, Component, System, API, Resource, Location, Template]
-
-kubernetes:
-  # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
+    - type: file
+      target: ./backstage_catalog/catalog-info.yaml
+      rules:
+        - allow: [User, Group, Component, System, API, Resource, Location, Template]
 
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
