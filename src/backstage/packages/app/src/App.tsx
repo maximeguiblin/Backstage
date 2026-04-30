@@ -1,3 +1,11 @@
+// CUSTOM: using the old frontend system
+/*
+TODO: migrate to the new frontend system, and remove the old frontend system code
+export default createApp({
+  features: [catalogPlugin, navModule],
+});
+*/
+
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
 import {
   CatalogEntityPage,
@@ -33,7 +41,7 @@ import {
   OAuthRequestDialog,
   SignInPage,
 } from '@backstage/core-components';
-import { microsoftAuthApiRef } from '@backstage/core-plugin-api';
+import { configApiRef, microsoftAuthApiRef, useApi } from '@backstage/core-plugin-api';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { NotificationsPage } from '@backstage/plugin-notifications';
@@ -61,20 +69,24 @@ const app = createApp({
     });
   },
   components: {
-    SignInPage: props => (
-      <SignInPage
-        {...props}
-        providers={[
-          'guest',
-          {
-            id: 'microsoft-auth-provider',
-            title: 'Microsoft',
-            message: 'Sign in using EntraID',
-            apiRef: microsoftAuthApiRef,
-          },
-        ]}
-      />
-    ),
+    SignInPage: props => {
+      const configApi = useApi(configApiRef);
+      const enableGuest = configApi.getOptionalBoolean('app.enableGuestAuth') ?? false;
+      return (
+        <SignInPage
+          {...props}
+          providers={[
+            ...(enableGuest ? ['guest' as const] : []),
+            {
+              id: 'microsoft-auth-provider',
+              title: 'Microsoft',
+              message: 'Sign in using EntraID',
+              apiRef: microsoftAuthApiRef,
+            },
+          ]}
+        />
+      );
+    },
   },
 });
 

@@ -1,4 +1,10 @@
-FROM node:22-bookworm-slim AS packages
+# CUSTOM Dockerfile for Backstage
+# Using a multi-stage build process to optimize the build process
+# Stage 1 (packages): Create a cacheable dependency skeleton with package.json files
+# Stage 2 (build): Installs all deps, compiles TypeScript, and builds the backend bundle
+# Stage 3 (final): Installs production deps, copies the built bundle, and starts the server
+
+FROM node:24-trixie-slim AS packages
 
 WORKDIR /app
 
@@ -9,7 +15,6 @@ COPY .yarnrc.yml ./
 
 # Copy package directories (will be cleaned below)
 COPY packages packages
-COPY sodexo sodexo
 COPY plugins plugins
 
 # Remove all files except package.json to create a minimal dependency tree
@@ -17,7 +22,7 @@ COPY plugins plugins
 RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {} \+
 
 # Build application
-FROM node:22-bookworm-slim AS build
+FROM node:24-trixie-slim AS build
 
 # Install system dependencies required for native Node.js modules
 RUN apt-get update && \
@@ -43,7 +48,9 @@ RUN chown -R node:node /app
 USER node
 
 # Install all dependencies (including devDependencies for building)
-RUN yarn install --immutable
+# TODO: add the --immutable flag to the yarn install command
+# RUN yarn install --immutable
+RUN yarn install
 
 # Copy application source code
 COPY --chown=node:node . .
@@ -58,7 +65,7 @@ RUN mkdir packages/backend/dist/skeleton packages/backend/dist/bundle && \
     tar xzf packages/backend/dist/bundle.tar.gz -C packages/backend/dist/bundle
 
 # Production runtime image
-FROM node:22-bookworm-slim
+FROM node:24-trixie-slim
 
 # Install runtime system dependencies
 RUN apt-get update && \
@@ -96,8 +103,8 @@ COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
 # Copy runtime configuration files
 COPY --chown=node:node app-config*.yaml ./
 
-# Copy Sodexo custom assets
-COPY --chown=node:node sodexo ./sodexo
+# Copy config schema so the config-loader can resolve @visibility annotations at runtime
+COPY --from=build --chown=node:node /app/packages/app/config.d.ts ./packages/app/config.d.ts
 
 # Create certs directory — certificates are injected at runtime via
 # WEBAPP_CLIENT_CERT / WEBAPP_CLIENT_KEY env vars (sourced from Key Vault)

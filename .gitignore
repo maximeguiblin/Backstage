@@ -1,4 +1,5 @@
 #specific for a project
+.devcontainer
 docs/build/
 outputs
 code_reports

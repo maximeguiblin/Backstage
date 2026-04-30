@@ -1,39 +1,64 @@
+// CUSTOM: http:request action for external HTTP calls
 import { createBackendModule } from '@backstage/backend-plugin-api';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
-import { z } from 'zod';
 
 const createHttpRequestAction = () => {
     return createTemplateAction({
         id: 'http:request',
         description: 'Sends an HTTP request to an external URL.',
         schema: {
-            input: z.object({
+            input: (z) => z.object({
                 method: z
                     .enum(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'])
                     .describe('HTTP method'),
                 url: z.string().describe('The full URL to send the request to'),
                 headers: z.record(z.string()).optional().describe('Request headers'),
+                basicAuth: z
+                    .object({
+                        username: z.string().describe('Username (can be empty for token-only auth)'),
+                        password: z.string().describe('Password or token'),
+                    })
+                    .optional()
+                    .describe('If provided, adds a Basic Authorization header (base64-encoded username:password)'),
+                basicAuthEnvVar: z
+                    .string()
+                    .optional()
+                    .describe('Name of an environment variable containing a token. Builds Basic auth as base64(:token). Takes precedence over basicAuth.'),
                 body: z.string().optional().describe('Request body'),
                 continueOnBadResponse: z
                     .boolean()
                     .optional()
                     .describe('If true, continue to next step even on 4xx/5xx responses'),
             }),
-            output: z.object({
+            output: (z) => z.object({
                 code: z.number().optional().describe('HTTP response status code'),
                 headers: z.record(z.any()).optional().describe('Response headers'),
                 body: z.any().optional().describe('Response body'),
             }),
         },
         async handler(ctx) {
-            const { url, method, headers, body, continueOnBadResponse } = ctx.input;
+            const { url, method, headers, basicAuth, body, continueOnBadResponse } = ctx.input;
+            const basicAuthEnvVar = (ctx.input as { basicAuthEnvVar?: string }).basicAuthEnvVar;
 
             ctx.logger.info(`Creating ${method} request to ${url}`);
 
+            const requestHeaders: Record<string, string> = { ...(headers ?? {}) };
+            if (basicAuthEnvVar) {
+                const token = process.env[basicAuthEnvVar];
+                if (!token) {
+                    throw new Error(`Environment variable '${basicAuthEnvVar}' is not set`);
+                }
+                const encoded = Buffer.from(`:${token}`).toString('base64');
+                requestHeaders.Authorization = `Basic ${encoded}`;
+            } else if (basicAuth) {
+                const encoded = Buffer.from(`${basicAuth.username}:${basicAuth.password}`).toString('base64');
+                requestHeaders.Authorization = `Basic ${encoded}`;
+            }
+
             const response = await fetch(url, {
                 method,
-                headers: headers ?? {},
+                headers: requestHeaders,
                 body: body ?? undefined,
                 signal: AbortSignal.timeout(60000),
             });
@@ -83,9 +108,13 @@ const createHttpRequestPollAction = () => {
         id: 'http:request:poll',
         description: 'Polls an HTTP endpoint until a condition is met or timeout is reached.',
         schema: {
-            input: z.object({
+            input: (z) => z.object({
                 url: z.string().describe('The URL to poll'),
                 headers: z.record(z.string()).optional().describe('Request headers'),
+                basicAuthEnvVar: z
+                    .string()
+                    .optional()
+                    .describe('Name of an environment variable containing a token. Builds Basic auth as base64(:token).'),
                 jsonPathField: z
                     .string()
                     .describe(
@@ -101,15 +130,26 @@ const createHttpRequestPollAction = () => {
                     .optional()
                     .describe('Max time to wait in milliseconds (default: 300000)'),
             }),
-            output: z.object({
+            output: (z) => z.object({
                 code: z.number().optional().describe('Last HTTP response status code'),
                 body: z.any().optional().describe('Last response body'),
             }),
         },
         async handler(ctx) {
             const { url, headers, jsonPathField, expectedValue } = ctx.input;
+            const basicAuthEnvVar = (ctx.input as { basicAuthEnvVar?: string }).basicAuthEnvVar;
             const intervalMs = (ctx.input as { intervalMs?: number }).intervalMs ?? 10000;
             const timeoutMs = (ctx.input as { timeoutMs?: number }).timeoutMs ?? 300000;
+
+            const pollHeaders: Record<string, string> = { ...(headers ?? {}) };
+            if (basicAuthEnvVar) {
+                const token = process.env[basicAuthEnvVar];
+                if (!token) {
+                    throw new Error(`Environment variable '${basicAuthEnvVar}' is not set`);
+                }
+                const encoded = Buffer.from(`:${token}`).toString('base64');
+                pollHeaders.Authorization = `Basic ${encoded}`;
+            }
 
             ctx.logger.info(
                 `Polling ${url} until ${jsonPathField} equals "${expectedValue}" (timeout: ${timeoutMs / 1000}s)`,
@@ -119,7 +159,7 @@ const createHttpRequestPollAction = () => {
             while (Date.now() - startTime < timeoutMs) {
                 const response = await fetch(url, {
                     method: 'GET',
-                    headers: headers ?? {},
+                    headers: pollHeaders,
                     signal: AbortSignal.timeout(30000),
                 });
 
@@ -174,12 +214,12 @@ const createCatalogRegisterInlineAction = () => {
         id: 'catalog:register:inline',
         description: 'Registers an entity by writing a catalog YAML file to the dynamic-entities directory watched by the catalog.',
         schema: {
-            input: z.object({
+            input: (z) => z.object({
                 entity: z
                     .any()
                     .describe('The entity object to register (apiVersion, kind, metadata, spec)'),
             }),
-            output: z.object({
+            output: (z) => z.object({
                 entityRef: z.string().optional().describe('The entity reference of the registered entity'),
                 filePath: z.string().optional().describe('The path of the written catalog file'),
             }),
@@ -248,6 +288,98 @@ const createCatalogRegisterInlineAction = () => {
     });
 };
 
+// Used only for debugging pipeline triggers
+const createAzurePipelineTriggerAction = () => {
+    return createTemplateAction({
+        id: 'azure:pipeline:trigger',
+        description: 'Triggers an Azure DevOps pipeline run using BACKSTAGE_DEVOPS_TOKEN.',
+        schema: {
+            input: (z) => z.object({
+                organization: z.string().describe('Azure DevOps organization name'),
+                project: z.string().describe('Azure DevOps project name'),
+                pipelineId: z.string().describe('The pipeline ID to trigger'),
+                branch: z.string().optional().describe('Branch to run the pipeline on (default: main)'),
+                pipelineParameters: z
+                    .record(z.string())
+                    .optional()
+                    .describe('Template parameters to pass to the pipeline'),
+            }),
+            output: (z) => z.object({
+                runId: z.number().optional().describe('The ID of the pipeline run'),
+                runUrl: z.string().optional().describe('Web URL of the pipeline run'),
+            }),
+        },
+        async handler(ctx) {
+            const { organization, project, pipelineId, pipelineParameters } = ctx.input;
+            const branch = ctx.input.branch ?? 'main';
+
+            const token = process.env.BACKSTAGE_DEVOPS_TOKEN;
+            if (!token) {
+                throw new Error('Environment variable BACKSTAGE_DEVOPS_TOKEN is not set');
+            }
+            const authHeader = `Basic ${Buffer.from(`:${token}`).toString('base64')}`;
+
+            const url = `https://dev.azure.com/${encodeURIComponent(organization)}/${encodeURIComponent(project)}/_apis/pipelines/${encodeURIComponent(pipelineId)}/runs?api-version=7.1`;
+
+            const body: Record<string, unknown> = {
+                resources: {
+                    repositories: {
+                        self: {
+                            refName: `refs/heads/${branch}`,
+                        },
+                    },
+                },
+            };
+            if (pipelineParameters && Object.keys(pipelineParameters).length > 0) {
+                body.templateParameters = pipelineParameters;
+            }
+
+            ctx.logger.info(
+                `Triggering pipeline ${pipelineId} in ${organization}/${project} on branch ${branch}`,
+            );
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    Authorization: authHeader,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(60000),
+            });
+
+            const text = await response.text();
+            let responseBody: Record<string, unknown> = {};
+            try {
+                const trimmed = text.trim();
+                if (trimmed !== '') {
+                    responseBody = JSON.parse(trimmed) as Record<string, unknown>;
+                }
+            } catch {
+                ctx.logger.warn('Could not parse pipeline response as JSON');
+            }
+
+            if (!response.ok) {
+                ctx.logger.error(
+                    `Pipeline trigger failed with status ${response.status}: ${JSON.stringify(responseBody)}`,
+                );
+                throw new Error(
+                    `Failed to trigger pipeline ${pipelineId} (${response.status}): ${JSON.stringify(responseBody)}`,
+                );
+            }
+
+            const runId = responseBody.id as number | undefined;
+            const runUrl = (responseBody._links as Record<string, { href?: string }> | undefined)
+                ?.web?.href;
+
+            ctx.logger.info(`Pipeline run created: id=${runId}, url=${runUrl}`);
+
+            if (runId !== undefined) ctx.output('runId', runId);
+            if (runUrl) ctx.output('runUrl', runUrl);
+        },
+    });
+};
+
 export const httpRequestModule = createBackendModule({
     pluginId: 'scaffolder',
     moduleId: 'http-request-external',
@@ -261,6 +393,7 @@ export const httpRequestModule = createBackendModule({
                     createHttpRequestAction(),
                     createHttpRequestPollAction(),
                     createCatalogRegisterInlineAction(),
+                    createAzurePipelineTriggerAction(),
                 );
             },
         });

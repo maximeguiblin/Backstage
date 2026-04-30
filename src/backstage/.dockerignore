@@ -1,19 +1,24 @@
-# ==============================================================================
-# Docker Ignore File for Backstage
-# Excludes unnecessary files from Docker build context for faster builds
-# ==============================================================================
+.git
+.yarn/cache
+.yarn/install-state.gz
+node_modules
+# packages/*/src
+packages/*/node_modules
+# plugins
+*.local.yaml
+
+# ===============================================================================================
+# CUSTOM: changes added to excludes unnecessary files from Docker build context for faster builds
+# ===============================================================================================
 
 # Node.js dependencies (will be installed by Yarn in the container)
 **/node_modules/
-node_modules
 
 # Build artifacts and cache directories
 **/dist/
 **/dist-types/
 **/build/
 **/.cache/
-.yarn/cache
-.yarn/install-state.gz
 
 # Testing and coverage
 **/coverage/

@@ -1,3 +1,4 @@
+// CUSTOM: Webapp proxy plugin - proxies requests to deployed container apps
 import {
     createBackendPlugin,
     coreServices,

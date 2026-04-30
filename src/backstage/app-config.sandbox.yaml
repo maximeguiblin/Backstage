@@ -1,3 +1,17 @@
+app:
+  # CUSTOM: Enable showing the Guest sign-in option
+  enableGuestAuth: true
+
+backend:
+  # CUSTOM: Disable default auth policy for local development
+  auth:
+    dangerouslyDisableDefaultAuthPolicy: true
+
 auth:
   providers:
     guest: {}
+
+# CUSTOM: Disable permission plugin for local development
+# TODO: Dangerously uncomment this to manage backstage content without authentication
+#permission:
+#  enabled: false
