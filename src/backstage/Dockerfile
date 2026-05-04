@@ -48,9 +48,7 @@ RUN chown -R node:node /app
 USER node
 
 # Install all dependencies (including devDependencies for building)
-# TODO: add the --immutable flag to the yarn install command
-# RUN yarn install --immutable
-RUN yarn install
+RUN yarn install --immutable
 
 # Copy application source code
 COPY --chown=node:node . .
