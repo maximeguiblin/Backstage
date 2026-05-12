@@ -44,7 +44,7 @@ backend.add(import('@backstage/plugin-permission-backend'));
 // See https://backstage.io/docs/permissions/getting-started for how to create your own permission policy
 // backend.add(
 //  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
-//);
+// );
 
 // search plugin
 backend.add(import('@backstage/plugin-search-backend'));
@@ -78,10 +78,12 @@ backend.add(import('@backstage-community/plugin-sonarqube-backend'));
 
 // CUSTOM: http:request action for external HTTP calls
 import { httpRequestModule } from './httpRequestAction';
+
 backend.add(httpRequestModule);
 
 // CUSTOM: Webapp proxy plugin - proxies requests to deployed container apps
 import { webappProxyPlugin } from './webappProxyPlugin';
+
 backend.add(webappProxyPlugin);
 
 backend.start();

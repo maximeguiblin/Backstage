@@ -56,7 +56,8 @@
     "@drodil/backstage-plugin-qeta-backend": "^3.59.7",
     "@backstage-community/plugin-scaffolder-backend-module-azure-devops": "^0.24.0",
     "@backstage/backend-plugin-api": "1.9.0",
-    "@backstage/plugin-scaffolder-node": "0.11.3"
+    "@backstage/plugin-scaffolder-node": "0.11.3",
+    "express": "^4.21.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.36.1"
