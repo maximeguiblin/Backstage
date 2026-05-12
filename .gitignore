@@ -186,3 +186,4 @@ cython_debug/
 
 # TechDocs user guide
 docs/techdocs-user-guide/
+run-local.sh
