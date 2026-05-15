@@ -44,7 +44,10 @@ backend:
     # Uncomment the following host directive to bind to specific interfaces
     host: 0.0.0.0
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src: ["'self'", "http:", "https:"]
+    frame-src: ["'self'"]
+    # Allow inline scripts (required for some Backstage UI components)
+    script-src: ["'self'", "'unsafe-eval'", "'unsafe-inline'"]
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
@@ -55,7 +58,7 @@ backend:
   # The production database configuration is stored in app-config.production.yaml
   database:
     client: better-sqlite3
-    connection: ':memory:'
+    connection: ":memory:"
   # see https://backstage.io/docs/ai/mcp-actions#actions-configuration for more details
   actions:
     pluginSources:
@@ -63,7 +66,26 @@ backend:
       - catalog
       - scaffolder
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+  proxy:
+    endpoints:
+      # Azure DevOps proxy
+      "/proxy/azure-devops":
+        target: https://dev.azure.com
+        changeOrigin: true
+        pathRewrite:
+          "^/proxy/azure-devops": ""
+        headers:
+          Authorization: ${{ 'Basic ' + Buffer.from(':' +
+            env.BACKSTAGE_DEVOPS_TOKEN).toString('base64') }}
+        allowedHeaders: ["Authorization", "Content-Type"]
 
+      # Streamlit webapp proxy — WebSocket support enabled
+      "/webapp-proxy/azieca2poc001.thankfulfield-cf356ef2.northeurope.azurecontainerapps.io":
+        target: "https://azieca2poc001.thankfulfield-cf356ef2.northeurope.azurecontainerapps.io"
+        changeOrigin: true
+        ws: true
+        pathRewrite:
+          "^/api/proxy/webapp-proxy/azieca2poc001.thankfulfield-cf356ef2.northeurope.azurecontainerapps.io": ""
   # CUSTOM: Allow reading from the storage host and Azure DevOps aliases
   reading:
     allow:
@@ -177,7 +199,8 @@ catalog:
       # TODO: set branch back to master once merged into main
       target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml&version=GBfeat/switch-to-new-plugin
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location, Template]
+        - allow:
+            [User, Group, Component, System, API, Resource, Location, Template]
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
@@ -224,5 +247,5 @@ permission:
 
 # see https://backstage.io/docs/ai/mcp-actions for more details
 mcpActions:
-  name: 'Sodexo Developer Portal' # defaults to "backstage"
-  description: 'Tools for managing your software catalog, creating new services from templates, and exploring your developer portal' # optional
+  name: "Sodexo Developer Portal" # defaults to "backstage"
+  description: "Tools for managing your software catalog, creating new services from templates, and exploring your developer portal" # optional
