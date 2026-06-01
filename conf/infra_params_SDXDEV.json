@@ -35,6 +35,7 @@
   "CORS_ENDPOINT": "https://developer-portal.dev.sodexonet.com",
   "BACK_ENDPOINT": "https://developer-portal.dev.sodexonet.com",
   "CONTAINER_APP_NAME": "azieca2frt001",
+  "LOG_LEVEL": "warn",
   "ENVIRONMENT": "DEV",
   "USE_PRODUCTION_CONFIG": "true"
 }

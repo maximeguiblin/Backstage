@@ -99,7 +99,9 @@ export const webappProxyPlugin = createBackendPlugin({
                     }
 
                     const targetUrl = `https://${fqdn}/${subPath}`;
-                    logger.info(`Proxying request to ${targetUrl}`);
+                    // Per-request log kept at debug level: Streamlit polling generates one entry
+                    // per ~1s and was the top contributor to Log Analytics ingestion (AB#783907).
+                    logger.debug(`Proxying request to ${targetUrl}`);
 
                     try {
                         const response = await proxyRequest(targetUrl);
@@ -169,7 +171,9 @@ export const webappProxyPlugin = createBackendPlugin({
                             }
 
                             const targetWsUrl = `wss://${gatewayIp || fqdn}/${subPath}`;
-                            logger.info(`WebSocket upgrade: proxying to ${targetWsUrl}`);
+                            // Per-upgrade log kept at debug level for the same reason as the
+                            // HTTP proxy log above (AB#783907).
+                            logger.debug(`WebSocket upgrade: proxying to ${targetWsUrl}`);
 
                             const agent = makeAgent(fqdn);
                             const upstream = new WebSocket(targetWsUrl, {

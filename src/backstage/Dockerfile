@@ -104,9 +104,12 @@ COPY --chown=node:node sodexo ./sodexo
 RUN mkdir -p /app/certs
 
 # Set production environment variables
+# LOG_LEVEL defaults to "warn" to limit Log Analytics ingestion costs (cf. AB#783907).
+# Override at deploy-time via the LOG_LEVEL env var (see conf/app_config.json) when
+# debugging is needed.
 ENV NODE_ENV=production \
     NODE_OPTIONS="--no-node-snapshot" \
-    LOG_LEVEL=info
+    LOG_LEVEL=warn
 
 # Runtime configuration arguments (can be overridden at build time)
 ARG FRONT_ENDPOINT="http://localhost:7007"

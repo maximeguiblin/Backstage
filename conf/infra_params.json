@@ -35,6 +35,7 @@
   "CORS_ENDPOINT": "https://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
   "BACK_ENDPOINT": "https://azieca0aip001.salmonsand-4821f7af.northeurope.azurecontainerapps.io",
   "CONTAINER_APP_NAME": "azieca0aip001",
+  "LOG_LEVEL": "warn",
   "ENVIRONMENT": "DEV",
   "USE_PRODUCTION_CONFIG": "true"
 }

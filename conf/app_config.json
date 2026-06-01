@@ -33,6 +33,7 @@
         "7007"
       ],
       "env_vars": {
+        "LOG_LEVEL": "{@infra.log_level}",
         "PG_HOST": "{#{@infra.keyvault_secrets.pg_host}}",
         "PG_PORT": "{#{@infra.keyvault_secrets.pg_port}}",
         "PG_USER": "{#{@infra.keyvault_secrets.pg_user}}",
