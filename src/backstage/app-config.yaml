@@ -1,22 +1,26 @@
 app:
   title: Sodexo Developer Portal
   baseUrl: http://localhost:3000
+
+  # CUSTOM: Bind to all interfaces for local development
   listen:
     port: 3000
-    # Uncomment the following host directive to bind to specific interfaces
     host: 0.0.0.0
 
-azureDevOps:
-  host: dev.azure.com
-  organization: sdxcloud
-  token: ${BACKSTAGE_DEVOPS_TOKEN}
+  # Enable all packages by default, this will discover packages from packages/app/package.json
+  packages: all
 
-sonarqube:
-  instances:
-    - name: sodexoSonarqube
-      instanceKey: sodexoSonarqube
-      baseUrl: https://scrutineer.sodexonet.com
-      apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
+  extensions:
+    # Disable the nav items that we're manually rendering in packages/app/src/modules/nav/Sidebar.tsx
+    - nav-item:search: false
+    - nav-item:user-settings: false
+    - nav-item:catalog: false
+    - nav-item:scaffolder: false
+
+    # Configure the catalog index page to be the root page, this is normally mounted on /catalog
+    - page:catalog:
+        config:
+          path: /
 
 organization:
   name: Sodexo
@@ -29,12 +33,7 @@ backend:
   #   keys:
   #     - secret: ${BACKEND_SECRET}
 
-  # Disable default auth policy for local development
-  # WARNING: DO NOT use this in production!
-  auth:
-    dangerouslyDisableDefaultAuthPolicy: true
-
-  # Give permission/RBAC plugin time to finish init before returning 503 on /authorize.
+  # CUSTOM: Give permission/RBAC plugin time to finish init before returning 503 on /authorize.
   # Catalog calls /authorize early; in Docker RBAC init can exceed the default 5s.
   lifecycle:
     startupRequestPauseTimeout: 60s
@@ -52,16 +51,21 @@ backend:
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   cors:
-    origin:
-      - http://localhost:7007
+    origin: http://localhost:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
-  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
     client: better-sqlite3
     connection: ":memory:"
+  # see https://backstage.io/docs/ai/mcp-actions#actions-configuration for more details
+  actions:
+    pluginSources:
+      - auth
+      - catalog
+      - scaffolder
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
   proxy:
     endpoints:
       # Azure DevOps proxy
@@ -82,7 +86,7 @@ backend:
         ws: true
         pathRewrite:
           "^/api/proxy/webapp-proxy/azieca2poc001.thankfulfield-cf356ef2.northeurope.azurecontainerapps.io": ""
-
+  # CUSTOM: Allow reading from the storage host and Azure DevOps aliases
   reading:
     allow:
       - host: ${BACKSTAGE_STORAGE_HOST}
@@ -90,6 +94,7 @@ backend:
       - host: dev.azure.com
 
 integrations:
+  # CUSTOM: Azure DevOps integration
   azure:
     - host: dev.azure.com #sdxcloud.visualstudio.com
       credentials:
@@ -97,22 +102,45 @@ integrations:
         # - clientId: ${BACKSTAGE_CLIENT_ID}
         #   clientSecret: ${BACKSTAGE_CLIENT_SECRET}
         #   tenantId: ${BACKSTAGE_TENANT_ID}
+
+  # CUSTOM: Azure DevOps integration for the Azure DevOps plugin
   azureDevOps:
     - host: dev.azure.com
       organization: sdxcloud
       token: ${BACKSTAGE_DEVOPS_TOKEN}
 
-# Webapp proxy mTLS configuration
+proxy:
+  ### Example for how to add a proxy endpoint for the frontend.
+  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
+
+# CUSTOM: Storage account for reports used by the HtmlDisplayTab component
+customStorage:
+  host: ${BACKSTAGE_STORAGE_HOST}
+  reportSasToken: ${BACKSTAGE_STORAGE_REPORT_SAS_TOKEN}
+
+# CUSTOM: SonarQube integrations
+sonarqube:
+  instances:
+    - name: sodexoSonarqube
+      instanceKey: sodexoSonarqube
+      baseUrl: https://scrutineer.sodexonet.com
+      apiKey: ${BACKSTAGE_SONARQUBE_TOKEN}
+
+# CUSTOM: Webapp proxy mTLS configuration
 webappProxy:
   clientCertPath: /app/certs/client.pem
   clientKeyPath: /app/certs/client-key.pem
   # Azure App Gateway IP — requests are sent to this IP with the original hostname as SNI
   gatewayIp: ${WEBAPP_GATEWAY_IP}
 
-# Storage account report configuration
-customStorage:
-  host: ${BACKSTAGE_STORAGE_HOST}
-  reportSasToken: ${BACKSTAGE_STORAGE_REPORT_SAS_TOKEN}
+# CUSTOM: Q&A plugin configuration
+qeta:
+  permissions: false
+  allowAnonymous: true
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -121,22 +149,17 @@ customStorage:
 techdocs:
   builder: "external"
   publisher:
+    # CUSTOM: Azure Blob Storage integration
     type: "azureBlobStorage"
     azureBlobStorage:
       containerName: "documentation"
       credentials:
         accountName: ${BACKSTAGE_STORAGE_ACCOUNT}
         accountKey: ${BACKSTAGE_STORAGE_KEY}
-  # Disable search indexing for now to avoid the search index error
   search:
-    enabled: false
+    enabled: false # Disable search indexing for now to avoid the search index error
 
-# auth:
-#   # see https://backstage.io/docs/auth/ to learn about auth providers
-#   providers:
-#     # See https://backstage.io/docs/auth/guest/provider
-#     guest: {}
-
+# CUSTOM: Microsoft authentication integration
 auth:
   environment: development
   experimentalExtraAllowedOrigins:
@@ -158,6 +181,9 @@ auth:
               # Allow SSO users from allowed domains even if they have no User entity in the catalog
               dangerouslyAllowSignInWithoutUserInCatalog: true
 
+scaffolder:
+  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+
 catalog:
   import:
     entityFilename: catalog-info.yaml
@@ -165,19 +191,21 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
 
-  # All catalog entities and templates are maintained in the BackstageCatalog repo.
+  # CUSTOM: Catalog entities and templates are maintained in the BackstageCatalog repo.
   # The root catalog-info.yaml is a Location entity that references all individual files.
   # Updating that repo automatically updates the portal without redeployment.
   locations:
     - type: url
-      target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml
+      # TODO: set branch back to master once merged into main
+      target: https://dev.azure.com/sdxcloud/IST.GLB.GLB.DataFactory_DeveloperPlatform/_git/IST.GLB.GLB.DataFactory_DeveloperPlatform.BackstageCatalog?path=/catalog-info.yaml&version=GBfeat/switch-to-new-plugin
       rules:
-        - allow: [User, Group, Component, System, API, Resource, Location, Template]
-    - type: file
-      target: ./backstage_catalog/catalog-info.yaml
-      rules:
-        - allow: [User, Group, Component, System, API, Resource, Location, Template]
+        - allow:
+            [User, Group, Component, System, API, Resource, Location, Template]
 
+kubernetes:
+  # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
+
+# CUSTOM: RBAC permission framework
 # see https://backstage.io/docs/permissions/getting-started for more on the permission framework
 permission:
   enabled: true
@@ -218,6 +246,7 @@ permission:
       users:
         - name: group:default/admins
 
-qeta:
-  permissions: false
-  allowAnonymous: true
+# see https://backstage.io/docs/ai/mcp-actions for more details
+mcpActions:
+  name: "Sodexo Developer Portal" # defaults to "backstage"
+  description: "Tools for managing your software catalog, creating new services from templates, and exploring your developer portal" # optional

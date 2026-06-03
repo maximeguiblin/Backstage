@@ -27,21 +27,24 @@ backend.add(import('@backstage/plugin-techdocs-backend'));
 backend.add(import('@backstage/plugin-auth-backend'));
 // See https://backstage.io/docs/backend-system/building-backends/migrating#the-auth-plugin
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
-backend.add(import('@backstage/plugin-auth-backend-module-microsoft-provider'));
+// See https://backstage.io/docs/auth/guest/provider
+
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
 );
-backend.add(import('@backstage/plugin-catalog-backend-module-azure'));
 
 // See https://backstage.io/docs/features/software-catalog/configuration#subscribing-to-catalog-errors
 backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
 
 // permission plugin
 backend.add(import('@backstage/plugin-permission-backend'));
-// RBAC provides the permission policy; do not use allow-all-policy with RBAC (see plugin-rbac-backend README)
-backend.add(import('@backstage-community/plugin-rbac-backend'));
+// CUSTOM: do not use allow-all-policy with RBAC (see plugin-rbac-backend README)
+// See https://backstage.io/docs/permissions/getting-started for how to create your own permission policy
+// backend.add(
+//  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+// );
 
 // search plugin
 backend.add(import('@backstage/plugin-search-backend'));
@@ -61,19 +64,24 @@ backend.add(import('@backstage/plugin-kubernetes-backend'));
 backend.add(import('@backstage/plugin-notifications-backend'));
 backend.add(import('@backstage/plugin-signals-backend'));
 
-// ... other feature additions
+// mcp actions plugin
+backend.add(import('@backstage/plugin-mcp-actions-backend'));
+
+// CUSTOM: other feature additions
+backend.add(import('@backstage/plugin-auth-backend-module-microsoft-provider'));
+backend.add(import('@backstage/plugin-catalog-backend-module-azure'));
+backend.add(import('@backstage-community/plugin-rbac-backend'));
 backend.add(import('@backstage-community/plugin-azure-devops-backend'));
-backend.add(import('@parfuemerie-douglas/scaffolder-backend-module-azure-pipelines'))
-backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
+backend.add(import('@backstage-community/plugin-scaffolder-backend-module-azure-devops'))
 backend.add(import('@drodil/backstage-plugin-qeta-backend'));
 backend.add(import('@backstage-community/plugin-sonarqube-backend'));
 
-// Custom http:request action for external HTTP calls
+// CUSTOM: http:request action for external HTTP calls
 import { httpRequestModule } from './httpRequestAction';
 
 backend.add(httpRequestModule);
 
-// Webapp proxy plugin - proxies requests to deployed container apps
+// CUSTOM: Webapp proxy plugin - proxies requests to deployed container apps
 import { webappProxyPlugin } from './webappProxyPlugin';
 
 backend.add(webappProxyPlugin);
