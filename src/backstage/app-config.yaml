@@ -242,6 +242,7 @@ permission:
         - name: user:default/hamed.ky
         - name: user:default/christophe.gougam.ext
         - name: user:default/samuel.rochette
+        - name: user:default/maxime.guiblin.ext
         - name: group:default/admins
       users:
         - name: group:default/admins

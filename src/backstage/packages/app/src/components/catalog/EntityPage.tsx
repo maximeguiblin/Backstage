@@ -47,11 +47,8 @@ import {
   EntityOwnershipCard,
   EntityUserProfileCard,
 } from '@backstage/plugin-org';
-import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import { Button, Grid } from '@material-ui/core';
 
-import { ReportIssue } from '@backstage/plugin-techdocs-module-addons-contrib';
-import { TechDocsAddons } from '@backstage/plugin-techdocs-react';
 
 import {
   EntityKubernetesContent,
@@ -72,15 +69,7 @@ import { isSonarQubeAvailable } from '@backstage-community/plugin-sonarqube-reac
 import { TrivyReportTab } from './TrivyReportTab';
 import { AipCheckTab } from './AipCheckTab';
 import { WebAppIFrameTab, isWebAppAvailable } from './WebAppIFrameTab';
-
-
-const techdocsContent = (
-  <EntityTechdocsContent>
-    <TechDocsAddons>
-      <ReportIssue />
-    </TechDocsAddons>
-  </EntityTechdocsContent>
-);
+import { CustomDocsTab } from './CustomDocsTab';
 
 
 const cicdContent = (
@@ -113,7 +102,7 @@ const cicdContent = (
     </EntitySwitch.Case>
 
     <EntitySwitch.Case if={isAzureDevOpsAvailable}>
-        <EntityAzurePipelinesContent defaultLimit={25} />
+      <EntityAzurePipelinesContent defaultLimit={25} />
     </EntitySwitch.Case>
   </EntitySwitch>
 );
@@ -213,10 +202,6 @@ const serviceEntityPage = (
       </Grid>
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
-    </EntityLayout.Route>
-
     <EntityLayout.Route if={isAzureDevOpsAvailable} path="/pull-requests" title="Pull Requests">
       <EntityAzurePullRequestsContent defaultLimit={25} />
     </EntityLayout.Route>
@@ -255,10 +240,6 @@ const websiteEntityPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
-    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -290,13 +271,9 @@ const repoEntityPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-    
+
     <EntityLayout.Route path="/trivy-report" title="Trivy Report">
       <TrivyReportTab />
-    </EntityLayout.Route>
-
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/aip-check" title="AIP Check">
@@ -327,10 +304,6 @@ const defaultEntityPage = (
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
     </EntityLayout.Route>
-
-    <EntityLayout.Route path="/docs" title="Docs">
-      {techdocsContent}
-    </EntityLayout.Route>
   </EntityLayout>
 );
 
@@ -351,6 +324,18 @@ const infraEnvironmentEntityPage = (
   </EntityLayout>
 );
 
+const documentationEntityPage = (
+  <EntityLayout>
+    <EntityLayout.Route path="/" title="Overview">
+      {overviewContent}
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/docs" title="Docs">
+      <CustomDocsTab />
+    </EntityLayout.Route>
+  </EntityLayout>
+);
+
 const componentPage = (
   <EntitySwitch>
     <EntitySwitch.Case if={isComponentType('service')}>
@@ -367,6 +352,10 @@ const componentPage = (
 
     <EntitySwitch.Case if={isComponentType('infra-environment')}>
       {infraEnvironmentEntityPage}
+    </EntitySwitch.Case>
+
+    <EntitySwitch.Case if={isComponentType('documentation')}>
+      {documentationEntityPage}
     </EntitySwitch.Case>
 
     <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
