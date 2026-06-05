@@ -7,6 +7,16 @@ export interface Config {
     app: {
         /** CUSTOM: Whether to show the Guest sign-in option (sandbox only) @visibility frontend */
         enableGuestAuth?: boolean;
+        analytics?: {
+            azureAppInsights?: {
+                /**
+                 * Azure Application Insights connection string.
+                 * This is a public ingestion endpoint, safe to expose to the browser.
+                 * @visibility frontend
+                 */
+                connectionString?: string;
+            };
+        };
     };
 
     /** Adding extra configuration for the custom storage account */
