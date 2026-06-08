@@ -133,7 +133,7 @@ export const webappProxyPlugin = createBackendPlugin({
                 httpRouter.addAuthPolicy({ path: '/', allow: 'unauthenticated' });
 
                 // WebSocket upgrade proxy — forward ws:// → wss:// to the target app
-                httpRouter.addAuthPolicy({ path: '/*', allow: 'unauthenticated' });
+                httpRouter.addAuthPolicy({ path: '/{*path}', allow: 'unauthenticated' });
 
                 // Attach WS upgrade handler to the HTTP server
                 // We hook into the underlying server via the router's handle upgrade

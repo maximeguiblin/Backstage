@@ -1,6 +1,9 @@
 app:
   title: Sodexo Developer Portal
   baseUrl: http://localhost:3000
+  analytics:
+    azureAppInsights:
+      connectionString: ${AZURE_APP_INSIGHTS_CONNECTION_STRING}
 
   # CUSTOM: Bind to all interfaces for local development
   listen:
