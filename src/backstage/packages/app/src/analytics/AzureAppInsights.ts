@@ -39,7 +39,7 @@ export class AzureAppInsightsAnalytics implements AnalyticsApi {
 
         const { action, subject, value, attributes, context } = event;
 
-        // Track template navigation so create events can be enriched with the template ref.
+        // Keep track of last visited template page to enrich create events.
         // URL pattern: /create/templates/{namespace}/{name}
         if (action === 'navigate') {
             const match = subject.match(/^\/create\/templates\/([^/]+)\/([^/]+)$/);
@@ -48,20 +48,16 @@ export class AzureAppInsightsAnalytics implements AnalyticsApi {
             }
         }
 
-        const extraDimensions: Record<string, string> =
-            action === 'create' && context.pluginId === 'scaffolder' && this.lastTemplateRef
-                ? { templateRef: this.lastTemplateRef }
-                : {};
+        // Only track when the user launches a template (scaffolder create action)
+        if (!(action === 'create' && context.pluginId === 'scaffolder')) return;
 
         this.appInsights.trackEvent(
             { name: action },
             {
                 subject,
                 ...(value !== undefined && { value }),
-                pluginId: context.pluginId,
-                extensionId: context.extensionId,
+                ...(this.lastTemplateRef && { templateRef: this.lastTemplateRef }),
                 ...attributes,
-                ...extraDimensions,
             },
         );
         this.appInsights.flush();

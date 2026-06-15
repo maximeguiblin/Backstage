@@ -92,8 +92,9 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.local/bin:$PATH"
+          pip 
           if [[ -d backstage ]]; then cd backstage ; fi
-          aip core docs build --add_markdowns --install_packages
+          aip core docs build --add_markdowns
           if [[ ! -d $(PATHDOC) ]];
           then
             echo "Not found generated doc at path $(PATHDOC)"
