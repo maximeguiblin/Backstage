@@ -92,6 +92,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.local/bin:$PATH"
+          export UV_EXTRA_INDEX_URL="$PIP_EXTRA_INDEX_URL"
           uv venv
           uv pip install -r /opt/uv/venv/aipcli/lib/python3.10/site-packages/aipcli/core/docs/default_docs/requirements.txt
           if [[ -d backstage ]]; then cd backstage ; fi
