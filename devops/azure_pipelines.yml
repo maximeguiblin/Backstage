@@ -92,7 +92,8 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.local/bin:$PATH"
-          /opt/uv/venv/aipcli/bin/pip install -r /opt/uv/venv/aipcli/lib/python3.10/site-packages/aipcli/core/docs/default_docs/requirements.txt
+          pip install --target /tmp/doc-deps -r /opt/uv/venv/aipcli/lib/python3.10/site-packages/aipcli/core/docs/default_docs/requirements.txt
+          export PYTHONPATH="/tmp/doc-deps:${PYTHONPATH:-}"
           if [[ -d backstage ]]; then cd backstage ; fi
           aip core docs build --add_markdowns
           if [[ ! -d $(PATHDOC) ]];
