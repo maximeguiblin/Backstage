@@ -92,10 +92,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.local/bin:$PATH"
-          uv venv
-          source .venv/bin/activate
-          pip install -r /opt/uv/venv/aipcli/lib/python3.10/site-packages/aipcli/core/docs/default_docs/requirements.txt
-          export UV_EXTRA_INDEX_URL="$PIP_EXTRA_INDEX_URL"
+          /opt/uv/venv/aipcli/bin/pip install -r /opt/uv/venv/aipcli/lib/python3.10/site-packages/aipcli/core/docs/default_docs/requirements.txt
           if [[ -d backstage ]]; then cd backstage ; fi
           aip core docs build --add_markdowns
           if [[ ! -d $(PATHDOC) ]];
