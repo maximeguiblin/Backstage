@@ -1,0 +1,23 @@
+name: Sync to ADO Mirror
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  delete:
+    branches:
+      - '*'
+    tags:
+      - '*'
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror to ADO
+        run: |
+          git clone --mirror https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git mirror-dir
+          cd mirror-dir
+          git push --mirror https://x-token-auth:${{ secrets.ADO_PAT }}@dev.azure.com/sdxcloud/GLB.GLB.DataLab.AIPlatform/_git/BackstageTest.git
